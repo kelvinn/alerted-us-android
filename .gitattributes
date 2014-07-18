@@ -1,0 +1,5 @@
+*.xml -crlf
+*.gitignore -crlf
+*.properties -crlf
+*.gradle -crlf
+gradlew -crlf
