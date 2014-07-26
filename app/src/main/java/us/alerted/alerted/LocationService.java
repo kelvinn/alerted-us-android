@@ -42,12 +42,12 @@ public class LocationService extends Service implements
     // A request to connect to Location Services
     private LocationRequest mLocationRequest;
 
+    private SubmitCrdTask mSubmitCrdTask = null;
+
     // Stores the current instantiation of the location client in this object
     private LocationClient mLocationClient;
     private TextView mConnectionState;
     private TextView mConnectionStatus;
-
-    private SubmitCrdTask mSubmitCrdTask = null;
 
     SharedPreferences sharedPref;
 
@@ -61,42 +61,6 @@ public class LocationService extends Service implements
      */
     boolean mUpdatesRequested = false;
 
-
-    /*
-     * Called by Location Services when the request to connect the
-     * client finishes successfully. At this point, you can
-     * request the current location or start periodic updates
-     */
-    @Override
-    public void onConnected(Bundle bundle) {
-
-        JSONObject postData = null;
-        JSONObject geom = null;
-        Log.d(TAG, "Connected to Google Play Services.");
-        Location lastLocation = mLocationClient.getLastLocation();
-        Log.d(TAG, "Last location is: " + (lastLocation == null ? "null" : Utils.format(lastLocation)));
-        mLocationClient.requestLocationUpdates(mLocationRequest, this);
-
-
-        try {
-            postData = new JSONObject();
-            geom = new JSONObject();
-
-            geom.put("type", "Point");
-            geom.put("coordinates", Utils.format(lastLocation));
-            postData.put("name","Test");
-            postData.put("source","dynamic");
-            postData.put("geom", geom);
-
-            mSubmitCrdTask = new SubmitCrdTask(postData.toString());
-            mSubmitCrdTask.execute((Void) null);
-
-        }  catch(JSONException e) {
-            Log.e(TAG, e.toString());
-        }
-
-    }
-
     public class SubmitCrdTask extends AsyncTask<Void, Void, Boolean> {
         String httpAuthToken = sharedPref.getString("AlertedToken", null);
         private final String mPostData;
@@ -107,6 +71,7 @@ public class LocationService extends Service implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
             try {
                 String jString = "{\"geom\": {\"type\": \"Point\",\"coordinates\": [6.85546875,13.883972167969]},\"name\": \"Test\",\"source\": \"dynamic\"}";
                 Log.i(TAG, "Submitting data: " + mPostData);
@@ -148,6 +113,22 @@ public class LocationService extends Service implements
         }
     }
 
+
+    /*
+     * Called by Location Services when the request to connect the
+     * client finishes successfully. At this point, you can
+     * request the current location or start periodic updates
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "Connected to Google Play Services.");
+        Location lastLocation = mLocationClient.getLastLocation();
+        Log.d(TAG, "Last location is: " + (lastLocation == null ? "null" : Utils.format(lastLocation)));
+        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+    }
+
+
+
     /*
      * Called by Location Services if the connection to the
      * location client drops because of an error.
@@ -164,16 +145,6 @@ public class LocationService extends Service implements
     }
 
     /**
-     * In response to a request to stop updates, send a request to
-     * Location Services
-     */
-    private void stopPeriodicUpdates() {
-        mLocationClient.removeLocationUpdates(this);
-        mConnectionState.setText(R.string.location_updates_stopped);
-    }
-
-
-    /**
      * Report location updates to the UI.
      *
      * @param location The updated location.
@@ -181,9 +152,27 @@ public class LocationService extends Service implements
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "Location Changed");
+
+        try {
+            JSONObject postData = new JSONObject();
+            JSONObject geom = new JSONObject();
+
+            geom.put("type", "Point");
+            geom.put("coordinates", Utils.format(location));
+            postData.put("name","Current Location");
+            postData.put("source","current");
+            postData.put("geom", geom);
+
+            mSubmitCrdTask = new SubmitCrdTask(postData.toString());
+            mSubmitCrdTask.execute((Void) null);
+
+        }  catch(JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        // TODO figure out how to use the below
         Intent intent = new Intent(ACTION_NEW_LOCATION).putExtra(EXTRA_LOCATION, location);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
     }
 
     /**
