@@ -61,6 +61,25 @@ public class LocationService extends Service implements
      */
     boolean mUpdatesRequested = false;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (servicesAvailable() && httpAuthTokenExists()) {
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                    .setInterval(60 * 60 * 1000)
+                    .setFastestInterval(5 * 60 * 1000);
+
+            mLocationClient = new LocationClient(this, this, this);
+            mLocationClient.connect();
+        } else {
+            stopSelf();
+        }
+    }
+
     public class SubmitCrdTask extends AsyncTask<Void, Void, Boolean> {
         String httpAuthToken = sharedPref.getString("AlertedToken", null);
         private final String mPostData;
@@ -73,8 +92,8 @@ public class LocationService extends Service implements
         protected Boolean doInBackground(Void... params) {
 
             try {
-                String jString = "{\"geom\": {\"type\": \"Point\",\"coordinates\": [6.85546875,13.883972167969]},\"name\": \"Test\",\"source\": \"dynamic\"}";
-                Log.i(TAG, "Submitting data: " + mPostData);
+
+                //Log.i(TAG, "Submitting data: " + mPostData);
                 URL url = new URL("https://alerted.us/api/v1/users/locations/");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 String tokenAuth = "Token " + httpAuthToken;
@@ -90,19 +109,14 @@ public class LocationService extends Service implements
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
                 writer.write(mPostData);
-                //writer.write(jString);
                 writer.flush();
                 writer.close();
                 os.close();
 
                 conn.connect();
+
                 // create JSON object from content
-                //InputStream in = new BufferedInputStream(conn.getInputStream());
                 InputStream inputStream = conn.getInputStream();
-
-
-
-                Log.i(TAG, "Done submitting data");
 
             } catch (MalformedURLException e) {
                 Log.e(TAG, e.toString());
@@ -123,7 +137,7 @@ public class LocationService extends Service implements
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "Connected to Google Play Services.");
         Location lastLocation = mLocationClient.getLastLocation();
-        Log.d(TAG, "Last location is: " + (lastLocation == null ? "null" : Utils.format(lastLocation)));
+        //Log.d(TAG, "Last location is: " + (lastLocation == null ? "null" : Utils.format(lastLocation)));
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
     }
 
@@ -151,7 +165,6 @@ public class LocationService extends Service implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "Location Changed");
 
         try {
             JSONObject postData = new JSONObject();
@@ -183,7 +196,7 @@ public class LocationService extends Service implements
     public boolean servicesAvailable() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (ConnectionResult.SUCCESS == resultCode) {
-            Log.d(TAG, "Google Play services is available.");
+            //Log.d(TAG, "Google Play services is available.");
             return true;
         }
         Log.e(TAG, "Google Play services NOT available.");
@@ -193,7 +206,7 @@ public class LocationService extends Service implements
     public boolean httpAuthTokenExists() {
 
         String httpAuthToken = sharedPref.getString("AlertedToken", null);
-        Log.i(TAG, httpAuthToken);
+
         if (httpAuthToken != null) {
             return true;
         } else {
@@ -201,25 +214,7 @@ public class LocationService extends Service implements
         }
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (!servicesAvailable() || !httpAuthTokenExists()) {
-            stopSelf();
-        }
-
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(60 * 60 * 1000)
-                .setFastestInterval(5 * 60 * 1000);
-
-        mLocationClient = new LocationClient(this, this, this);
-        mLocationClient.connect();
-
-    }
 
     @Override
     public IBinder onBind(Intent intent) {

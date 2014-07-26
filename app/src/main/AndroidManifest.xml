@@ -27,7 +27,7 @@
             android:exported="true" >
         </service>
 
-        <receiver android:name="us.alerted.alerted.BootCompletedReceiver">
+        <receiver android:name=".BootCompletedReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -36,16 +36,46 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:noHistory="true">
         </activity>
 
+        <service
+            android:name=".NotificationService"
+            android:label=".NotificationService" >
+            <intent-filter>
+                <action android:name="com.amazonaws.androidtest.AndroidMobilePushApp" />
+                <action android:name="com.amazonaws.androidtest.ExternalReceiver" />
+                <category android:name="us.alerted.alerted" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".ExternalReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <action android:name="com.google.android.c2dm.intent.REGISTER" />
+
+                <category android:name="us.alerted.alerted" />
+            </intent-filter>
+        </receiver>
     </application>
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- For LocationService -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- To allow automatic startup at boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- To receive GCM push notificaiton -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.REGISTER" />
 
     <!--
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect

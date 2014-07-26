@@ -8,6 +8,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -439,7 +440,10 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                     SharedPreferences.Editor editor = sharedPref.edit();
                     String httpAuthToken = jsonToken.get("token").toString();
                     editor.putString("AlertedToken", httpAuthToken);
+                    editor.putBoolean("userLoggedInState", true);
                     editor.apply();
+
+
                 } catch(JSONException e) {
                     Log.e(TAG, e.toString());
                 }
@@ -449,9 +453,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             } catch (IOException e) {
                 Log.e(TAG, e.toString());
             }
-
-
-
 
             // TODO: register the new account here.
             return true;
@@ -463,7 +464,17 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             showProgress(false);
 
             if (success) {
-                finish();
+                startService(new Intent(getApplicationContext(), NotificationService.class));
+                startService(new Intent(getApplicationContext(), LocationService.class));
+                //Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+                //LoginActivity.this.startActivity(myIntent);
+
+                Intent i = new Intent(getBaseContext(), MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+
+
+                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
