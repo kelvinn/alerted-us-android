@@ -45,7 +45,7 @@ public class NotificationService extends Service{
         if(VERSION.SDK_INT >  9){
             savedValues = getSharedPreferences(preferences, Context.MODE_MULTI_PROCESS);
         }
-        Log.i(TAG, "In NoatificationService");
+
         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
         SharedPreferences savedValues = PreferenceManager.getDefaultSharedPreferences(this);
 
