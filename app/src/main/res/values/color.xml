@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="common_border_color">#bbbbbb</color>
+    <color name="common_light_gray">#444444</color>
+    <color name="common_white">#777777</color>
+</resources>

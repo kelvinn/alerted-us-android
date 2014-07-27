@@ -70,8 +70,6 @@ public class MainActivity extends Activity {
 
     }
 
-
-
     public void onResume(){
         super.onResume();
 
@@ -148,12 +146,7 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_login) {
 
-            Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
-            MainActivity.this.startActivity(myIntent);
-            return true;
-        }
         if (id == R.id.action_logout) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.remove("AlertedToken");

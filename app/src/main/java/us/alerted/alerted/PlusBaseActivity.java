@@ -261,7 +261,7 @@ public abstract class PlusBaseActivity extends Activity
      */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        updateConnectButtonState();
+        //updateConnectButtonState();
 
         // Most of the time, the connection will fail with a user resolvable result. We can store
         // that in our mConnectionResult property ready to be used when the user clicks the

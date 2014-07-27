@@ -29,13 +29,7 @@ public class NotificationService extends Service{
     public static SharedPreferences savedValues;
     private String TAG = this.getClass().getSimpleName();
 
-    public static void sendToApp(Bundle extras, Context context){
-        Intent newIntent = new Intent();
-        newIntent.setClass(context, MainActivity.class);
-        newIntent.putExtras(extras);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(newIntent);
-    }
+
 
     public void onCreate(){
         super.onCreate();
@@ -56,7 +50,15 @@ public class NotificationService extends Service{
             editor.commit();
         }
         // Let AndroidMobilePushApp know we have just initialized and there may be stored messages
-        sendToApp(new Bundle(), this);
+        //sendToApp(new Bundle(), this);
+    }
+
+    public static void sendToApp(Bundle extras, Context context){
+        Intent newIntent = new Intent();
+        newIntent.setClass(context, MainActivity.class);
+        newIntent.putExtras(extras);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(newIntent);
     }
 
     protected static void saveToLog(Bundle extras, Context context){
@@ -90,7 +92,6 @@ public class NotificationService extends Service{
     }
 
     private void register() {
-        Log.i(TAG, "begging register async");
         new AsyncTask(){
             protected Object doInBackground(final Object... params) {
                 String token;

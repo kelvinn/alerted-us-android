@@ -6,7 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_temp">Start</string>
     <string name="action_settings">Settings</string>
-
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
     <string name="local_service_started">Service Started Text from Res</string>
@@ -27,7 +26,6 @@
     <string name="location_updates_stopped">Periodic updates stopped</string>
     <string name="title_activity_my">MyActivity</string>
     <string name="auth_token_name">Auth Token</string>
-
     <string name="project_number">840452629019</string>
     <string name="introduction">Welcome!</string>
     <string name="clear_screen">Clear Screen</string>
@@ -36,5 +34,7 @@
     <string name="lines_of_message_count">LinesOfMessageCount</string>
     <string name="preferences">PreferencesFile</string>
     <string name="notification_number">1337</string>
+    <string name="title_activity_first">Alerted</string>
+    <string name="title_activity_signup">Alerted</string>
 
 </resources>

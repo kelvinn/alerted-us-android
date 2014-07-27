@@ -1,11 +1,20 @@
 <resources>
-        <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_first_name">First Name</string>
+    <string name="prompt_last_name">Last Name (optional)</string>
+    <string name="prompt_email">Email Address</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_verify">Password (verify)…</string>
+    <string name="action_sign_in">Sign In</string>
     <string name="action_sign_in_short">Sign in</string>
+
+    <string name="label_email">E-mail</string>
+    <string name="label_password">Password</string>
+    <string name="action_sign_up">Create Account</string>
+    <string name="terms_and_conditions">By registering, you confirm that you accept our <![CDATA[ <a href="https://alerted.us">Terms of Use</a>]]> and <![CDATA[ <a href="https://alerted.us">Privacy Policy</a>]]>.</string>
+
     <string name="plus_sign_out">Switch Google+ account</string>
     <string name="plus_disconnect">Disconnect from Google+</string>
     <string name="error_invalid_email">This email address is invalid</string>

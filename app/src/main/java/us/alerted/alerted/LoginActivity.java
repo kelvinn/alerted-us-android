@@ -19,7 +19,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -87,6 +89,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private SignInButton mPlusSignInButton;
     private View mSignOutButtons;
     private View mLoginFormView;
+    private Boolean create_user;
+    private Boolean cancel;
+
     SharedPreferences sharedPref;
 
     @Override
@@ -124,40 +129,54 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    verifyDetails();
                     return true;
                 }
                 return false;
             }
         });
 
+        // This sets the Terms and Privacy to allow clickable links
+        TextView tv = (TextView) findViewById(R.id.termsView);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
+        tv.setText(Html.fromHtml(getString(R.string.terms_and_conditions)));
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                cancel = verifyDetails();
+                attemptLogin(false);
+            }
+        });
+
+        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
+        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel = verifyDetails();
+                attemptLogin(true);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mEmailLoginFormView = findViewById(R.id.email_login_form);
-        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
+        //mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
     }
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    public void attemptLogin() {
+    public boolean verifyDetails() {
         if (mAuthTask != null) {
-            return;
+            return false;
         }
 
         // Reset errors.
@@ -194,14 +213,23 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
         }
+        return cancel;
+
     }
+
+    public void attemptLogin(Boolean create_user) {
+        // Show a progress spinner, and kick off a background task to
+        // perform the user login attempt.
+
+        showProgress(true);
+        // Store values at the time of the login attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+        mAuthTask = new UserLoginTask(email, password, create_user);
+        mAuthTask.execute((Void) null);
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -251,6 +279,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     @Override
     protected void onPlusClientSignIn() {
         //Set up sign out and disconnect buttons.
+        /*
         Button signOutButton = (Button) findViewById(R.id.plus_sign_out_button);
         signOutButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -258,6 +287,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 signOut();
             }
         });
+
         Button disconnectButton = (Button) findViewById(R.id.plus_disconnect_button);
         disconnectButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -265,6 +295,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 revokeAccess();
             }
         });
+        */
     }
 
     @Override
@@ -277,7 +308,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         //TODO: Update this logic to also handle the user logged in by email.
         boolean connected = getPlusClient().isConnected();
 
-        mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
+        //mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
         //mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);
         mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
     }
@@ -366,12 +397,14 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         private final String mEmail;
         private final String mPassword;
+        private final Boolean mCreateUser;
 
         //SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences();
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, Boolean create_user) {
             mEmail = email;
             mPassword = password;
+            mCreateUser = create_user;
         }
 
         private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
@@ -400,12 +433,48 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             return new Scanner(inStream).useDelimiter("\\A").next();
         }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
 
+        protected void createAccount(){
+            List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
+            urlParams.add(new BasicNameValuePair("username", mEmail));
+            urlParams.add(new BasicNameValuePair("password", mPassword));
+            urlParams.add(new BasicNameValuePair("email", mEmail));
 
-            // TODO: attempt authentication against a network service.
+            try {
+                URL url = new URL("https://alerted.us/api/v1/users/");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
 
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getQuery(urlParams));
+                writer.flush();
+                writer.close();
+                os.close();
+
+                conn.connect();
+
+                // create JSON object from content
+                InputStream in = new BufferedInputStream(
+                        conn.getInputStream());
+                try {
+                    JSONObject jsonToken = new JSONObject(getResponseText(in));
+                } catch(JSONException e) {
+                    Log.e(TAG, e.toString());
+                }
+
+            } catch (MalformedURLException e) {
+                Log.e(TAG, e.toString());
+            } catch (IOException e) {
+                Log.e(TAG, e.toString());
+            }
+        }
+        protected void getToken(){
             List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
             urlParams.add(new BasicNameValuePair("username", mEmail));
             urlParams.add(new BasicNameValuePair("password", mPassword));
@@ -453,6 +522,20 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             } catch (IOException e) {
                 Log.e(TAG, e.toString());
             }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            // TODO: attempt authentication against a network service.
+
+            if (!mCreateUser){
+                getToken();
+            } else {
+                createAccount();
+                getToken();
+            }
+
 
             // TODO: register the new account here.
             return true;
@@ -480,6 +563,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 mPasswordView.requestFocus();
             }
         }
+
 
         @Override
         protected void onCancelled() {

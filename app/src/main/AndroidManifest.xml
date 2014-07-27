@@ -30,6 +30,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -51,9 +52,9 @@
 
         <service
             android:name=".LocationService"
-            android:label="NotificationService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:label="LocationService" >
         </service>
 
         <receiver android:name=".BootCompletedReceiver" >
@@ -64,9 +65,9 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:noHistory="true">
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
 
         <service
@@ -76,6 +77,7 @@
                 <action android:name="us.alerted.alerted.MainActivity" />
                 <action android:name="us.alerted.alerted.ExternalReceiver" />
                 <action android:name="us.alerted.alerted.LoginActivity" />
+
                 <category android:name="us.alerted.alerted" />
             </intent-filter>
         </service>
@@ -91,7 +93,15 @@
                 <category android:name="us.alerted.alerted" />
             </intent-filter>
         </receiver>
-    </application>
 
+        <activity
+            android:name=".FirstActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:label="@string/app_name" >
+        </activity>
+    </application>
 
 </manifest>
