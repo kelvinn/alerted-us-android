@@ -10,10 +10,14 @@
     <string name="action_logout">Logout</string>
     <string name="local_service_started">Service Started Text from Res</string>
 
+
+    <!-- GCM -->
+    <string name="http_auth_token">AlertedToken</string>
+
     <!-- Latitude, longitude format -->
     <string name="latitude_longitude">%1$.8f, %2$.8f</string>
 
-    <!-- Messages -->
+    <!-- For Notifications -->
     <string name="resolved">Error resolved. Please re-try operation.</string>
     <string name="connected">Client connected</string>
     <string name="no_resolution">Google Play services: unable to resolve connection error.</string>
@@ -36,5 +40,11 @@
     <string name="notification_number">1337</string>
     <string name="title_activity_first">Alerted</string>
     <string name="title_activity_signup">Alerted</string>
+
+
+    <!-- For SNS -->
+    <string name="was_sns_submitted">No</string>
+
+
 
 </resources>

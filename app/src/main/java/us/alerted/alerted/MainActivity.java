@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
             MainActivity.this.startActivity(myIntent);
         } else {
             inBackground = false;
-            savedValues = NotificationService.savedValues;
+            savedValues = NotificationService.sharedPref;
             int numOfMissedMessages = 0;
             if(savedValues != null){
                 numOfMissedMessages = savedValues.getInt(this.numOfMissedMessages, 0);
