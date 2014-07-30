@@ -1,4 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.newrelic.agent.android:agent-gradle-plugin:3.+'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'newrelic'
 apply plugin: 'com.android.application'
+
 
 android {
     //compileSdkVersion 18
@@ -34,6 +50,9 @@ dependencies {
     // For ORMLite
     compile "com.j256.ormlite:ormlite-android:4.48"
 
-    //Core card library
+    // Core card library
     compile 'com.github.gabrielemariotti.cards:library:1.8.0'
+
+    // For New Relic
+    compile 'com.newrelic.agent.android:android-agent:3.+'
 }

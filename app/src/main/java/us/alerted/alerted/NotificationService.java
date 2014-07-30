@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
+import java.util.List;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,11 +25,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.j256.ormlite.android.AndroidConnectionSource;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +37,7 @@ import org.json.JSONObject;
 public class NotificationService extends Service{
 
     private GoogleCloudMessaging gcm;
-    //public static SharedPreferences savedValues;
+
     public static SharedPreferences sharedPref;
     private String TAG = this.getClass().getSimpleName();
 
@@ -50,18 +45,10 @@ public class NotificationService extends Service{
     public void onCreate(){
         super.onCreate();
         final String preferences = getString(R.string.preferences);
-        //savedValues = getSharedPreferences(preferences, Context.MODE_PRIVATE);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        // In later versions multi_process is no longer the default
-        //if(VERSION.SDK_INT >  9){
-
-        //    savedValues = getSharedPreferences(preferences, Context.MODE_MULTI_PROCESS);
-        //}
-
-        DatabaseHelper helper = new DatabaseHelper(this);
 
         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
-        //SharedPreferences savedValues = PreferenceManager.getDefaultSharedPreferences(this);
 
         if(sharedPref.getBoolean(getString(R.string.first_launch), true)){
             register();
@@ -91,56 +78,27 @@ public class NotificationService extends Service{
         JSONObject recData;
         String msg = extras.getString("default");
 
+
         try {
-            recData = new JSONObject(msg);
+            if (msg != null) {
+                recData = new JSONObject(msg);
 
-            String cap_headline = recData.get("cap_headline").toString();
-            String cap_urgency = recData.get("cap_urgency").toString();
-            String cap_severity = recData.get("cap_severity").toString();
-            String cap_certainty = recData.get("cap_certainty").toString();
-            String cap_effective = recData.get("cap_effective").toString();
+                String cap_headline = recData.get("cap_headline").toString();
+                String cap_urgency = recData.get("cap_urgency").toString();
+                String cap_severity = recData.get("cap_severity").toString();
+                String cap_certainty = recData.get("cap_certainty").toString();
+                String cap_effective = recData.get("cap_effective").toString();
 
-           // DatabaseHelper helper = new DatabaseHelper(context);
+                Alert alert = new Alert();
 
-//            Dao<Alert, Integer> alertDao = helper.getAlertDao();
+                alert.headline = cap_headline;
+                alert.urgency = cap_urgency;
+                alert.severity = cap_severity;
+                alert.certainty = cap_certainty;
+                alert.effective = cap_effective;
+                alert.save();
 
-            /*
-            DatabaseManager(Context ctx) {
-                helper = new DatabaseHelper(context);
             }
-            */
-
-            /*
-            ConnectionSource connectionSource =
-                    new AndroidConnectionSource(helper);
-
-            */
-            //Dao<Alert, String> alertDao =
-            //        DaoManager.createDao(connectionSource, Alert.class);
-
-
-// create an instance of Account
-            /*
-            String name = "Jim Smith";
-            Account account = new Account(name, "_secret");
-
-// persist the account object to the database
-// it should return 1 for the 1 row inserted
-            if (accountDao.create(account) != 1) {
-                throw new Exception("Failure adding account");
-            }
-            */
-            Alert alert = new Alert();
-            //alert.setCertainty();
-
-            alert.headline = cap_headline;
-            alert.urgency = cap_urgency;
-            alert.severity = cap_severity;
-            alert.certainty = cap_certainty;
-            alert.effective = cap_effective;
-            alert.save();
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -161,15 +119,20 @@ public class NotificationService extends Service{
         editor.putInt(context.getString(R.string.lines_of_message_count), linesOfMessageCount);
         editor.putInt(numOfMissedMessages, sharedPref.getInt(numOfMissedMessages, 0) + 1);
         editor.commit();
-        postNotification(new Intent(context, MainActivity.class), context);
+        //postNotification(new Intent(context, MainActivity.class), context);
     }
 
     protected static void postNotification(Intent intentAction, Context context){
+
+        List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "1");
+
+        String msg = alerts.get(0).headline;
+
         final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentAction, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_CANCEL_CURRENT);
         final Notification notification = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("Message Received!")
+                .setContentTitle(msg)
                 .setContentText("")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

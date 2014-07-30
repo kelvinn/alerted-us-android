@@ -11,14 +11,23 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.newrelic.agent.android.NewRelic;
+
+import org.json.JSONObject;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
@@ -40,83 +49,96 @@ public class MainActivity extends Activity {
     ArrayList<String> alertNameList;
     //private SharedPreferences sharedPref = getApplicationContext().getPreferences(Context.MODE_PRIVATE);
 
+    private List<RowItem> rowItems;
+
+    private static Integer[] images = {
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners,
+            R.drawable.prisoners
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        NewRelic.withApplicationToken(
+                "xXxXxXxXxXx"
+        ).start(this.getApplication());
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //String httpAuthToken = sharedPref.getString("AlertedToken", null);
         isUserLoggedIn = sharedPref.getBoolean("userLoggedInState", false);
+
         if (!isUserLoggedIn) {
             Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.startActivity(myIntent);
         } else {
             numOfMissedMessages = getString(R.string.num_of_missed_messages);
+
+            /*
             setContentView(R.layout.activity_main);
 
             // TODO ENABLE BELOW
             tView = (TextView) findViewById(R.id.tViewId);
             tView.setMovementMethod(new ScrollingMovementMethod());
+
+            */
+
+
+            setContentView(R.layout.activity_main);
+
+            List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "8");
+            //Collections.reverse(alerts);
+
+            //ArrayList<JSONObject> listdata = new ArrayList<JSONObject>();
+
+            ListView lv = (ListView) findViewById(R.id.myListImg);
+            rowItems = new ArrayList<RowItem>();
+
+            //Populate the List
+            for (int i = 0; i < alerts.size(); i++) {
+                RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
+                rowItems.add(item);
+            }
+
+            // Set the adapter on the ListView
+            LazyAdapter adapter = new LazyAdapter(getApplicationContext(), R.layout.list_row, rowItems);
+            lv.setAdapter(adapter);
+
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position,
+                                        long id) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Hello toast!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                /*
+                Intent intent = new Intent(MainActivity.this, SendMessage.class);
+                String message = "abc";
+                intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+                */
+                }
+            });
+
+
+
+
+
+
             startService(new Intent(this, NotificationService.class));
             startService(new Intent(this, LocationService.class));
         }
 
-
-
-        // Card experiments
-        ArrayList<Card> cards = new ArrayList<Card>();
-
-        //Create a Card
-        Card card = new Card(this);
-
-        //Create a CardHeader
-        CardHeader header = new CardHeader(this);
-
-        header.setTitle("test");
-        //Add Header to card
-        card.addCardHeader(header);
-        card.setTitle("My Title");
-
-        cards.add(card);
-
-        Card card2 = new Card(this);
-        //card2.setInnerLayout();
-        CardHeader header2 = new CardHeader(this);
-
-        header2.setTitle("test2");
-        //Add Header to card
-        card2.addCardHeader(header2);
-        card2.setTitle("My Title2");
-
-        cards.add(card2);
-        cards.add(card);
-        cards.add(card2);
-        cards.add(card);
-        cards.add(card2);
-        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(this,cards);
-
-        CardListView listView = (CardListView) this.findViewById(R.id.test_list1);
-        if (listView!=null){
-            listView.setAdapter(mCardArrayAdapter);
-        }
-
-        // Experiments
-        /*
-        ListView cardList=(ListView)findViewById(R.id.apps_fragment_list);
-
-        alertNameList = new ArrayList<String>();
-
-        alertNameList.add("DOG");
-        alertNameList.add("CAT");
-        alertNameList.add("HORSE");
-        alertNameList.add("ELEPHANT");
-        // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, alertNameList);
-
-        cardList.setAdapter(arrayAdapter);
-        */
     }
 
     public void onStop(){
@@ -132,10 +154,7 @@ public class MainActivity extends Activity {
         if (!isUserLoggedIn) {
             Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.startActivity(myIntent);
-        } else {
-            tView.setText("");
         }
-
     }
 
     public void onResume(){
@@ -148,16 +167,6 @@ public class MainActivity extends Activity {
             MainActivity.this.startActivity(myIntent);
         } else {
             inBackground = false;
-            savedValues = NotificationService.sharedPref;
-            int numOfMissedMessages = 0;
-            if(savedValues != null){
-                numOfMissedMessages = savedValues.getInt(this.numOfMissedMessages, 0);
-            }
-            String newMessage = getMessage(numOfMissedMessages);
-            if(newMessage!=""){
-                Log.i("displaying message", newMessage);
-                tView.append(newMessage);
-            }
         }
     }
 
@@ -173,6 +182,7 @@ public class MainActivity extends Activity {
         }
         return true;
     }
+
 
     // If messages have been missed, check the backlog. Otherwise check the current intent for a new message.
     private String getMessage(int numOfMissedMessages) {
@@ -215,18 +225,6 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_hello_card) {
-            Intent intent = new Intent(MainActivity.this, HelloCardListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
-        if (id == R.id.action_img_card) {
-            Intent intent = new Intent(MainActivity.this, ImgCardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
         if (id == R.id.action_logout) {
 
             // Stop services
@@ -249,9 +247,6 @@ public class MainActivity extends Activity {
             finish();
             //MainActivity.this.startActivity(intent);
             startActivity(intent);
-
-
-
 
             return true;
         }

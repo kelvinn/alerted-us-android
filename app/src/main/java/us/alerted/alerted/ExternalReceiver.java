@@ -11,12 +11,15 @@ public class ExternalReceiver extends BroadcastReceiver {
         if(intent!=null){
             Bundle extras = intent.getExtras();
             if(!MainActivity.inBackground){
-                NotificationService.sendToApp(extras, context);
+                //NotificationService.sendToApp(extras, context);
+                // TODO also refresh app on this one?
                 NotificationService.saveToDB(extras, context);
             }
             else{
-                NotificationService.saveToLog(extras, context);
+                //NotificationService.saveToLog(extras, context);
+
                 NotificationService.saveToDB(extras, context);
+                NotificationService.postNotification(new Intent(context, MainActivity.class), context);
             }
         }
     }
