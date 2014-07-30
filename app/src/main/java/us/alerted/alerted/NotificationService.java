@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,6 +25,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.j256.ormlite.android.AndroidConnectionSource;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,10 +40,12 @@ import org.json.JSONObject;
  * and a notification is posted to the NotificationManager.
  */
 public class NotificationService extends Service{
+
     private GoogleCloudMessaging gcm;
     //public static SharedPreferences savedValues;
     public static SharedPreferences sharedPref;
     private String TAG = this.getClass().getSimpleName();
+
 
     public void onCreate(){
         super.onCreate();
@@ -49,6 +57,8 @@ public class NotificationService extends Service{
 
         //    savedValues = getSharedPreferences(preferences, Context.MODE_MULTI_PROCESS);
         //}
+
+        DatabaseHelper helper = new DatabaseHelper(this);
 
         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
         //SharedPreferences savedValues = PreferenceManager.getDefaultSharedPreferences(this);
@@ -75,6 +85,67 @@ public class NotificationService extends Service{
         newIntent.putExtras(extras);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(newIntent);
+    }
+
+    public static void saveToDB(Bundle extras, Context context){
+        JSONObject recData;
+        String msg = extras.getString("default");
+
+        try {
+            recData = new JSONObject(msg);
+
+            String cap_headline = recData.get("cap_headline").toString();
+            String cap_urgency = recData.get("cap_urgency").toString();
+            String cap_severity = recData.get("cap_severity").toString();
+            String cap_certainty = recData.get("cap_certainty").toString();
+            String cap_effective = recData.get("cap_effective").toString();
+
+           // DatabaseHelper helper = new DatabaseHelper(context);
+
+//            Dao<Alert, Integer> alertDao = helper.getAlertDao();
+
+            /*
+            DatabaseManager(Context ctx) {
+                helper = new DatabaseHelper(context);
+            }
+            */
+
+            /*
+            ConnectionSource connectionSource =
+                    new AndroidConnectionSource(helper);
+
+            */
+            //Dao<Alert, String> alertDao =
+            //        DaoManager.createDao(connectionSource, Alert.class);
+
+
+// create an instance of Account
+            /*
+            String name = "Jim Smith";
+            Account account = new Account(name, "_secret");
+
+// persist the account object to the database
+// it should return 1 for the 1 row inserted
+            if (accountDao.create(account) != 1) {
+                throw new Exception("Failure adding account");
+            }
+            */
+            Alert alert = new Alert();
+            //alert.setCertainty();
+
+            alert.headline = cap_headline;
+            alert.urgency = cap_urgency;
+            alert.severity = cap_severity;
+            alert.certainty = cap_certainty;
+            alert.effective = cap_effective;
+            alert.save();
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     protected static void saveToLog(Bundle extras, Context context){

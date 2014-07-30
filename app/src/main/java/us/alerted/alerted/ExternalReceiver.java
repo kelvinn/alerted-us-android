@@ -12,9 +12,11 @@ public class ExternalReceiver extends BroadcastReceiver {
             Bundle extras = intent.getExtras();
             if(!MainActivity.inBackground){
                 NotificationService.sendToApp(extras, context);
+                NotificationService.saveToDB(extras, context);
             }
             else{
                 NotificationService.saveToLog(extras, context);
+                NotificationService.saveToDB(extras, context);
             }
         }
     }
