@@ -8,9 +8,11 @@
     <string name="action_settings">Settings</string>
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
+    <string name="action_hello_card">Test Cards</string>
+    <string name="action_img_card">Test Img Cards</string>
     <string name="local_service_started">Service Started Text from Res</string>
 
-
+    
     <!-- GCM -->
     <string name="http_auth_token">AlertedToken</string>
 

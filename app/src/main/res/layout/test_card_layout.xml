@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Card visible layout -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/card_main_layout"
+        style="@style/card.main_layout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- Main Content View -->
+            <ImageView
+                android:layout_marginTop="2dp"
+                android:id="@+id/colorBorder"
+                android:background="@drawable/rectangle"
+                android:layout_width="10dp"
+                android:layout_height="@dimen/card_base_empty_height"/>
+
+            <!-- Use same ID to use built-in features -->
+            <it.gmariotti.cardslib.library.view.component.CardHeaderView
+                style="@style/card.header_outer_layout"
+                android:id="@+id/card_header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:id="@+id/test_card_tx1"
+                style="@style/card.header_simple_title"/>
+
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
+    <!-- Compound view for Shadow
+           If you want to customize this element use attr card:card_shadow_layout_resourceID -->
+    <it.gmariotti.cardslib.library.view.component.CardShadowView
+        style="@style/card.shadow_outer_layout"
+        android:id="@+id/card_shadow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:id="@+id/card_content_expand_layout"
+        style="@style/card.main_contentExpand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>

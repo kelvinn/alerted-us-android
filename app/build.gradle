@@ -27,4 +27,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.2.42'
     compile 'org.bouncycastle:bcprov-jdk16:1.45'
     compile 'com.android.support:appcompat-v7:20.+'
+
+    //Core card library
+    compile 'com.github.gabrielemariotti.cards:library:1.8.0'
 }
