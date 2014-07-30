@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -40,7 +41,9 @@ public class NotificationService extends Service{
 
     public static SharedPreferences sharedPref;
     private String TAG = this.getClass().getSimpleName();
-
+    static public LocalBroadcastManager broadcaster;
+    static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
+    static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
 
     public void onCreate(){
         super.onCreate();
@@ -49,6 +52,8 @@ public class NotificationService extends Service{
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
+
+        broadcaster = LocalBroadcastManager.getInstance(this);
 
         if(sharedPref.getBoolean(getString(R.string.first_launch), true)){
             register();
@@ -66,13 +71,24 @@ public class NotificationService extends Service{
         //sendToApp(new Bundle(), this);
     }
 
+    public static void sendToApp(String message) {
+        //LocalBroadcastManager broadcaster = new LocalBroadcastManager();
+        Intent intent = new Intent(NOTIF_RESULT);
+        if(message != null)
+            intent.putExtra(NOTIF_MESSAGE, message);
+        broadcaster.sendBroadcast(intent);
+    }
+
+    /*
     public static void sendToApp(Bundle extras, Context context){
         Intent newIntent = new Intent();
         newIntent.setClass(context, MainActivity.class);
         newIntent.putExtras(extras);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(newIntent);
+
+        //context.startActivity(newIntent);
     }
+    */
 
     public static void saveToDB(Bundle extras, Context context){
         JSONObject recData;

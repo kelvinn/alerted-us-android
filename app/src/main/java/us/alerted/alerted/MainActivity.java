@@ -2,11 +2,14 @@ package us.alerted.alerted;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +50,7 @@ public class MainActivity extends Activity {
     public String httpAuthToken;
     public Boolean isUserLoggedIn;
     ArrayList<String> alertNameList;
+    public BroadcastReceiver receiver;
     //private SharedPreferences sharedPref = getApplicationContext().getPreferences(Context.MODE_PRIVATE);
 
     private List<RowItem> rowItems;
@@ -79,6 +83,22 @@ public class MainActivity extends Activity {
             Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.startActivity(myIntent);
         } else {
+
+            receiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String s = intent.getStringExtra(NotificationService.NOTIF_MESSAGE);
+                    if (s.equals("NEW_CARD")){
+                        Intent newIntent = getIntent();
+                        overridePendingTransition(0, 0);
+                        newIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(newIntent);
+                    }
+                }
+            };
+
             numOfMissedMessages = getString(R.string.num_of_missed_messages);
 
             /*
@@ -130,18 +150,21 @@ public class MainActivity extends Activity {
                 }
             });
 
-
-
-
-
-
             startService(new Intent(this, NotificationService.class));
             startService(new Intent(this, LocationService.class));
         }
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        inBackground = false;
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(NotificationService.NOTIF_RESULT));
+    }
+
     public void onStop(){
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onStop();
         inBackground = true;
     }

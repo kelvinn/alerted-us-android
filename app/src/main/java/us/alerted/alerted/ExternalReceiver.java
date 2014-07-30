@@ -1,5 +1,6 @@
 package us.alerted.alerted;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,10 @@ public class ExternalReceiver extends BroadcastReceiver {
         if(intent!=null){
             Bundle extras = intent.getExtras();
             if(!MainActivity.inBackground){
-                //NotificationService.sendToApp(extras, context);
                 // TODO also refresh app on this one?
                 NotificationService.saveToDB(extras, context);
+                NotificationService.sendToApp("NEW_CARD");
+                //NotificationService.sendToApp(extras, context);
             }
             else{
                 //NotificationService.saveToLog(extras, context);
