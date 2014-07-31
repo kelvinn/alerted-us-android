@@ -26,17 +26,14 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONObject;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.view.CardListView;
-import it.gmariotti.cardslib.library.view.CardView;
 import us.alerted.alerted.R;
 
 public class MainActivity extends Activity {
@@ -51,6 +48,8 @@ public class MainActivity extends Activity {
     public Boolean isUserLoggedIn;
     ArrayList<String> alertNameList;
     public BroadcastReceiver receiver;
+
+    static final public String EXTRA_MESSAGE = "us.alerted.alerted.MainActivity.MESSAGE";
     //private SharedPreferences sharedPref = getApplicationContext().getPreferences(Context.MODE_PRIVATE);
 
     private List<RowItem> rowItems;
@@ -67,13 +66,18 @@ public class MainActivity extends Activity {
     };
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         NewRelic.withApplicationToken(
                 "xXxXxXxXxXx"
         ).start(this.getApplication());
+
+        overridePendingTransition(R.anim.animation_leave,
+                R.anim.animation_enter);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //String httpAuthToken = sharedPref.getString("AlertedToken", null);
@@ -83,6 +87,8 @@ public class MainActivity extends Activity {
             Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.startActivity(myIntent);
         } else {
+
+
 
             receiver = new BroadcastReceiver() {
                 @Override
@@ -110,7 +116,6 @@ public class MainActivity extends Activity {
 
             */
 
-
             setContentView(R.layout.activity_main);
 
             List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "8");
@@ -118,12 +123,15 @@ public class MainActivity extends Activity {
 
             //ArrayList<JSONObject> listdata = new ArrayList<JSONObject>();
 
-            ListView lv = (ListView) findViewById(R.id.myListImg);
+            final ListView lv = (ListView) findViewById(R.id.myListImg);
             rowItems = new ArrayList<RowItem>();
+
 
             //Populate the List
             for (int i = 0; i < alerts.size(); i++) {
-                RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
+                // TODO image to be put in when map is ready
+                // RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
+                RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).headline, alerts.get(i).certainty, alerts.get(i).severity, alerts.get(i).urgency);
                 rowItems.add(item);
             }
 
@@ -135,18 +143,21 @@ public class MainActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position,
                                         long id) {
-                    Context context = getApplicationContext();
-                    CharSequence text = "Hello toast!";
-                    int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                /*
-                Intent intent = new Intent(MainActivity.this, SendMessage.class);
-                String message = "abc";
-                intent.putExtra(EXTRA_MESSAGE, message);
-                startActivity(intent);
-                */
+                    Intent intent = new Intent(MainActivity.this, MainDetailActivity.class);
+                    Long message = rowItems.get(position).getId();
+
+                    Bundle extras = new Bundle();
+                    extras.putLong(EXTRA_MESSAGE, message);
+
+                    // add bundle to intent
+                    intent.putExtras(extras);
+
+
+
+
+                    startActivity(intent);
+
                 }
             });
 
@@ -247,7 +258,11 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (id == R.id.action_test) {
+            Intent intent = new Intent(MainActivity.this, MainDetailActivity.class);
+            //MainActivity.this.startActivity(intent);
+            startActivity(intent);
+        }
         if (id == R.id.action_logout) {
 
             // Stop services

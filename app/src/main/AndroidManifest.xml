@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- For New Relic -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <!-- To allow automatic startup at boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -30,19 +34,24 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <application
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name="com.orm.SugarApp">
-
-        <meta-data android:name="DATABASE" android:value="alertdb.db" />
-        <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="us.alerted" />
-
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="DATABASE"
+            android:value="alertdb.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="us.alerted" />
 
         <activity
             android:name=".MainActivity"
@@ -78,18 +87,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
 
-        <activity
-            android:name=".HelloCardListActivity"
-            android:label="@string/app_name"
-            android:noHistory="true"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
-        <activity
-            android:name=".ImgCardActivity"
-            android:label="@string/app_name"
-            android:noHistory="true"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-        </activity>
         <service
             android:name=".NotificationService"
             android:label="NotificationService" >
@@ -115,12 +112,16 @@
         </receiver>
 
         <activity
-            android:name=".FirstActivity"
+            android:name=".SignupActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".SignupActivity"
-            android:label="@string/app_name" >
+            android:name=".MainDetailActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="us.alerted.alerted.MainActivity" />
         </activity>
     </application>
 

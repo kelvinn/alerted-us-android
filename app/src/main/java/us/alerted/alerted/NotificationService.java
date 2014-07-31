@@ -94,6 +94,17 @@ public class NotificationService extends Service{
         JSONObject recData;
         String msg = extras.getString("default");
 
+        String headline;
+        String urgency;
+        String severity;
+        String certainty;
+        String effective;
+        String expires;
+        String description;
+        String instruction;
+        String category;
+        String slug;
+        String event;
 
         try {
             if (msg != null) {
@@ -104,6 +115,11 @@ public class NotificationService extends Service{
                 String cap_severity = recData.get("cap_severity").toString();
                 String cap_certainty = recData.get("cap_certainty").toString();
                 String cap_effective = recData.get("cap_effective").toString();
+                String cap_expires = recData.get("cap_expires").toString();
+                String cap_description = recData.get("cap_description").toString();
+                String cap_instruction = recData.get("cap_instruction").toString();
+                String cap_category = recData.get("cap_category").toString();
+                String cap_event = recData.get("cap_event").toString();
 
                 Alert alert = new Alert();
 
@@ -112,6 +128,12 @@ public class NotificationService extends Service{
                 alert.severity = cap_severity;
                 alert.certainty = cap_certainty;
                 alert.effective = cap_effective;
+                alert.expires = cap_expires;
+                alert.description = cap_description;
+                alert.instruction = cap_instruction;
+                alert.category = cap_category;
+                alert.event = cap_event;
+
                 alert.save();
 
             }
