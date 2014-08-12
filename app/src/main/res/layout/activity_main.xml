@@ -17,6 +17,16 @@
             android:paddingRight="10dip"
             android:paddingTop="10dip"
             android:clipToPadding="false"/>
-    
+
+        <TextView android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/empty_listview_text"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:padding="50dp"
+            android:textStyle="italic" />
+
 
 </LinearLayout>

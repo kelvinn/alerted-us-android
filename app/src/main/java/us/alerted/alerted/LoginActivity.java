@@ -462,6 +462,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 // create JSON object from content
                 InputStream in = new BufferedInputStream(
                         conn.getInputStream());
+
                 try {
                     JSONObject jsonToken = new JSONObject(getResponseText(in));
                 } catch(JSONException e) {
@@ -474,7 +475,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 Log.e(TAG, e.toString());
             }
         }
-        protected void getToken(){
+        protected boolean getToken(){
             List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
             urlParams.add(new BasicNameValuePair("username", mEmail));
             urlParams.add(new BasicNameValuePair("password", mPassword));
@@ -501,44 +502,54 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 // create JSON object from content
                 InputStream in = new BufferedInputStream(
                         conn.getInputStream());
-                try {
-                    JSONObject jsonToken = new JSONObject(getResponseText(in));
-                    System.out.println(jsonToken.get("token"));
-                    //SharedPreferences sharedPref = getSharedPreferences(Context.MODE_PRIVATE);
+                int code = conn.getResponseCode();
+                Log.i(TAG, String.valueOf(code));
+                if (code == 200){
+                    try {
+                        JSONObject jsonToken = new JSONObject(getResponseText(in));
+                        //System.out.println(jsonToken.get("token"));
+                        //SharedPreferences sharedPref = getSharedPreferences(Context.MODE_PRIVATE);
 
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    String httpAuthToken = jsonToken.get("token").toString();
-                    editor.putString("AlertedToken", httpAuthToken);
-                    editor.putBoolean("userLoggedInState", true);
-                    editor.apply();
-
-
-                } catch(JSONException e) {
-                    Log.e(TAG, e.toString());
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        String httpAuthToken = jsonToken.get("token").toString();
+                        editor.putString("AlertedToken", httpAuthToken);
+                        editor.putBoolean("userLoggedInState", true);
+                        editor.apply();
+                        return true;
+                    } catch(JSONException e) {
+                        Log.e(TAG, e.toString());
+                    }
                 }
+
 
             } catch (MalformedURLException e) {
                 Log.e(TAG, e.toString());
+
             } catch (IOException e) {
                 Log.e(TAG, e.toString());
             }
+            return false;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            // TODO: attempt authentication against a network service.
-
+            Boolean result;
             if (!mCreateUser){
-                getToken();
+                result = getToken();
+
+                if (result) {
+                    // Because an account already exists we do not need to create a new SNS token
+                    // setting this to 'false' means the SNS token will just be updated
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean(getString(R.string.post_new_gmc_token), false);
+                }
+
+
             } else {
                 createAccount();
-                getToken();
+                result = getToken();
             }
-
-
-            // TODO: register the new account here.
-            return true;
+            return result;
         }
 
         @Override
@@ -549,15 +560,11 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             if (success) {
                 startService(new Intent(getApplicationContext(), NotificationService.class));
                 startService(new Intent(getApplicationContext(), LocationService.class));
-                //Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-                //LoginActivity.this.startActivity(myIntent);
 
                 Intent i = new Intent(getBaseContext(), MainActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
 
-
-                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

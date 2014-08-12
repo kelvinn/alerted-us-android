@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('bcprov-jdk15on-151.jar'))

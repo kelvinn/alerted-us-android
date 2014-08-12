@@ -15,6 +15,9 @@
     <string name="effective_text">Effective:</string>
     <string name="local_service_started">Service Started Text from Res</string>
     <string name="action_test">Test</string>
+    <string name="empty_listview_text">Hi!\n\n No alerts to show right now.</string>
+
+
     <!-- GCM -->
     <string name="http_auth_token">AlertedToken</string>
 
@@ -45,6 +48,7 @@
     <string name="title_activity_first">Alerted</string>
     <string name="title_activity_signup">Alerted</string>
 
+
     <!-- For Alert Details -->
     <string name="alert_description">DESCRIPTION</string>
     <string name="alert_instruction">INSTRUCTIONS</string>
@@ -52,6 +56,7 @@
 
     <!-- For SNS -->
     <string name="was_sns_submitted">No</string>
+    <string name="post_new_gmc_token">Yes</string>
     <string name="title_activity_main_detail">MainDetailActivity</string>
     <string name="title_alert_list">Alerts</string>
     <string name="title_alert_detail">Alert Detail</string>

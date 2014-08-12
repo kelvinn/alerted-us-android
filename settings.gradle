@@ -1,1 +1,1 @@
-include ':app', ':bcprov-jdk15on-151'
+include ':app'

@@ -135,7 +135,7 @@ public class LocationService extends Service implements
      */
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "Connected to Google Play Services.");
+        //Log.d(TAG, "Connected to Google Play Services.");
         Location lastLocation = mLocationClient.getLastLocation();
         //Log.d(TAG, "Last location is: " + (lastLocation == null ? "null" : Utils.format(lastLocation)));
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
@@ -149,7 +149,7 @@ public class LocationService extends Service implements
      */
     @Override
     public void onDisconnected() {
-        Log.d(TAG, "Disconnected from Google Play Services.");
+        //Log.d(TAG, "Disconnected from Google Play Services.");
     }
 
 
@@ -223,13 +223,13 @@ public class LocationService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand()");
+        //Log.d(TAG, "onStartCommand()");
         return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy()");
+        //Log.d(TAG, "onDestroy()");
 
         if (mLocationClient != null && mLocationClient.isConnected()) {
             mLocationClient.removeLocationUpdates(this);

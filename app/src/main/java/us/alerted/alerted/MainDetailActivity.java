@@ -28,7 +28,7 @@ public class MainDetailActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Long id = bundle.getLong(EXTRA_MESSAGE);
-        Log.i(TAG, id.toString());
+        //Log.i(TAG, id.toString());
 
         Alert alert = Alert.findById(Alert.class, id);
 

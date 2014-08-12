@@ -139,7 +139,7 @@ public abstract class PlusBaseActivity extends Activity
             // process from scratch.
             initiatePlusClientDisconnect();
 
-            Log.v(TAG, "Sign out successful!");
+            //Log.v(TAG, "Sign out successful!");
         }
 
         updateConnectButtonState();

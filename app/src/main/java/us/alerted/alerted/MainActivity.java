@@ -76,8 +76,8 @@ public class MainActivity extends Activity {
                 "xXxXxXxXxXx"
         ).start(this.getApplication());
 
-        overridePendingTransition(R.anim.animation_leave,
-                R.anim.animation_enter);
+        //overridePendingTransition(R.anim.animation_leave,
+        //        R.anim.animation_enter);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //String httpAuthToken = sharedPref.getString("AlertedToken", null);
@@ -124,16 +124,20 @@ public class MainActivity extends Activity {
             //ArrayList<JSONObject> listdata = new ArrayList<JSONObject>();
 
             final ListView lv = (ListView) findViewById(R.id.myListImg);
+            TextView empty=(TextView)findViewById(R.id.empty);
+            lv.setEmptyView(empty);
             rowItems = new ArrayList<RowItem>();
 
-
-            //Populate the List
-            for (int i = 0; i < alerts.size(); i++) {
-                // TODO image to be put in when map is ready
-                // RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
-                RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).headline, alerts.get(i).certainty, alerts.get(i).severity, alerts.get(i).urgency);
-                rowItems.add(item);
+            if (alerts.size() > 0) {
+                //Populate the List
+                for (int i = 0; i < alerts.size(); i++) {
+                    // TODO image to be put in when map is ready
+                    // RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
+                    RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).headline, alerts.get(i).certainty, alerts.get(i).severity, alerts.get(i).urgency);
+                    rowItems.add(item);
+                }
             }
+
 
             // Set the adapter on the ListView
             LazyAdapter adapter = new LazyAdapter(getApplicationContext(), R.layout.list_row, rowItems);
@@ -224,7 +228,7 @@ public class MainActivity extends Activity {
         String linesOfMessageCount = getString(R.string.lines_of_message_count);
         if(numOfMissedMessages > 0){
             String plural = numOfMissedMessages > 1 ? "s" : "";
-            Log.i("onResume","missed " + numOfMissedMessages + " message" + plural);
+            //Log.i("onResume","missed " + numOfMissedMessages + " message" + plural);
             tView.append("You missed " + numOfMissedMessages +" message" + plural + ". Your most recent was:\n");
             for(int i = 0; i < savedValues.getInt(linesOfMessageCount, 0); i++){
                 String line = savedValues.getString("MessageLine"+i, "");
@@ -258,21 +262,22 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_test) {
-            Intent intent = new Intent(MainActivity.this, MainDetailActivity.class);
-            //MainActivity.this.startActivity(intent);
-            startActivity(intent);
-        }
+
         if (id == R.id.action_logout) {
 
             // Stop services
             stopService(new Intent(this, NotificationService.class));
             stopService(new Intent(this, LocationService.class));
 
-            // Erase settings from shared prefs
+            // Erase all records in database
+            Alert.deleteAll(Alert.class);
+
+            // Erase settings from shared prefs (e.g. reset back go normal state)
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.first_launch), true);
             editor.putBoolean(getString(R.string.was_sns_submitted), true);
+            editor.putBoolean(getString(R.string.post_new_gmc_token), true);
+
             editor.remove("AlertedToken");
             editor.putBoolean("userLoggedInState", false);
             editor.apply();

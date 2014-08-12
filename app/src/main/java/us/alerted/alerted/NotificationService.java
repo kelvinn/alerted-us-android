@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.provider.Settings.Secure;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -63,7 +64,7 @@ public class NotificationService extends Service{
         }
 
         if(sharedPref.getBoolean(getString(R.string.was_sns_submitted), true)){
-            submitSNSToken();
+            submitGCMToken();
         }
 
 
@@ -92,7 +93,9 @@ public class NotificationService extends Service{
 
     public static void saveToDB(Bundle extras, Context context){
         JSONObject recData;
-        String msg = extras.getString("default");
+        String msg = extras.getString("message");
+
+//        Log.i("NotificationService", extras.getString("cap_headline"));
 
         String headline;
         String urgency;
@@ -107,7 +110,29 @@ public class NotificationService extends Service{
         String event;
 
         try {
+            /*
+            if (!extras.isEmpty()){
+
+                Alert alert = new Alert();
+
+                alert.headline = extras.getString("cap_headline");
+                alert.urgency = extras.getString("cap_urgency");
+                alert.severity = extras.getString("cap_severity");
+                alert.certainty = extras.getString("cap_certainty");
+                alert.effective = extras.getString("cap_effective");
+                alert.expires = extras.getString("cap_expires");
+                alert.description = extras.getString("cap_description");
+                alert.instruction = extras.getString("cap_instruction");
+                alert.category = extras.getString("cap_category");
+                alert.event = extras.getString("cap_event");
+
+                alert.save();
+            }
+            */
+
+
             if (msg != null) {
+                Log.i("NotificationService", msg);
                 recData = new JSONObject(msg);
 
                 String cap_headline = recData.get("cap_headline").toString();
@@ -164,22 +189,27 @@ public class NotificationService extends Service{
 
         List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "1");
 
-        String msg = alerts.get(0).headline;
+        if (alerts.size() > 0) {
+            String msg = alerts.get(0).headline;
 
-        final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentAction, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_CANCEL_CURRENT);
-        final Notification notification = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(msg)
-                .setContentText("")
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .getNotification();
+            final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentAction, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_CANCEL_CURRENT);
+            final Notification notification = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle(msg)
+                    .setContentText("")
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .getNotification();
 
-        mNotificationManager.notify(R.string.notification_number, notification);
+            mNotificationManager.notify(R.string.notification_number, notification);
+        }
+
     }
 
-    private void submitSNSToken() {
+
+
+    private void submitGCMToken() {
 
         new AsyncTask(){
             protected Object doInBackground(final Object... params) {
@@ -187,24 +217,45 @@ public class NotificationService extends Service{
                 String mPostData;
                 try {
 
+                    String android_id = Secure.getString(getContentResolver(),
+                            Secure.ANDROID_ID);
+
                     token = sharedPref.getString("GCM_TOKEN", "");
 
                     JSONObject postData = new JSONObject();
 
-                    postData.put("sns_reg_id", token);
+                    postData.put("registration_id", token);
+
+                    // device_id throws an error with django push_notifications
+                    //postData.put("device_id", android_id);
 
                     mPostData = postData.toString();
 
                     String httpAuthToken = sharedPref.getString("AlertedToken", null);
+                    String reqMethod;
+                    URL url;
 
-                    URL url = new URL("https://alerted.us/api/v1/users/snstoken/");
+                    /*
+                    if(sharedPref.getBoolean(getString(R.string.post_new_sns_token), true)){
+                        reqMethod = "POST";
+                        url = new URL("https://alerted.us/api/v1/users/snstoken/");
+                    } else {
+                        reqMethod = "PUT";
+                        url = new URL("https://alerted.us/api/v1/users/snstoken/" + android_id + "/");
+                    }
+                    */
+
+                    reqMethod = "POST";
+                    url = new URL("https://alerted.us/api/v1/users/gcmtoken/");
+                    //Log.i(TAG, mPostData);
+
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     String tokenAuth = "Token " + httpAuthToken;
                     conn.setRequestProperty ("Authorization", tokenAuth);
                     conn.setRequestProperty("Content-Type", "application/json");
                     conn.setReadTimeout(10000);
                     conn.setConnectTimeout(15000);
-                    conn.setRequestMethod("POST");
+                    conn.setRequestMethod(reqMethod);
                     conn.setDoInput(true);
                     conn.setDoOutput(true);
 
@@ -225,11 +276,13 @@ public class NotificationService extends Service{
                     if (code == 201){
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putBoolean(getString(R.string.was_sns_submitted), false);
+                        editor.putBoolean(getString(R.string.post_new_gmc_token), false);
                         editor.commit();
+
                     }
                 }
                 catch (IOException e) {
-                    Log.i("Registration Error", e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -249,7 +302,7 @@ public class NotificationService extends Service{
                     editor.commit();
                 }
                 catch (IOException e) {
-                    Log.i("Registration Error", e.getMessage());
+                    Log.e(TAG, e.getMessage());
                 }
                 return true;
             }
