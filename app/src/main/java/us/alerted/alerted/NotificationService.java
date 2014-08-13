@@ -132,7 +132,7 @@ public class NotificationService extends Service{
 
 
             if (msg != null) {
-                Log.i("NotificationService", msg);
+                //Log.i("NotificationService", msg);
                 recData = new JSONObject(msg);
 
                 String cap_headline = recData.get("cap_headline").toString();

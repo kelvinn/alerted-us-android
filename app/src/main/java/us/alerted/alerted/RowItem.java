@@ -43,7 +43,6 @@ public class RowItem {
     private int desc_cap_severity;
     private int desc_cap_urgency;
     private int desc_cap_certainty;
-    DrawableLookup drawableLookup;
 
     //private int urgencyImageId;
     // TODO image to be put in when map is ready

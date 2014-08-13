@@ -12,6 +12,15 @@
     tools:context="us.alerted.alerted.LoginActivity">
 
     <!-- Login progress -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_login_loading"
+        android:id="@+id/textViewLoading"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_marginTop="100dp" />
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -19,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
 
     <ScrollView
@@ -32,7 +41,23 @@
             android:orientation="vertical">
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_login_headline"
+                android:id="@+id/textView"
+                android:layout_gravity="left"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_login_desc"
+                android:id="@+id/textView2"
+                android:layout_gravity="left"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp" />
 
             <LinearLayout
                 android:id="@+id/email_login_form"

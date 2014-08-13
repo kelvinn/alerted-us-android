@@ -85,6 +85,8 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
+    //private View mTextViewLoading;
+    private TextView mTextViewLoading;
     private View mEmailLoginFormView;
     private SignInButton mPlusSignInButton;
     private View mSignOutButtons;
@@ -128,13 +130,18 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.email_sign_in_button || id == R.id.email_sign_up_button || id == EditorInfo.IME_NULL) {
                     verifyDetails();
                     return true;
                 }
                 return false;
             }
         });
+
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+        mTextViewLoading = (TextView)findViewById(R.id.textViewLoading);
+        mEmailLoginFormView = findViewById(R.id.email_login_form);
 
         // This sets the Terms and Privacy to allow clickable links
         TextView tv = (TextView) findViewById(R.id.termsView);
@@ -146,6 +153,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             @Override
             public void onClick(View view) {
                 cancel = verifyDetails();
+                mTextViewLoading.setText("Logging in...");
                 attemptLogin(false);
             }
         });
@@ -155,13 +163,12 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             @Override
             public void onClick(View view) {
                 cancel = verifyDetails();
+                mTextViewLoading.setText("Creating account...");
                 attemptLogin(true);
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        mEmailLoginFormView = findViewById(R.id.email_login_form);
+
         //mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
     }
 
@@ -261,6 +268,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mTextViewLoading.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -272,6 +280,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mTextViewLoading.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }

@@ -7,13 +7,18 @@
     <string name="prompt_email">Email Address</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_verify">Password (verify)…</string>
-    <string name="action_sign_in">Sign In</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in">Log In</string>
+    <string name="action_sign_in_short">Login</string>
+
+    <string name="activity_login_loading">Loading…</string>
+
+    <string name="activity_login_headline">Welcome to Alerted</string>
+    <string name="activity_login_desc">Please enter an email address and password to login or sign up.</string>
 
     <string name="label_email">E-mail</string>
     <string name="label_password">Password</string>
     <string name="action_sign_up">Create Account</string>
-    <string name="terms_and_conditions">By registering, you confirm that you accept our <![CDATA[ <a href="https://alerted.us">Terms of Use</a>]]> and <![CDATA[ <a href="https://alerted.us">Privacy Policy</a>]]>.</string>
+    <string name="terms_and_conditions">By registering, you confirm that you accept our <![CDATA[ <a href="https://alerted.us/pages/terms/">Terms of Use</a>]]> and <![CDATA[ <a href="https://alerted.us/pages/privacy/">Privacy Policy</a>]]>.</string>
 
     <string name="plus_sign_out">Switch Google+ account</string>
     <string name="plus_disconnect">Disconnect from Google+</string>

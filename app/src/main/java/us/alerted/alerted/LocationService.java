@@ -108,6 +108,7 @@ public class LocationService extends Service implements
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
+                //Log.i(TAG, mPostData);
                 writer.write(mPostData);
                 writer.flush();
                 writer.close();
