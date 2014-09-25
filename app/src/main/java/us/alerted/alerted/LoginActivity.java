@@ -84,6 +84,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private Boolean mLoginResult;
     private View mProgressView;
     //private View mTextViewLoading;
     private TextView mTextViewLoading;
@@ -398,6 +399,10 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         mEmailView.setAdapter(adapter);
     }
 
+    public boolean getLoginResult(){
+        return mLoginResult;
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -407,6 +412,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         private final String mEmail;
         private final String mPassword;
         private final Boolean mCreateUser;
+        private URL mUrl;
 
         //SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences();
 
@@ -414,6 +420,12 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             mEmail = email;
             mPassword = password;
             mCreateUser = create_user;
+
+            try {
+                mUrl = new URL("https://alerted.us/api-token-auth/");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
 
         private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
@@ -490,8 +502,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             urlParams.add(new BasicNameValuePair("password", mPassword));
 
             try {
-                URL url = new URL("https://alerted.us/api-token-auth/");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) mUrl.openConnection();
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
@@ -567,6 +578,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             showProgress(false);
 
             if (success) {
+                mLoginResult = true; // This is for unit tests
                 startService(new Intent(getApplicationContext(), NotificationService.class));
                 startService(new Intent(getApplicationContext(), LocationService.class));
 
@@ -575,10 +587,12 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 startActivity(i);
 
             } else {
+                mLoginResult = false; // This is for unit tests
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
         }
+
 
 
         @Override
