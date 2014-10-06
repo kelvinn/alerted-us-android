@@ -133,7 +133,9 @@ public class MainActivity extends Activity {
                 for (int i = 0; i < alerts.size(); i++) {
                     // TODO image to be put in when map is ready
                     // RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
-                    RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).headline, alerts.get(i).certainty, alerts.get(i).severity, alerts.get(i).urgency);
+                    RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).event,
+                            alerts.get(i).certainty, alerts.get(i).severity, alerts.get(i).urgency,
+                            alerts.get(i).category);
                     rowItems.add(item);
                 }
             }

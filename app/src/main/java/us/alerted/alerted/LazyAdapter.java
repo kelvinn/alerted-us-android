@@ -32,6 +32,7 @@ public class LazyAdapter extends ArrayAdapter<RowItem> {
         ImageView image_severity;
         ImageView image_urgency;
         ImageView image_certainty;
+        ImageView image_category;
         LinearLayout card;
         //ImageView urgencyImageId;
     }
@@ -52,6 +53,7 @@ public class LazyAdapter extends ArrayAdapter<RowItem> {
             holder.image_urgency = (ImageView)convertView.findViewById(R.id.urgency_image);
             holder.image_certainty = (ImageView)convertView.findViewById(R.id.certainty_image);
             holder.image_severity = (ImageView)convertView.findViewById(R.id.severity_image);
+            holder.image_category = (ImageView)convertView.findViewById(R.id.category_image);
             convertView.setTag(holder);
         } else
             holder = (ViewHolder)convertView.getTag();
@@ -62,6 +64,7 @@ public class LazyAdapter extends ArrayAdapter<RowItem> {
         holder.image_severity.setImageResource(rowItem.getSeverityImageId());
         holder.image_certainty.setImageResource(rowItem.getCertaintyImageId());
         holder.image_urgency.setImageResource(rowItem.getUrgencyImageId());
+        holder.image_category.setImageResource(rowItem.getCategoryImageId());
 
         // Enable the below to have animated cards
         //Animation animation = AnimationUtils.loadAnimation(context, R.anim.card_animation);

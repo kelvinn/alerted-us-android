@@ -34,6 +34,21 @@ public class RowItem {
         certaintyLookup.put("Unknown",R.drawable.nobar);
     }
 
+    Map<String,Integer> categoryLookup = new HashMap<String, Integer>();
+    {
+        categoryLookup.put("Geo", R.drawable.geo);
+        categoryLookup.put("Met",R.drawable.met);
+        categoryLookup.put("Safety",R.drawable.safety);
+        categoryLookup.put("Security",R.drawable.security);
+        categoryLookup.put("Rescue",R.drawable.rescue);
+        categoryLookup.put("Fire",R.drawable.fire);
+        categoryLookup.put("health",R.drawable.health);
+        categoryLookup.put("Env",R.drawable.env);
+        categoryLookup.put("Transport",R.drawable.transport);
+        categoryLookup.put("Infra",R.drawable.infra);
+        categoryLookup.put("CBRNE",R.drawable.cbrne);
+        categoryLookup.put("Other",R.drawable.other);
+    }
 
     private String TAG = this.getClass().getSimpleName();
     private int imageId;
@@ -43,11 +58,13 @@ public class RowItem {
     private int desc_cap_severity;
     private int desc_cap_urgency;
     private int desc_cap_certainty;
+    private int desc_cap_category;
 
     //private int urgencyImageId;
     // TODO image to be put in when map is ready
     // public RowItem(int imageId, String title, String desc) {
-    public RowItem(Long id, String title, String desc_cap_certainty, String desc_cap_severity, String desc_cap_urgency) {
+    public RowItem(Long id, String title, String desc_cap_certainty, String desc_cap_severity,
+                   String desc_cap_urgency, String desc_cap_category) {
         //this.imageId = imageId;
         this.title = title;
         this.id = id;
@@ -55,7 +72,7 @@ public class RowItem {
         this.desc_cap_urgency = urgencyLookup.get(desc_cap_urgency);
         this.desc_cap_severity = severityLookup.get(desc_cap_severity);
         this.desc_cap_certainty = certaintyLookup.get(desc_cap_certainty);
-
+        this.desc_cap_category = categoryLookup.get(desc_cap_category);
 
         //this.urgencyImageId = urgencyImageId;
     }
@@ -100,6 +117,10 @@ public class RowItem {
     }
     public void setDescCapCertainty(int desc_cap_certainty) {
         this.desc_cap_certainty = desc_cap_certainty;
+    }
+
+    public int getCategoryImageId() {
+        return desc_cap_category;
     }
 
     public String getTitle() {

@@ -132,19 +132,42 @@ public class NotificationService extends Service{
 
 
             if (msg != null) {
-                //Log.i("NotificationService", msg);
-                recData = new JSONObject(msg);
 
-                String cap_headline = recData.get("cap_headline").toString();
-                String cap_urgency = recData.get("cap_urgency").toString();
-                String cap_severity = recData.get("cap_severity").toString();
-                String cap_certainty = recData.get("cap_certainty").toString();
-                String cap_effective = recData.get("cap_effective").toString();
-                String cap_expires = recData.get("cap_expires").toString();
-                String cap_description = recData.get("cap_description").toString();
-                String cap_instruction = recData.get("cap_instruction").toString();
-                String cap_category = recData.get("cap_category").toString();
-                String cap_event = recData.get("cap_event").toString();
+                String cap_headline = "";
+                String cap_urgency = "";
+                String cap_severity = "";
+                String cap_certainty = "";
+                String cap_effective = "";
+                String cap_expires = "";
+                String cap_description = "";
+                String cap_instruction = "";
+                String cap_category = "";
+                String cap_event = "";
+
+                //Log.i("NotificationService", msg);
+                if (msg.equals("Test single notification")){
+                    cap_headline = "Test Headline";
+                    cap_urgency = "Immediate";
+                    cap_severity = "Extreme";
+                    cap_certainty = "Observed";
+                    cap_description = "This is a sample description";
+                    cap_instruction = "This is a sample instruction";
+                    cap_category = "Transport";
+                    cap_event = "Special Transport Event";
+                } else {
+                    recData = new JSONObject(msg);
+
+                    cap_headline = recData.get("cap_headline").toString();
+                    cap_urgency = recData.get("cap_urgency").toString();
+                    cap_severity = recData.get("cap_severity").toString();
+                    cap_certainty = recData.get("cap_certainty").toString();
+                    cap_effective = recData.get("cap_effective").toString();
+                    cap_expires = recData.get("cap_expires").toString();
+                    cap_description = recData.get("cap_description").toString();
+                    cap_instruction = recData.get("cap_instruction").toString();
+                    cap_category = recData.get("cap_category").toString();
+                    cap_event = recData.get("cap_event").toString();
+                }
 
                 Alert alert = new Alert();
 
@@ -190,7 +213,7 @@ public class NotificationService extends Service{
         List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "1");
 
         if (alerts.size() > 0) {
-            String msg = alerts.get(0).headline;
+            String msg = alerts.get(0).event;
 
             final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
