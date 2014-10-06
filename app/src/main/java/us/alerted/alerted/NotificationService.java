@@ -146,14 +146,24 @@ public class NotificationService extends Service{
 
                 //Log.i("NotificationService", msg);
                 if (msg.equals("Test single notification")){
-                    cap_headline = "Test Headline";
+                    cap_headline = "Sample Weather Alert";
                     cap_urgency = "Immediate";
                     cap_severity = "Extreme";
                     cap_certainty = "Observed";
-                    cap_description = "This is a sample description";
+                    cap_description = "...SIGNIFICANT WEATHER ADVISORY FOR...\n" +
+                        "SOUTHERN HOPKINS COUNTY\n" +
+                        "EASTERN RAINS COUNTY\n" +
+                        "AT 447 AM CDT...NATIONAL WEATHER SERVICE METEOROLOGISTS DETECTED A\n" +
+                        "STRONG THUNDERSTORM 2 MILES EAST OF SULPHUR SPRINGS...MOVING SOUTH AT\n" +
+                        "30 MPH.\n" +
+                        "CITIES IN THE PATH OF THIS STORM INCLUDE COMO...CUMBY...SULPHUR\n" +
+                        "SPRINGS AND EMORY.\n" +
+                        "FREQUENT CLOUD TO GROUND LIGHTNING...VERY HEAVY RAINFALL...PEA-SIZED\n" +
+                        "HAIL...AND WIND GUSTS TO 50 MPH CAN BE EXPECTED FROM THIS STORM.\n" +
+                        "IF THIS STORM INTENSIFIES...A SEVERE WEATHER WARNING MAY BE NEEDED.";
                     cap_instruction = "This is a sample instruction";
-                    cap_category = "Transport";
-                    cap_event = "Special Transport Event";
+                    cap_category = "Met";
+                    cap_event = "Special Weather Statement";
                 } else {
                     recData = new JSONObject(msg);
 

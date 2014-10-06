@@ -50,6 +50,7 @@ public class LazyAdapter extends ArrayAdapter<RowItem> {
             // TODO image to be put in when map is ready
             // holder.image = (ImageView)convertView.findViewById(R.id.list_image);
             holder.title = (TextView)convertView.findViewById(R.id.title);
+            holder.description = (TextView)convertView.findViewById(R.id.description);
             holder.image_urgency = (ImageView)convertView.findViewById(R.id.urgency_image);
             holder.image_certainty = (ImageView)convertView.findViewById(R.id.certainty_image);
             holder.image_severity = (ImageView)convertView.findViewById(R.id.severity_image);
@@ -61,6 +62,7 @@ public class LazyAdapter extends ArrayAdapter<RowItem> {
         // TODO image to be put in when map is ready
         // holder.image.setImageResource(rowItem.getImageId());
         holder.title.setText(rowItem.getTitle());
+        holder.description.setText(rowItem.getDesc());
         holder.image_severity.setImageResource(rowItem.getSeverityImageId());
         holder.image_certainty.setImageResource(rowItem.getCertaintyImageId());
         holder.image_urgency.setImageResource(rowItem.getUrgencyImageId());

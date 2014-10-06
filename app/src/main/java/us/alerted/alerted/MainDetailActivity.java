@@ -32,8 +32,8 @@ public class MainDetailActivity extends Activity {
 
         Alert alert = Alert.findById(Alert.class, id);
 
-        RowItem rowItem = new RowItem(alert.getId(), alert.headline, alert.certainty, alert.severity,
-                alert.urgency, alert.category);
+        RowItem rowItem = new RowItem(alert.getId(), alert.headline, alert.description,
+                alert.certainty, alert.severity, alert.urgency, alert.category);
 
 
         setContentView(R.layout.activity_main_detail);

@@ -6,7 +6,7 @@
     <color name="common_white">#ffffffff</color>
     <color name="second_grey">#ff999999</color>
     <color name="activity_background">#e5e5e5</color>
-    <color name="card_text">#ff8d8d8d</color>
+    <color name="card_text">#ff7e7e7e</color>
     <color name="card_white">#ffffffff</color>
     <color name="card_shadow">#8c666666</color>
     <color name="card_background">#FFF</color>

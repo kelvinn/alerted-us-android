@@ -63,12 +63,18 @@ public class RowItem {
     //private int urgencyImageId;
     // TODO image to be put in when map is ready
     // public RowItem(int imageId, String title, String desc) {
-    public RowItem(Long id, String title, String desc_cap_certainty, String desc_cap_severity,
-                   String desc_cap_urgency, String desc_cap_category) {
+    public RowItem(Long id, String title, String description, String desc_cap_certainty,
+                   String desc_cap_severity, String desc_cap_urgency, String desc_cap_category) {
         //this.imageId = imageId;
         this.title = title;
         this.id = id;
         //this.description = desc;
+        if(description.length() > 250){
+            this.description = description.substring(0,249) + "...";
+        }
+        else {
+            this.description = description;
+        }
         this.desc_cap_urgency = urgencyLookup.get(desc_cap_urgency);
         this.desc_cap_severity = severityLookup.get(desc_cap_severity);
         this.desc_cap_certainty = certaintyLookup.get(desc_cap_certainty);

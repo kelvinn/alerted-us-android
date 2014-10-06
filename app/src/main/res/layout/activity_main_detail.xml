@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:text="@string/alert_summary"
             android:id="@+id/alert_summary"
+            android:textColor="@color/card_text"
             android:textSize="15dp"
             android:textStyle="bold" />
 
@@ -47,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/headline"
+            android:textColor="@color/card_text"
             android:textSize="15dp" />
 
 
@@ -59,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/effective_text"
+                android:textColor="@color/card_text"
                 android:id="@+id/effectiveLabel"
                 android:layout_marginRight="20dp" />
 
@@ -66,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/effective"
+                android:textColor="@color/card_text"
                 android:textSize="15dp" />
         </LinearLayout>
 
@@ -79,6 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/expires_text"
+                android:textColor="@color/card_text"
                 android:id="@+id/expiresLabel"
                 android:layout_marginRight="20dp" />
 
@@ -112,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:text="@string/desc_urgency"
-                android:textColor="@android:color/secondary_text_dark"
+                android:textColor="@color/card_text"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ImageView
@@ -128,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textColor="@android:color/secondary_text_dark"
+                android:textColor="@color/card_text"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:paddingLeft="15dp" />
 
@@ -149,10 +154,10 @@
 
             <TextView
                 android:text="@string/desc_certainty"
+                android:textColor="@color/card_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textColor="@android:color/secondary_text_dark"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ImageView
@@ -182,6 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_description"
+            android:textColor="@color/card_text"
             android:id="@+id/alert_description"
             android:textSize="15dp"
             android:textStyle="bold" />
@@ -189,7 +195,6 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-
             android:background="@android:color/darker_gray"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp" />
@@ -198,13 +203,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/description"
+            android:textColor="@color/card_text"
             android:textSize="15dp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
-
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/square_borders"
@@ -215,6 +220,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alert_instruction"
+            android:textColor="@color/card_text"
             android:id="@+id/alert_instruction"
             android:textSize="15dp"
             android:textStyle="bold" />
@@ -222,7 +228,6 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-
             android:background="@android:color/darker_gray"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp" />
@@ -231,6 +236,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/instruction"
+            android:textColor="@color/card_text"
             android:textSize="15dp" />
 
     </LinearLayout>
