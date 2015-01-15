@@ -16,8 +16,8 @@
 
 package us.alerted.alerted;
 
-        import android.content.Context;
-        import android.location.Location;
+import android.content.Context;
+import android.location.Location;
 
         //import us.alerted.alerted.android.location.R;
 

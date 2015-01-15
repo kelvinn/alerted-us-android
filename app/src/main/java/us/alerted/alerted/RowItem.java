@@ -1,7 +1,5 @@
 package us.alerted.alerted;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +40,7 @@ public class RowItem {
         categoryLookup.put("Security",R.drawable.security);
         categoryLookup.put("Rescue",R.drawable.rescue);
         categoryLookup.put("Fire",R.drawable.fire);
-        categoryLookup.put("health",R.drawable.health);
+        categoryLookup.put("Health",R.drawable.health);
         categoryLookup.put("Env",R.drawable.env);
         categoryLookup.put("Transport",R.drawable.transport);
         categoryLookup.put("Infra",R.drawable.infra);

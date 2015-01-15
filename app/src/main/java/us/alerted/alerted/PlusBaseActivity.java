@@ -1,17 +1,14 @@
 package us.alerted.alerted;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
-
-import android.app.Activity;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.plus.PlusClient;
-import us.alerted.alerted.R;
 
 /**
  * A base class to wrap communication with the Google Play Services PlusClient.

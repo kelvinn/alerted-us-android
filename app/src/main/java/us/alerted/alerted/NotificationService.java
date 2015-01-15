@@ -1,14 +1,5 @@
 package us.alerted.alerted;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,19 +8,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.Settings.Secure;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.provider.Settings.Secure;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * This service is designed to run in the background and receive messages from gcm. If the app is in the foreground
@@ -45,6 +47,7 @@ public class NotificationService extends Service{
     static public LocalBroadcastManager broadcaster;
     static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
+
 
     public void onCreate(){
         super.onCreate();
@@ -144,12 +147,14 @@ public class NotificationService extends Service{
                 String cap_category = "";
                 String cap_event = "";
 
-                //Log.i("NotificationService", msg);
                 if (msg.equals("Test single notification")){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
                     cap_headline = "Sample Weather Alert";
                     cap_urgency = "Immediate";
-                    cap_severity = "Extreme";
+                    cap_severity = "Minor";
                     cap_certainty = "Observed";
+                    cap_effective = sdf.toString();
                     cap_description = "...SIGNIFICANT WEATHER ADVISORY FOR...\n" +
                         "SOUTHERN HOPKINS COUNTY\n" +
                         "EASTERN RAINS COUNTY\n" +
@@ -163,7 +168,7 @@ public class NotificationService extends Service{
                         "IF THIS STORM INTENSIFIES...A SEVERE WEATHER WARNING MAY BE NEEDED.";
                     cap_instruction = "This is a sample instruction";
                     cap_category = "Met";
-                    cap_event = "Special Weather Statement";
+                    cap_event = "Test Weather Statement";
                 } else {
                     recData = new JSONObject(msg);
 
@@ -222,25 +227,52 @@ public class NotificationService extends Service{
 
         List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "1");
 
+
+        Map<String,Integer> categoryLookup = new HashMap<String, Integer>();
+        {
+            categoryLookup.put("Geo", R.drawable.geo);
+            categoryLookup.put("Met",R.drawable.met);
+            categoryLookup.put("Safety",R.drawable.safety);
+            categoryLookup.put("Security",R.drawable.security);
+            categoryLookup.put("Rescue",R.drawable.rescue);
+            categoryLookup.put("Fire",R.drawable.fire);
+            categoryLookup.put("Health",R.drawable.health);
+            categoryLookup.put("Env",R.drawable.env);
+            categoryLookup.put("Transport",R.drawable.transport);
+            categoryLookup.put("Infra",R.drawable.infra);
+            categoryLookup.put("CBRNE",R.drawable.cbrne);
+            categoryLookup.put("Other",R.drawable.other);
+        }
+
+        Map<String,Integer> severityLookup = new HashMap<String, Integer>();
+        {
+            severityLookup.put("Extreme", Notification.PRIORITY_HIGH);
+            severityLookup.put("Severe", Notification.PRIORITY_LOW);
+            severityLookup.put("Moderate", Notification.PRIORITY_MIN);
+            severityLookup.put("Minor", Notification.PRIORITY_MIN);
+            severityLookup.put("Unknown", Notification.PRIORITY_MIN);
+        }
+
         if (alerts.size() > 0) {
             String msg = alerts.get(0).event;
 
             final NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
+            final Integer desc_cap_category = categoryLookup.get(alerts.get(0).category);
+            final Integer notif_priority = severityLookup.get(alerts.get(0).severity);
             final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentAction, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_CANCEL_CURRENT);
-            final Notification notification = new NotificationCompat.Builder(context).setSmallIcon(R.drawable.ic_launcher)
+            final Notification notification = new NotificationCompat.Builder(context)
+                    .setSmallIcon(desc_cap_category)
                     .setContentTitle(msg)
                     .setContentText("")
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
+                    .setPriority(notif_priority)
                     .getNotification();
 
             mNotificationManager.notify(R.string.notification_number, notification);
         }
 
     }
-
-
 
     private void submitGCMToken() {
 
