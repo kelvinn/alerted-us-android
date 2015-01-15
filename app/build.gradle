@@ -26,8 +26,8 @@ android {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
         targetSdkVersion 18
-        versionCode 5
-        versionName "r5"
+        versionCode 6
+        versionName "r6"
     }
     buildTypes {
         release {
