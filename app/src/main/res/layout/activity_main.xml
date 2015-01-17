@@ -18,15 +18,39 @@
             android:paddingTop="10dip"
             android:clipToPadding="false"/>
 
-        <TextView android:id="@+id/empty"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/empty">
+
+        <TextView android:id="@+id/empty_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
             android:text="@string/empty_listview_text"
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="30dp"
-            android:padding="50dp"
-            android:textStyle="italic" />
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textColor="#ff7d7d7d"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="25dp" />
+
+        <TextView android:id="@+id/empty_subtext"
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:text="@string/empty_listview_subtext"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textColor="#ff919191"
+            android:fontFamily="sans-serif-light" />
+
+    </LinearLayout>
 
 
 </LinearLayout>
+

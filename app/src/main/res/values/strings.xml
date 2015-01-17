@@ -16,7 +16,8 @@
     <string name="effective_text">Effective:</string>
     <string name="local_service_started">Service Started Text from Res</string>
     <string name="action_test">Test</string>
-    <string name="empty_listview_text">Hi!\n\n No alerts to show right now.</string>
+    <string name="empty_listview_text">No alerts to show right now.</string>
+    <string name="empty_listview_subtext">We receive thousands of alerts every day, and when one is active near your current location, you will receive a notification.</string>
 
 
     <!-- GCM -->

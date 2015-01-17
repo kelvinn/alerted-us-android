@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,12 +52,9 @@ public class MainActivity extends Activity {
             R.drawable.prisoners
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         NewRelic.withApplicationToken(
                 "xXxXxXxXxXx"
@@ -110,7 +108,13 @@ public class MainActivity extends Activity {
             //ArrayList<JSONObject> listdata = new ArrayList<JSONObject>();
 
             final ListView lv = (ListView) findViewById(R.id.myListImg);
-            TextView empty=(TextView)findViewById(R.id.empty);
+            //TextView empty=(TextView)findViewById(R.id.empty);
+            //lv.setEmptyView(empty);
+
+            //TextView empty_subtext=(TextView)findViewById(R.id.empty_subtext);
+            //lv.setEmptyView(empty_subtext);
+
+            LinearLayout empty = (LinearLayout)findViewById(R.id.empty);
             lv.setEmptyView(empty);
             rowItems = new ArrayList<RowItem>();
 
@@ -144,9 +148,6 @@ public class MainActivity extends Activity {
 
                     // add bundle to intent
                     intent.putExtras(extras);
-
-
-
 
                     startActivity(intent);
 
