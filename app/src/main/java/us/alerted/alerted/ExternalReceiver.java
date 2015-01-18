@@ -14,11 +14,8 @@ public class ExternalReceiver extends BroadcastReceiver {
                 // TODO also refresh app on this one?
                 NotificationService.saveToDB(extras, context);
                 NotificationService.sendToApp("NEW_CARD");
-                //NotificationService.sendToApp(extras, context);
             }
             else{
-                //NotificationService.saveToLog(extras, context);
-
                 NotificationService.saveToDB(extras, context);
                 NotificationService.postNotification(new Intent(context, MainActivity.class), context);
             }

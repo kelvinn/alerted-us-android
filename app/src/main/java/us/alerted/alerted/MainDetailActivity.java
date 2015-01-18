@@ -2,7 +2,9 @@ package us.alerted.alerted;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -11,14 +13,13 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 public class MainDetailActivity extends Activity {
 
     private String TAG = this.getClass().getSimpleName();
     static final public String EXTRA_MESSAGE = "us.alerted.alerted.MainActivity.MESSAGE";
-    //Long id;
+    public SharedPreferences sharedPref;
     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
@@ -27,7 +28,8 @@ public class MainDetailActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Long id = bundle.getLong(EXTRA_MESSAGE);
-        //Log.i(TAG, id.toString());
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         Alert alert = Alert.findById(Alert.class, id);
 
@@ -37,16 +39,10 @@ public class MainDetailActivity extends Activity {
 
         setContentView(R.layout.activity_main_detail);
 
-        //this.overridePendingTransition(R.anim.animation_enter,
-        //        R.anim.animation_leave);
-
-        Date effectiveDate = null;
-        //Calendar expiresDate = null;
         Calendar expiresDate = Calendar.getInstance();
         String formatted_expires = new String();
         String formatted_effective = new String();
         try {
-//            effectiveDate = dt.parse(String.valueOf(alert.effective));
             formatted_expires = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(alert.expires));
             formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(alert.effective));
 
@@ -59,16 +55,10 @@ public class MainDetailActivity extends Activity {
         }
 
         ((TextView)findViewById(R.id.headline)).setText(String.valueOf(alert.headline));
-        //((TextView)findViewById(R.id.urgency)).setText(String.valueOf(alert.urgency));
-
-        //((TextView)findViewById(R.id.severity)).setText(String.valueOf(alert.severity));
-        //((TextView)findViewById(R.id.certainty)).setText(String.valueOf(alert.certainty));
         ((TextView)findViewById(R.id.effective)).setText(formatted_effective);
         ((TextView)findViewById(R.id.expires)).setText(formatted_expires);
         ((TextView)findViewById(R.id.description)).setText(String.valueOf(alert.description));
         ((TextView)findViewById(R.id.instruction)).setText(String.valueOf(alert.instruction));
-        //((TextView)findViewById(R.id.category)).setText(String.valueOf(alert.category));
-        //((TextView)findViewById(R.id.event)).setText(String.valueOf(alert.event));
         ((ImageView)findViewById(R.id.urgency_image)).setImageResource(rowItem.getUrgencyImageId());
         ((ImageView)findViewById(R.id.severity_image)).setImageResource(rowItem.getSeverityImageId());
         ((ImageView)findViewById(R.id.certainty_image)).setImageResource(rowItem.getCertaintyImageId());
@@ -88,7 +78,32 @@ public class MainDetailActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+
+            // Stop services
+            stopService(new Intent(this, NotificationService.class));
+            stopService(new Intent(this, LocationService.class));
+
+            // Erase all records in database
+            Alert.deleteAll(Alert.class);
+
+            // Erase settings from shared prefs (e.g. reset back go normal state)
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.first_launch), true);
+            editor.putBoolean(getString(R.string.was_sns_submitted), true);
+            editor.putBoolean(getString(R.string.post_new_gmc_token), true);
+
+            editor.remove("AlertedToken");
+            editor.putBoolean("userLoggedInState", false);
+            editor.apply();
+
+            // Now go back to LoginActivity
+            Intent intent = new Intent(MainDetailActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            finish();
+            startActivity(intent);
+
             return true;
         }
         return super.onOptionsItemSelected(item);

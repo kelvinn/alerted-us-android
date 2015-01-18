@@ -102,8 +102,13 @@ public class LocationService extends Service implements
 
             try {
 
+                String apiUrl;
                 //Log.i(TAG, "Submitting data: " + mPostData);
-                String apiUrl = data.getString("api.url.token");
+                if (BuildConfig.DEBUG) {
+                    apiUrl = data.getString("api.url.test.token");
+                } else {
+                    apiUrl = data.getString("api.url.token");
+                }
 
                 URL url = new URL(apiUrl);
 

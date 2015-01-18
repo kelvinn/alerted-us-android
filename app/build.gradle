@@ -25,27 +25,27 @@ android {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 7
-        versionName "r7"
+        versionCode 8
+        versionName "r8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         def BOOLEAN = "boolean"
+        def STRING = "String"
         def TRUE = "true"
         def FALSE = "false"
-        def STUB_HTTP_SERVER = "STUB_HTTP_SERVER"
 
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-            buildConfigField BOOLEAN, STUB_HTTP_SERVER, FALSE
-        }
-        debug {
-            buildConfigField BOOLEAN, STUB_HTTP_SERVER, TRUE
 
+        }
+
+        debug {
+            minifyEnabled false
         }
     }
     sourceSets {

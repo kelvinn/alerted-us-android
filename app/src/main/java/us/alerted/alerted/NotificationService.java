@@ -12,10 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.Settings.Secure;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -28,7 +26,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -42,24 +39,21 @@ import java.util.Map;
  */
 public class NotificationService extends Service{
 
-    private GoogleCloudMessaging gcm;
-
     public static SharedPreferences sharedPref;
-    private String TAG = this.getClass().getSimpleName();
+    public String TAG = this.getClass().getSimpleName();
     static public LocalBroadcastManager broadcaster;
     static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
-    private Bundle data;
+    public static Bundle data;
+    public static GoogleCloudMessaging gcm;
+    public static Context baseContext;
 
     public void onCreate(){
         super.onCreate();
-        final String preferences = getString(R.string.preferences);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        gcm = GoogleCloudMessaging.getInstance(getBaseContext());
-
         broadcaster = LocalBroadcastManager.getInstance(this);
+        gcm = GoogleCloudMessaging.getInstance(getBaseContext());
 
         // This 'data' object is able to query the meta data from the Manifest
         try {
@@ -74,77 +68,26 @@ public class NotificationService extends Service{
             register();
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.first_launch), false);
-            editor.commit();
+            editor.apply();
         }
 
         if(sharedPref.getBoolean(getString(R.string.was_sns_submitted), true)){
             submitGCMToken();
         }
-
-
-        // Let AndroidMobilePushApp know we have just initialized and there may be stored messages
-        //sendToApp(new Bundle(), this);
     }
 
     public static void sendToApp(String message) {
-        //LocalBroadcastManager broadcaster = new LocalBroadcastManager();
         Intent intent = new Intent(NOTIF_RESULT);
         if(message != null)
             intent.putExtra(NOTIF_MESSAGE, message);
         broadcaster.sendBroadcast(intent);
     }
 
-    /*
-    public static void sendToApp(Bundle extras, Context context){
-        Intent newIntent = new Intent();
-        newIntent.setClass(context, MainActivity.class);
-        newIntent.putExtras(extras);
-        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        //context.startActivity(newIntent);
-    }
-    */
-
     public static void saveToDB(Bundle extras, Context context){
         JSONObject recData;
         String msg = extras.getString("message");
 
-//        Log.i("NotificationService", extras.getString("cap_headline"));
-
-        String headline;
-        String urgency;
-        String severity;
-        String certainty;
-        String effective;
-        String expires;
-        String description;
-        String instruction;
-        String category;
-        String slug;
-        String event;
-
         try {
-            /*
-            if (!extras.isEmpty()){
-
-                Alert alert = new Alert();
-
-                alert.headline = extras.getString("cap_headline");
-                alert.urgency = extras.getString("cap_urgency");
-                alert.severity = extras.getString("cap_severity");
-                alert.certainty = extras.getString("cap_certainty");
-                alert.effective = extras.getString("cap_effective");
-                alert.expires = extras.getString("cap_expires");
-                alert.description = extras.getString("cap_description");
-                alert.instruction = extras.getString("cap_instruction");
-                alert.category = extras.getString("cap_category");
-                alert.event = extras.getString("cap_event");
-
-                alert.save();
-            }
-            */
-
-
             if (msg != null) {
 
                 String cap_headline = "";
@@ -209,29 +152,12 @@ public class NotificationService extends Service{
                 alert.event = cap_event;
 
                 alert.save();
-
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-    }
-
-    protected static void saveToLog(Bundle extras, Context context){
-        SharedPreferences.Editor editor = sharedPref.edit();
-        String numOfMissedMessages = context.getString(R.string.num_of_missed_messages);
-        int linesOfMessageCount = 0;
-        for(String key : extras.keySet()){
-            String line = String.format("%s=%s", key, extras.getString(key));
-            editor.putString("MessageLine" + linesOfMessageCount, line);
-            linesOfMessageCount++;
-        }
-        editor.putInt(context.getString(R.string.lines_of_message_count), linesOfMessageCount);
-        editor.putInt(context.getString(R.string.lines_of_message_count), linesOfMessageCount);
-        editor.putInt(numOfMissedMessages, sharedPref.getInt(numOfMissedMessages, 0) + 1);
-        editor.commit();
-        //postNotification(new Intent(context, MainActivity.class), context);
     }
 
     protected static void postNotification(Intent intentAction, Context context){
@@ -285,111 +211,102 @@ public class NotificationService extends Service{
 
     }
 
-    private void submitGCMToken() {
-
-        new AsyncTask(){
-            protected Object doInBackground(final Object... params) {
-                String token;
-                String mPostData;
-                try {
-
-                    String android_id = Secure.getString(getContentResolver(),
-                            Secure.ANDROID_ID);
-
-                    token = sharedPref.getString("GCM_TOKEN", "");
-
-                    JSONObject postData = new JSONObject();
-
-                    postData.put("registration_id", token);
-
-                    // device_id throws an error with django push_notifications
-                    //postData.put("device_id", android_id);
-
-                    mPostData = postData.toString();
-
-                    String httpAuthToken = sharedPref.getString("AlertedToken", null);
-                    String reqMethod;
-                    URL url;
-
-                    /*
-                    if(sharedPref.getBoolean(getString(R.string.post_new_sns_token), true)){
-                        reqMethod = "POST";
-                        url = new URL("https://alerted.us/api/v1/users/snstoken/");
-                    } else {
-                        reqMethod = "PUT";
-                        url = new URL("https://alerted.us/api/v1/users/snstoken/" + android_id + "/");
-                    }
-                    */
-
-                    reqMethod = "POST";
-
-                    String apiUrl;
-                    if (BuildConfig.STUB_HTTP_SERVER) {
-                        apiUrl = data.getString("api.url.test.gcmtoken");
-                    } else {
-                        apiUrl = data.getString("api.url.gcmtoken");
-                    }
-
-                    url = new URL(apiUrl);
-
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    String tokenAuth = "Token " + httpAuthToken;
-                    conn.setRequestProperty ("Authorization", tokenAuth);
-                    conn.setRequestProperty("Content-Type", "application/json");
-                    conn.setReadTimeout(10000);
-                    conn.setConnectTimeout(15000);
-                    conn.setRequestMethod(reqMethod);
-                    conn.setDoInput(true);
-                    conn.setDoOutput(true);
-
-                    OutputStream os = conn.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(mPostData);
-                    writer.flush();
-                    writer.close();
-                    os.close();
-
-                    conn.connect();
-
-                    // create JSON object from content
-                    InputStream inputStream = conn.getInputStream();
-
-                    int code = conn.getResponseCode();
-                    if (code == 201){
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putBoolean(getString(R.string.was_sns_submitted), false);
-                        editor.putBoolean(getString(R.string.post_new_gmc_token), false);
-                        editor.commit();
-
-                    }
-                }
-                catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            }
-        }.execute(null, null, null);
+    public void submitGCMToken() {
+        SubmitGcmTokenTask task = new SubmitGcmTokenTask();
+        task.execute(null, null, null);
     }
 
-    private void register() {
-        new AsyncTask(){
-            protected Object doInBackground(final Object... params) {
-                String token;
-                try {
-                    token = gcm.register(getString(R.string.project_number));
+    public static class SubmitGcmTokenTask extends AsyncTask<Object, Void, Object> {
+        protected Object doInBackground(final Object... params) {
+            String token;
+            String mPostData;
+            try {
+                token = sharedPref.getString("GCM_TOKEN", "");
+
+                JSONObject postData = new JSONObject();
+
+                postData.put("registration_id", token);
+
+                mPostData = postData.toString();
+
+                String httpAuthToken = sharedPref.getString("AlertedToken", null);
+                String reqMethod;
+                URL url;
+
+                reqMethod = "POST";
+
+                String apiUrl;
+                if (BuildConfig.DEBUG) {
+                    apiUrl = data.getString("api.url.test.gcmtoken");
+                } else {
+                    apiUrl = data.getString("api.url.gcmtoken");
+                }
+
+                url = new URL(apiUrl);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                String tokenAuth = "Token " + httpAuthToken;
+                conn.setRequestProperty ("Authorization", tokenAuth);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod(reqMethod);
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(mPostData);
+                writer.flush();
+                writer.close();
+                os.close();
+
+                conn.connect();
+
+                // create JSON object from content
+                InputStream inputStream = conn.getInputStream();
+
+                int code = conn.getResponseCode();
+                if (code == 201){
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("GCM_TOKEN", token);
-                    editor.commit();
+                    editor.putBoolean(String.valueOf(R.string.was_sns_submitted), false);
+                    editor.putBoolean(String.valueOf(R.string.post_new_gmc_token), false);
+                    editor.apply();
                 }
-                catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                }
-                return true;
             }
-        }.execute(null, null, null);
+            catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+    }
+
+    public void register() {
+
+        RegisterGcmTokenTask task = new RegisterGcmTokenTask();
+        task.execute(gcm, null, null);
+    }
+
+
+    public static class RegisterGcmTokenTask extends AsyncTask<Object, Void, Object> {
+
+        protected Object doInBackground(final Object... params) {
+
+            String token;
+            try {
+                token = gcm.register(String.valueOf(R.string.project_number));
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("GCM_TOKEN", token);
+                editor.apply();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
     }
 
     public IBinder onBind(Intent arg0) {

@@ -108,25 +108,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             e.printStackTrace();
         }
 
-        // Find the Google+ sign in button.
-        //mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
-        /*
-        if (supportsGooglePlayServices()) {
-            // Set a listener to connect the user when the G+ button is clicked.
-            mPlusSignInButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signIn();
-                }
-            });
-        } else {
-            // Don't offer G+ sign in if the app's version is too low to support Google Play
-            // Services.
-            mPlusSignInButton.setVisibility(View.GONE);
-            return;
-        }
-        */
-
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -501,7 +482,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
             try {
 
-                if (BuildConfig.STUB_HTTP_SERVER) {
+                if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.token");
                 } else {
                     apiUrl = data.getString("api.url.token");
@@ -538,9 +519,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 if (code == 200){
                     try {
                         JSONObject jsonToken = new JSONObject(getResponseText(in));
-                        //System.out.println(jsonToken.get("token"));
-                        //SharedPreferences sharedPref = getSharedPreferences(Context.MODE_PRIVATE);
-
                         SharedPreferences.Editor editor = sharedPref.edit();
                         String httpAuthToken = jsonToken.get("token").toString();
                         editor.putString("AlertedToken", httpAuthToken);
