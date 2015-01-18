@@ -27,6 +27,23 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 
     }
 
+    public void testLoginEmptyUsernameDenied() {
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testLoginInvalidUsernameDenied() {
+        onView(withId(R.id.email)).perform(typeText("test")).check(ViewAssertions.matches(withText("test")));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testLoginEmptyPasswordDenied() {
+        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
     public void testCreateAccount() {
 
         onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
@@ -41,4 +58,22 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         onView(withText("Logout")).perform(click());
         onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
     }
+
+    public void testLoginEmptyUsernameSignUpDenied() {
+        onView(withId(R.id.email_sign_up_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testLoginInvalidUsernameSignUpDenied() {
+        onView(withId(R.id.email)).perform(typeText("test")).check(ViewAssertions.matches(withText("test")));
+        onView(withId(R.id.email_sign_up_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testLoginEmptyPasswordSignUpDenied() {
+        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
+        onView(withId(R.id.email_sign_up_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
 }

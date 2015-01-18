@@ -89,6 +89,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private Boolean create_user;
     private Boolean cancel;
     private Bundle data;
+    private Boolean success = false;
 
     SharedPreferences sharedPref;
 
@@ -110,19 +111,23 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        // I don't think this does anything
+        /*
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.email_sign_in_button || id == R.id.email_sign_up_button || id == EditorInfo.IME_NULL) {
-                    verifyDetails();
-                    return true;
+                    Boolean result = verifyDetails();
+                    return result;
                 }
                 return false;
             }
         });
+        */
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -140,7 +145,10 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             public void onClick(View view) {
                 cancel = verifyDetails();
                 mTextViewLoading.setText("Logging in...");
-                attemptLogin(false);
+                if (!cancel) {
+                    attemptLogin(false);
+                }
+
             }
         });
 
@@ -150,7 +158,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             public void onClick(View view) {
                 cancel = verifyDetails();
                 mTextViewLoading.setText("Creating account...");
-                attemptLogin(true);
+                if (!cancel) {
+                    attemptLogin(true);
+                }
             }
         });
 
@@ -170,6 +180,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             return false;
         }
 
+
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -181,6 +192,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         boolean cancel = false;
         View focusView = null;
 
+        if (email.isEmpty() || password.isEmpty()){
+            cancel = true;
+        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -203,7 +217,9 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            focusView.requestFocus();
+            if (focusView != null) {
+                focusView.requestFocus();
+            }
         }
         return cancel;
 
@@ -440,7 +456,14 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             urlParams.add(new BasicNameValuePair("email", mEmail));
 
             try {
-                String apiUrl = data.getString("api.url.users");
+                String apiUrl;
+
+                if (BuildConfig.DEBUG) {
+                    apiUrl = data.getString("api.url.test.users");
+                } else {
+                    apiUrl = data.getString("api.url.users");
+                }
+
                 URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000);
@@ -463,11 +486,14 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 InputStream in = new BufferedInputStream(
                         conn.getInputStream());
 
+                /*
                 try {
                     JSONObject jsonToken = new JSONObject(getResponseText(in));
                 } catch(JSONException e) {
                     Log.e(TAG, e.toString());
                 }
+                */
+
 
             } catch (MalformedURLException e) {
                 Log.e(TAG, e.toString());
@@ -551,6 +577,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                     // setting this to 'false' means the SNS token will just be updated
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean(getString(R.string.post_new_gmc_token), false);
+                    editor.apply();
                 }
 
 
@@ -581,7 +608,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 mPasswordView.requestFocus();
             }
         }
-
 
 
         @Override
