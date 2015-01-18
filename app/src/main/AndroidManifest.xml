@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="us.alerted.alerted" >
 
+
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -34,6 +35,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+
     <application
         android:name="com.orm.SugarApp"
         android:allowBackup="true"
@@ -52,6 +54,19 @@
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="us.alerted" />
+
+        <!-- API Values Testing -->
+        <meta-data android:name="api.url.test.token" android:value="https://private-9edaa-alerted.apiary-mock.com/api-token-auth/"/>
+        <meta-data android:name="api.url.test.users" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/"/>
+        <meta-data android:name="api.url.test.gcmtoken" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/gcmtoken/"/>
+        <meta-data android:name="api.url.test.locations" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/locations/"/>
+
+        <!-- API Values Production -->
+        <meta-data android:name="api.url.prod.token" android:value="https://alerted.us/api-token-auth/"/>
+        <meta-data android:name="api.url.prod.users" android:value="https://alerted.us/api/v1/users/"/>
+        <meta-data android:name="api.url.prod.gcmtoken" android:value="https://alerted.us/api/v1/users/gcmtoken/"/>
+        <meta-data android:name="api.url.prod.locations" android:value="https://alerted.us/api/v1/users/locations/"/>
+
 
         <activity
             android:name=".MainActivity"
@@ -111,10 +126,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".SignupActivity"
-            android:label="@string/app_name" >
-        </activity>
         <activity
             android:name=".MainDetailActivity"
             android:label="@string/app_name"

@@ -3,6 +3,7 @@ package us.alerted.alerted;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class LocationService extends Service implements
     private LocationClient mLocationClient;
     private TextView mConnectionState;
     private TextView mConnectionStatus;
+    private Bundle data;
 
     SharedPreferences sharedPref;
 
@@ -65,6 +67,14 @@ public class LocationService extends Service implements
         super.onCreate();
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        try {
+            data = getApplicationContext().getPackageManager().getApplicationInfo(
+                    getApplicationContext().getPackageName(),
+                    PackageManager.GET_META_DATA).metaData;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if (servicesAvailable() && httpAuthTokenExists()) {
             mLocationRequest = LocationRequest.create()
@@ -93,7 +103,10 @@ public class LocationService extends Service implements
             try {
 
                 //Log.i(TAG, "Submitting data: " + mPostData);
-                URL url = new URL("https://alerted.us/api/v1/users/locations/");
+                String apiUrl = data.getString("api.url.token");
+
+                URL url = new URL(apiUrl);
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 String tokenAuth = "Token " + httpAuthToken;
                 conn.setRequestProperty ("Authorization", tokenAuth);

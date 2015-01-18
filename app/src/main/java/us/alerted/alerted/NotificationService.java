@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -47,7 +49,7 @@ public class NotificationService extends Service{
     static public LocalBroadcastManager broadcaster;
     static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
-
+    private Bundle data;
 
     public void onCreate(){
         super.onCreate();
@@ -58,6 +60,15 @@ public class NotificationService extends Service{
         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
 
         broadcaster = LocalBroadcastManager.getInstance(this);
+
+        // This 'data' object is able to query the meta data from the Manifest
+        try {
+            data = getApplicationContext().getPackageManager().getApplicationInfo(
+                    getApplicationContext().getPackageName(),
+                    PackageManager.GET_META_DATA).metaData;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if(sharedPref.getBoolean(getString(R.string.first_launch), true)){
             register();
@@ -311,8 +322,15 @@ public class NotificationService extends Service{
                     */
 
                     reqMethod = "POST";
-                    url = new URL("https://alerted.us/api/v1/users/gcmtoken/");
-                    //Log.i(TAG, mPostData);
+
+                    String apiUrl;
+                    if (BuildConfig.STUB_HTTP_SERVER) {
+                        apiUrl = data.getString("api.url.test.gcmtoken");
+                    } else {
+                        apiUrl = data.getString("api.url.gcmtoken");
+                    }
+
+                    url = new URL(apiUrl);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     String tokenAuth = "Token " + httpAuthToken;

@@ -8,6 +8,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -87,6 +88,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
     private View mLoginFormView;
     private Boolean create_user;
     private Boolean cancel;
+    private Bundle data;
 
     SharedPreferences sharedPref;
 
@@ -96,6 +98,15 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         setContentView(R.layout.activity_login);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // This 'data' object is able to query the meta data from the Manifest
+        try {
+            data = getApplicationContext().getPackageManager().getApplicationInfo(
+                    getApplicationContext().getPackageName(),
+                    PackageManager.GET_META_DATA).metaData;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // Find the Google+ sign in button.
         //mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
@@ -162,8 +173,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             }
         });
 
-
-        //mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
     }
 
     private void populateAutoComplete() {
@@ -406,6 +415,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         private final String mPassword;
         private final Boolean mCreateUser;
         private URL mUrl;
+        private String apiUrl;
 
         //SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences();
 
@@ -413,12 +423,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             mEmail = email;
             mPassword = password;
             mCreateUser = create_user;
-
-            try {
-                mUrl = new URL("https://alerted.us/api-token-auth/");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
         }
 
         private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
@@ -455,7 +459,8 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             urlParams.add(new BasicNameValuePair("email", mEmail));
 
             try {
-                URL url = new URL("https://alerted.us/api/v1/users/");
+                String apiUrl = data.getString("api.url.users");
+                URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -493,6 +498,19 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
             urlParams.add(new BasicNameValuePair("username", mEmail));
             urlParams.add(new BasicNameValuePair("password", mPassword));
+
+            try {
+
+                if (BuildConfig.STUB_HTTP_SERVER) {
+                    apiUrl = data.getString("api.url.test.token");
+                } else {
+                    apiUrl = data.getString("api.url.token");
+                }
+
+                mUrl = new URL(apiUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
 
             try {
                 HttpURLConnection conn = (HttpURLConnection) mUrl.openConnection();
