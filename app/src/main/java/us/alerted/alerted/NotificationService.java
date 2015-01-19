@@ -239,7 +239,7 @@ public class NotificationService extends Service{
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.gcmtoken");
                 } else {
-                    apiUrl = data.getString("api.url.gcmtoken");
+                    apiUrl = data.getString("api.url.prod.gcmtoken");
                 }
 
                 url = new URL(apiUrl);

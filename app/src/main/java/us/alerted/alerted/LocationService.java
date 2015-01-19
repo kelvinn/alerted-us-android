@@ -107,7 +107,7 @@ public class LocationService extends Service implements
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.token");
                 } else {
-                    apiUrl = data.getString("api.url.token");
+                    apiUrl = data.getString("api.url.prod.token");
                 }
 
                 URL url = new URL(apiUrl);

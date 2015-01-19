@@ -461,7 +461,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.users");
                 } else {
-                    apiUrl = data.getString("api.url.users");
+                    apiUrl = data.getString("api.url.prod.users");
                 }
 
                 URL url = new URL(apiUrl);
@@ -511,7 +511,7 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.token");
                 } else {
-                    apiUrl = data.getString("api.url.token");
+                    apiUrl = data.getString("api.url.prod.token");
                 }
 
                 mUrl = new URL(apiUrl);
