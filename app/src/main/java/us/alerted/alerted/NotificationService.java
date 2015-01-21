@@ -14,8 +14,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.ocpsoft.pretty.time.PrettyTime;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,7 @@ public class NotificationService extends Service{
     public static Bundle data;
     public static GoogleCloudMessaging gcm;
     public static Context baseContext;
+
 
     public void onCreate(){
         super.onCreate();
@@ -102,13 +106,13 @@ public class NotificationService extends Service{
                 String cap_event = "";
 
                 if (msg.equals("Test single notification")){
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
                     cap_headline = "Sample Weather Alert";
                     cap_urgency = "Immediate";
                     cap_severity = "Minor";
                     cap_certainty = "Observed";
-                    cap_effective = sdf.toString();
+                    cap_effective = "2015-01-10T05:05:05";
+                    cap_expires = "2015-01-11T05:05:05";
+
                     cap_description = "...SIGNIFICANT WEATHER ADVISORY FOR...\n" +
                         "SOUTHERN HOPKINS COUNTY\n" +
                         "EASTERN RAINS COUNTY\n" +
@@ -238,9 +242,12 @@ public class NotificationService extends Service{
                 String apiUrl;
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.gcmtoken");
+
                 } else {
                     apiUrl = data.getString("api.url.prod.gcmtoken");
                 }
+
+                Log.i("GCM_TOKEN", mPostData);
 
                 url = new URL(apiUrl);
 
@@ -297,10 +304,12 @@ public class NotificationService extends Service{
 
             String token;
             try {
-                token = gcm.register(String.valueOf(R.string.project_number));
+                token = gcm.register("840452629019");
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("GCM_TOKEN", token);
                 editor.apply();
+                Log.i("GCM Reg Success RegID", token);
+
             }
             catch (IOException e) {
                 e.printStackTrace();

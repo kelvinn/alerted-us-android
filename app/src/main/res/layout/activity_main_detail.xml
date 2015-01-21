@@ -52,26 +52,15 @@
             android:textSize="15sp" />
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/effective_text"
-                android:textColor="@color/card_text"
-                android:id="@+id/effectiveLabel"
-                android:layout_marginRight="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/effective"
-                android:textColor="@color/card_text"
-                android:textSize="15sp" />
-        </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="15dp"
+        android:background="@drawable/square_borders"
+        android:layout_marginTop="15dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -94,6 +83,26 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/effective_text"
+                android:textColor="@color/card_text"
+                android:id="@+id/effectiveLabel"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/effective"
+                android:textColor="@color/card_text"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

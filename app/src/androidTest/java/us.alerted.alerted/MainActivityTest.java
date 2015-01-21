@@ -1,5 +1,6 @@
 package us.alerted.alerted;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -65,5 +66,27 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // Click the item.
         onView(withText("Logout")).perform(click());
         onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testReceiveGCM() {
+
+        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
+        onView(withId(R.id.password)).perform(typeText("password")).check(ViewAssertions.matches(withText("password")));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        Intent gcmIntent = new Intent();
+        gcmIntent.putExtra("message", "Test single notification");
+
+        ExternalReceiver r = new ExternalReceiver();
+        // TODO put extras
+        //gcmIntent.addFlags()
+        r.onReceive(getInstrumentation().getTargetContext(), gcmIntent);
+
+        // Check that the list of alerts comes up
+        //onView(withId(R.id.myListImg)).check(ViewAssertions.matches(isDisplayed()));
+
+        // Click on a card and see if the detail page comes up
+        //onView(withId(R.id.card)).perform(click());
+        //onView(withId(R.id.alert_summary)).check(ViewAssertions.matches(isDisplayed()));
+
     }
 }

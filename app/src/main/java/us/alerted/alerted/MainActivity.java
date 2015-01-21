@@ -19,8 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.newrelic.agent.android.NewRelic;
+import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -56,6 +58,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        PrettyTime p = new PrettyTime();
         NewRelic.withApplicationToken(
                 "xXxXxXxXxXx"
         ).start(this.getApplication());
@@ -123,9 +126,11 @@ public class MainActivity extends Activity {
                 for (int i = 0; i < alerts.size(); i++) {
                     // TODO image to be put in when map is ready
                     // RowItem item = new RowItem(images[i], alerts.get(i).headline, alerts.get(i).certainty);
+
                     RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).event,
                             alerts.get(i).description, alerts.get(i).certainty,
-                            alerts.get(i).severity, alerts.get(i).urgency, alerts.get(i).category);
+                            alerts.get(i).severity, alerts.get(i).urgency, alerts.get(i).category,
+                            alerts.get(i).effective);
                     rowItems.add(item);
                 }
             }
@@ -215,6 +220,7 @@ public class MainActivity extends Activity {
     private String getMessage(int numOfMissedMessages) {
         String message = "";
         String linesOfMessageCount = getString(R.string.lines_of_message_count);
+        PrettyTime p = new PrettyTime();
         if(numOfMissedMessages > 0){
             String plural = numOfMissedMessages > 1 ? "s" : "";
             //Log.i("onResume","missed " + numOfMissedMessages + " message" + plural);

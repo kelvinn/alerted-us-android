@@ -39,7 +39,7 @@
     <string name="location_updates_stopped">Periodic updates stopped</string>
     <string name="title_activity_my">MyActivity</string>
     <string name="auth_token_name">Auth Token</string>
-    <string name="project_number">840452629019</string>
+    <!--<string name="project_number">840452629019</string>-->
     <string name="introduction">Welcome!</string>
     <string name="clear_screen">Clear Screen</string>
     <string name="first_launch">First Launch</string>

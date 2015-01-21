@@ -1,12 +1,22 @@
 package us.alerted.alerted;
 
+import android.app.Notification;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import java.util.concurrent.CountDownLatch;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @LargeTest
 public class NotificationServiceTest extends ServiceTestCase<NotificationService> {
@@ -23,7 +33,6 @@ public class NotificationServiceTest extends ServiceTestCase<NotificationService
         super.setUp();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
     }
-
 
     public void testSubmitGCMToken() {
         NotificationService.SubmitGcmTokenTask asyncOperation = new NotificationService.SubmitGcmTokenTask();

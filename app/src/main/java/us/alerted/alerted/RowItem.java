@@ -1,5 +1,13 @@
 package us.alerted.alerted;
 
+import android.util.Log;
+
+
+import com.ocpsoft.pretty.time.PrettyTime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,15 +65,30 @@ public class RowItem {
     private int desc_cap_urgency;
     private int desc_cap_certainty;
     private int desc_cap_category;
+    private String effective;
+    public PrettyTime p = new PrettyTime();
+    String pretty_formatted;
+
+    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     //private int urgencyImageId;
     // TODO image to be put in when map is ready
     // public RowItem(int imageId, String title, String desc) {
     public RowItem(Long id, String title, String description, String desc_cap_certainty,
-                   String desc_cap_severity, String desc_cap_urgency, String desc_cap_category) {
+                   String desc_cap_severity, String desc_cap_urgency, String desc_cap_category,
+                   String effective) {
         //this.imageId = imageId;
         this.title = title;
         this.id = id;
+
+        String formatted_effective = new String();
+        try {
+            formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(effective));
+            pretty_formatted = p.format(dt.parse(effective));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         //this.description = desc;
         if(description.length() > 250){
             this.description = description.substring(0,249) + "...";
@@ -77,6 +100,9 @@ public class RowItem {
         this.desc_cap_severity = severityLookup.get(desc_cap_severity);
         this.desc_cap_certainty = certaintyLookup.get(desc_cap_certainty);
         this.desc_cap_category = categoryLookup.get(desc_cap_category);
+        Log.i("Alerted", formatted_effective);
+
+        this.effective = "Effective " + pretty_formatted;
 
         //this.urgencyImageId = urgencyImageId;
     }
@@ -130,6 +156,11 @@ public class RowItem {
     public String getTitle() {
         return title;
     }
+
+    public String getEffective() {
+        return this.effective;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
