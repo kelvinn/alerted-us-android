@@ -14,13 +14,12 @@
         { "token": "abcdefgh" }
 
 - request:
-    url: /api/v1/locations/
+    url: /api/v1/users/locations/
     method: POST
     headers:
             content-type: application/json
-    post: >
-        {"geom": {"type": "Point", "coordinates": "[-67.188634, 18.381713]"},
-           "name": "Current Location", "source": "current"}
+    body: >
+        {"source":"current","geom":{"type":"Point","coordinates":\[(\-?\d+(\.\d+)?),(\-?\d+(\.\d+)?)]},"name":"Current Location"}
 
   response:
     - status: 201
