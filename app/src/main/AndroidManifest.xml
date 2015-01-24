@@ -56,10 +56,10 @@
             android:value="us.alerted" />
 
         <!-- API Values Testing -->
-        <meta-data android:name="api.url.test.token" android:value="https://private-9edaa-alerted.apiary-mock.com/api-token-auth/"/>
-        <meta-data android:name="api.url.test.users" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/"/>
-        <meta-data android:name="api.url.test.gcmtoken" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/gcmtoken/"/>
-        <meta-data android:name="api.url.test.locations" android:value="https://private-9edaa-alerted.apiary-mock.com/api/v1/users/locations/"/>
+        <meta-data android:name="api.url.test.token" android:value="http://192.168.56.1:8882/api-token-auth/"/>
+        <meta-data android:name="api.url.test.users" android:value="http://192.168.56.1:8882/api/v1/users/"/>
+        <meta-data android:name="api.url.test.gcmtoken" android:value="http://192.168.56.1:8882/api/v1/users/gcmtoken/"/>
+        <meta-data android:name="api.url.test.locations" android:value="http://192.168.56.1:8882/api/v1/users/locations/"/>
 
         <!-- API Values Production -->
         <meta-data android:name="api.url.prod.token" android:value="https://alerted.us/api-token-auth/"/>
@@ -84,9 +84,14 @@
 
         <service
             android:name=".LocationService"
-            android:enabled="true"
-            android:exported="true"
             android:label="LocationService" >
+            <intent-filter>
+                <action android:name="us.alerted.alerted.MainActivity" />
+                <action android:name="us.alerted.alerted.ExternalReceiver" />
+                <action android:name="us.alerted.alerted.LoginActivity" />
+
+                <category android:name="us.alerted.alerted" />
+            </intent-filter>
         </service>
 
         <receiver android:name=".BootCompletedReceiver" >

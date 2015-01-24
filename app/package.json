@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "stubby": ">=0.2.8"
+  },
+  "license": "Apache",
+  "engine": {
+    "node": ">=0.10.x"
+  }
+}

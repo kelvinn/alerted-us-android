@@ -455,6 +455,17 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             urlParams.add(new BasicNameValuePair("password", mPassword));
             urlParams.add(new BasicNameValuePair("email", mEmail));
 
+            JSONObject postData = new JSONObject();
+
+            try {
+                postData.put("username",mEmail);
+                postData.put("password",mPassword);
+                postData.put("email", mEmail);
+            }  catch(JSONException e) {
+                Log.e(TAG, e.toString());
+            }
+
+
             try {
                 String apiUrl;
 
@@ -469,13 +480,16 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getQuery(urlParams));
+                //writer.write(getQuery(urlParams));
+                Log.i("us.alerted.us", postData.toString());
+                writer.write(postData.toString());
                 writer.flush();
                 writer.close();
                 os.close();
@@ -506,6 +520,15 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
             urlParams.add(new BasicNameValuePair("username", mEmail));
             urlParams.add(new BasicNameValuePair("password", mPassword));
 
+            JSONObject postData = new JSONObject();
+
+            try {
+                postData.put("username",mEmail);
+                postData.put("password",mPassword);
+            }  catch(JSONException e) {
+                Log.e(TAG, e.toString());
+            }
+
             try {
 
                 if (BuildConfig.DEBUG) {
@@ -524,13 +547,16 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                writer.write(getQuery(urlParams));
+                //writer.write(getQuery(urlParams));
+                Log.i("us.alerted.us", postData.toString());
+                writer.write(postData.toString());
                 writer.flush();
                 writer.close();
                 os.close();
@@ -579,7 +605,6 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
                     editor.putBoolean(getString(R.string.post_new_gmc_token), false);
                     editor.apply();
                 }
-
 
             } else {
                 createAccount();

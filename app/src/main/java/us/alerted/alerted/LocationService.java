@@ -1,6 +1,7 @@
 package us.alerted.alerted;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -38,22 +39,25 @@ public class LocationService extends Service implements
         GooglePlayServicesClient.OnConnectionFailedListener {
 
     private String TAG = this.getClass().getSimpleName();
+    private SubmitCrdTask mSubmitCrdTask = null;
 
     // A request to connect to Location Services
     private LocationRequest mLocationRequest;
-
-    private SubmitCrdTask mSubmitCrdTask = null;
+    private Location location;
 
     // Stores the current instantiation of the location client in this object
     private LocationClient mLocationClient;
     private TextView mConnectionState;
     private TextView mConnectionStatus;
     private Bundle data;
+    public String httpAuthToken;
 
     SharedPreferences sharedPref;
 
     public static final String ACTION_NEW_LOCATION = "us.alerted.alerted.action.newlocation";
     public static final String EXTRA_LOCATION = "location";
+
+    private static Context mContext;
 
     /*
      * Note if updates have been turned on. Starts out as "false"; is set to "true" in the
@@ -66,7 +70,10 @@ public class LocationService extends Service implements
     public void onCreate() {
         super.onCreate();
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mContext = getApplicationContext();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 
         try {
             data = getApplicationContext().getPackageManager().getApplicationInfo(
@@ -89,58 +96,79 @@ public class LocationService extends Service implements
         }
     }
 
-    public class SubmitCrdTask extends AsyncTask<Void, Void, Boolean> {
-        String httpAuthToken = sharedPref.getString("AlertedToken", null);
-        private final String mPostData;
+    protected boolean submitLocation(){
+        //String httpAuthToken = sharedPref.getString("AlertedToken", "");
 
-        SubmitCrdTask(String postData) {
-            mPostData = postData;
+        try {
+            JSONObject postData = new JSONObject();
+            JSONObject geom = new JSONObject();
+
+            geom.put("type", "Point");
+            geom.put("coordinates", Utils.format(location));
+            postData.put("name","Current Location");
+            postData.put("source","current");
+            postData.put("geom", geom);
+
+
+            String apiUrl;
+            //Log.i(TAG, "Submitting data: " + mPostData);
+            if (BuildConfig.DEBUG) {
+                apiUrl = data.getString("api.url.test.token");
+            } else {
+                apiUrl = data.getString("api.url.prod.token");
+            }
+
+            URL url = new URL(apiUrl);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            String tokenAuth = "Token " + httpAuthToken;
+            conn.setRequestProperty ("Authorization", tokenAuth);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            //Log.i(TAG, mPostData);
+            writer.write(postData.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+
+            conn.connect();
+
+
+            // create JSON object from content
+            InputStream inputStream = conn.getInputStream();
+
+            int code = conn.getResponseCode();
+            if (code == 201){
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (MalformedURLException e) {
+            Log.e(TAG, e.toString());
+        } catch (IOException e) {
+            Log.e(TAG, e.toString());
+        } catch(JSONException e) {
+            Log.e(TAG, e.toString());
         }
+        return true;
+    }
+    public class SubmitCrdTask extends AsyncTask<Void, Void, Boolean> {
+
+
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            Boolean result = submitLocation();
 
-            try {
-
-                String apiUrl;
-                //Log.i(TAG, "Submitting data: " + mPostData);
-                if (BuildConfig.DEBUG) {
-                    apiUrl = data.getString("api.url.test.token");
-                } else {
-                    apiUrl = data.getString("api.url.prod.token");
-                }
-
-                URL url = new URL(apiUrl);
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                String tokenAuth = "Token " + httpAuthToken;
-                conn.setRequestProperty ("Authorization", tokenAuth);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                //Log.i(TAG, mPostData);
-                writer.write(mPostData);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                conn.connect();
-
-                // create JSON object from content
-                InputStream inputStream = conn.getInputStream();
-
-            } catch (MalformedURLException e) {
-                Log.e(TAG, e.toString());
-            } catch (IOException e) {
-                Log.e(TAG, e.toString());
-            }
             return true;
         }
     }
@@ -183,23 +211,11 @@ public class LocationService extends Service implements
      */
     @Override
     public void onLocationChanged(Location location) {
+        this.location = location;
 
-        try {
-            JSONObject postData = new JSONObject();
-            JSONObject geom = new JSONObject();
+        SubmitCrdTask mSubmitCrdTask = new SubmitCrdTask();
+        mSubmitCrdTask.execute((Void) null);
 
-            geom.put("type", "Point");
-            geom.put("coordinates", Utils.format(location));
-            postData.put("name","Current Location");
-            postData.put("source","current");
-            postData.put("geom", geom);
-
-            mSubmitCrdTask = new SubmitCrdTask(postData.toString());
-            mSubmitCrdTask.execute((Void) null);
-
-        }  catch(JSONException e) {
-            Log.e(TAG, e.toString());
-        }
 
         // TODO figure out how to use the below
         Intent intent = new Intent(ACTION_NEW_LOCATION).putExtra(EXTRA_LOCATION, location);
@@ -222,6 +238,7 @@ public class LocationService extends Service implements
     }
 
     public boolean httpAuthTokenExists() {
+
 
         String httpAuthToken = sharedPref.getString("AlertedToken", null);
 

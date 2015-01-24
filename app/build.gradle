@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         mavenCentral()
@@ -5,8 +6,11 @@ buildscript {
 
     dependencies {
         classpath 'com.newrelic.agent.android:agent-gradle-plugin:4.178.0'
-
     }
+}
+
+plugins {
+    id "com.moowork.node" version "0.8"
 }
 
 repositories {
@@ -16,11 +20,26 @@ repositories {
 apply plugin: 'newrelic'
 apply plugin: 'com.android.application'
 
+//gradle.projectsEvaluated {
+//    preBuild.dependsOn(startStubby)
+//}
+
+task startStubby(type: NodeTask) {
+    script = file('./node_modules/.bin/stubby')
+    args = ['-d', 'api.yaml']
+}
 
 android {
+    signingConfigs {
+        release {
+            storeFile file("../signing_keystore.jks")
+            storePassword "F5GGYkGNVuNdWxqQamu8"
+            keyAlias "alerted"
+            keyPassword "F5GGYkGNVuNdWxqQamu8"
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion '20.0.0'
-
     defaultConfig {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
@@ -29,20 +48,17 @@ android {
         versionName "r11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         def BOOLEAN = "boolean"
         def STRING = "String"
         def TRUE = "true"
         def FALSE = "false"
-
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
+            signingConfig signingConfigs.release
         }
-
         debug {
             minifyEnabled false
         }
@@ -50,7 +66,6 @@ android {
     sourceSets {
         androidTest.setRoot('src/androidTest')
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/LICENSE'
@@ -77,16 +92,13 @@ dependencies {
     // For testing API calls
     //compile 'com.google.mockwebserver:mockwebserver:20130706'
     //androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
-
     //androidTestCompile 'com.squareup.okhttp:mockwebserver:2.2.0'
     compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.7'
-
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-
 }
