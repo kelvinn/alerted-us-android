@@ -54,13 +54,14 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         */
 
         LocationService locationService = new LocationService();
-        //locationService.onCreate();
+        locationService.onCreate();
         Location location = new Location("");//provider name is unecessary
         location.setLatitude(0.0d);//your coords of course
         location.setLongitude(0.0d);
         //locationService.onLocationChanged(location);
-        Boolean result = locationService.submitLocation();
-
+        //Boolean result = locationService.submitLocation();
+        Boolean result = locationService.triggerChange();
+        assertTrue(result);
 
         //Boolean result = sharedPref.getBoolean(String.valueOf(R.string.post_new_gmc_token), true);
         //assertFalse(result);
