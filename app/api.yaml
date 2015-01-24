@@ -18,6 +18,7 @@
     method: POST
     headers:
             content-type: application/json
+            authorization: "Token abcdefgh"
     body: >
         {"source":"current","geom":{"type":"Point","coordinates":\[(\-?\d+(\.\d+)?),(\-?\d+(\.\d+)?)]},"name":"Current Location"}
 

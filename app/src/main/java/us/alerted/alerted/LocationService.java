@@ -194,20 +194,17 @@ public class LocationService extends Service implements
             try {
                 String apiUrl;
                 if (BuildConfig.DEBUG) {
-                    apiUrl = data.getString("api.url.test.gcmtoken");
+                    apiUrl = data.getString("api.url.test.locations");
 
                 } else {
-                    apiUrl = data.getString("api.url.prod.gcmtoken");
+                    apiUrl = data.getString("api.url.prod.locations");
                 }
 
                 String httpAuthToken = sharedPref.getString("AlertedToken", null);
-                //Log.i(TAG, "Submitting data: " + mPostData);
-                //URL url = new URL("https://alerted.us/api/v1/users/locations/");
-                //URL url = new URL("http://192.168.56.1:8882/api/v1/users/locations/");
                 URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 String tokenAuth = "Token " + httpAuthToken;
-                //conn.setRequestProperty ("Authorization", tokenAuth);
+                conn.setRequestProperty ("Authorization", tokenAuth);
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -218,7 +215,6 @@ public class LocationService extends Service implements
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                //Log.i(TAG, mPostData);
                 writer.write(mPostData);
                 writer.flush();
                 writer.close();
