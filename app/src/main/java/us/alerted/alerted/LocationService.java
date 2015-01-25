@@ -21,20 +21,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
-
-
-import android.location.Location;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -72,8 +64,9 @@ public class LocationService extends Service implements
     private GoogleApiClient mGoogleApiClient;
     private SubmitCrdTask mSubmitCrdTask = null;
     LocationRequest mLocationRequest;
-    SharedPreferences sharedPref;
+    public static SharedPreferences sharedPref;
     public static Bundle data;
+
 
     /**
      * Represents a geographical location.
@@ -83,12 +76,19 @@ public class LocationService extends Service implements
     protected TextView mLatitudeText;
     protected TextView mLongitudeText;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // This 'data' object is able to query the meta data from the Manifest
+
+        getBundleData();
+        buildGoogleApiClient();
+    }
+
+    public void getBundleData(){
         try {
             data = getApplicationContext().getPackageManager().getApplicationInfo(
                     getApplicationContext().getPackageName(),
@@ -96,17 +96,12 @@ public class LocationService extends Service implements
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-        Log.i(TAG, "created");
-        buildGoogleApiClient();
     }
 
     /**
      * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
      */
     protected synchronized void buildGoogleApiClient() {
-        Log.i(TAG, "mGoogleApiClient");
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -115,28 +110,11 @@ public class LocationService extends Service implements
         mGoogleApiClient.connect();
     }
 
-
-
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, location.toString());
-        try {
-            JSONObject postData = new JSONObject();
-            JSONObject geom = new JSONObject();
-
-            geom.put("type", "Point");
-            geom.put("coordinates", Utils.format(location));
-            postData.put("name","Current Location");
-            postData.put("source","current");
-            postData.put("geom", geom);
-
-            Log.i(TAG, "Location changed!");
-            mSubmitCrdTask = new SubmitCrdTask(postData.toString());
-            mSubmitCrdTask.execute((Void) null);
-
-        }  catch(JSONException e) {
-            Log.e(TAG, e.toString());
-        }
+        mLastLocation = location;
+        mSubmitCrdTask = new SubmitCrdTask();
+        mSubmitCrdTask.execute((Void) null);
     }
 
     /**
@@ -149,18 +127,17 @@ public class LocationService extends Service implements
         // updates. Gets the best and most recent location currently available, which may be null
         // in rare cases when a location is not available.
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location == null) {
-            Log.i(TAG, "null");
-        }
-        else {
-            Log.i(TAG, "handling new location");
-            //handleNewLocation(location);
+
+        if (location != null) {
+            mLastLocation = location;
+            mSubmitCrdTask = new SubmitCrdTask();
+            mSubmitCrdTask.execute((Void) null);
         }
 
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setInterval(5 * 60 * 1000); // Update location every five minutes
-        mLocationRequest.setFastestInterval(1 * 1000); // 60 seconds, in milliseconds
+        mLocationRequest.setInterval(15 * 60 * 1000); // Update location every five minutes
+        mLocationRequest.setFastestInterval(60 * 1000); // 60 seconds, in milliseconds
 
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
@@ -171,66 +148,99 @@ public class LocationService extends Service implements
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
+
+    public boolean submitLocation(String mPostData, String httpAuthToken, String apiUrl){
+        try {
+
+            if (BuildConfig.DEBUG && apiUrl.isEmpty()) {
+                apiUrl = data.getString("api.url.test.locations");
+
+            } else if (!BuildConfig.DEBUG) {
+                apiUrl = data.getString("api.url.prod.locations");
+            }
+
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            String tokenAuth = "Token " + httpAuthToken;
+            conn.setRequestProperty ("Authorization", tokenAuth);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(mPostData);
+            writer.flush();
+            writer.close();
+            os.close();
+
+            conn.connect();
+
+            // create JSON object from content
+            InputStream inputStream = conn.getInputStream();
+            int code = conn.getResponseCode();
+
+            return (code == 201);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
-    public class SubmitCrdTask extends AsyncTask<Void, Void, Boolean> {
+     /*
+     * class for binding
+     */
+    private final IBinder mBinder = new myBinder();
+    public class myBinder extends Binder {
+        LocationService getService() {
+            return LocationService.this;
+        }
+    }
 
-        private final String mPostData;
+    public class SubmitCrdTask extends AsyncTask<Object, Void, Object> {
 
-        SubmitCrdTask(String postData) {
-            mPostData = postData;
-            Log.i(TAG, mPostData);
+        public String generatePostData(){
+            JSONObject postData = new JSONObject();
+            JSONObject geom = new JSONObject();
+            try {
+                geom.put("type", "Point");
+                geom.put("coordinates", Utils.format(mLastLocation));
+                postData.put("name","Current Location");
+                postData.put("source","current");
+                postData.put("geom", geom);
+
+            }  catch(JSONException e) {
+                e.printStackTrace();
+            }
+            return postData.toString();
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected Object doInBackground(final Object... params) {
 
-            try {
-                String apiUrl;
-                if (BuildConfig.DEBUG) {
-                    apiUrl = data.getString("api.url.test.locations");
+            String mPostData = generatePostData();
 
-                } else {
-                    apiUrl = data.getString("api.url.prod.locations");
-                }
+            String httpAuthToken = sharedPref.getString("AlertedToken", null);
 
-                String httpAuthToken = sharedPref.getString("AlertedToken", null);
-                URL url = new URL(apiUrl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                String tokenAuth = "Token " + httpAuthToken;
-                conn.setRequestProperty ("Authorization", tokenAuth);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setReadTimeout(10000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
+            // Do not hit api if no json data
+            Boolean result = !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken, "");
 
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(mPostData);
-                writer.flush();
-                writer.close();
-                os.close();
-
-                conn.connect();
-
-                // create JSON object from content
-                InputStream inputStream = conn.getInputStream();
-
-            } catch (MalformedURLException e) {
-                Log.e(TAG, e.toString());
-            } catch (IOException e) {
-                Log.e(TAG, e.toString());
-            }
-            return true;
+            return result;
         }
     }
 
@@ -238,7 +248,6 @@ public class LocationService extends Service implements
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
-        Log.i(TAG, "Connection suspended");
         mGoogleApiClient.connect();
     }
 }

@@ -249,8 +249,6 @@ public class NotificationService extends Service{
                     apiUrl = data.getString("api.url.prod.gcmtoken");
                 }
 
-                Log.i("GCM_TOKEN", mPostData);
-
                 url = new URL(apiUrl);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -310,7 +308,7 @@ public class NotificationService extends Service{
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("GCM_TOKEN", token);
                 editor.apply();
-                Log.i("GCM Reg Success RegID", token);
+                //Log.i("GCM Reg Success RegID", token);
 
             }
             catch (IOException e) {
