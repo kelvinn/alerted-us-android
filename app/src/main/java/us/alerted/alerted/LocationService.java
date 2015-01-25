@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -67,15 +66,10 @@ public class LocationService extends Service implements
     public static SharedPreferences sharedPref;
     public static Bundle data;
 
-
     /**
      * Represents a geographical location.
      */
     protected Location mLastLocation;
-
-    protected TextView mLatitudeText;
-    protected TextView mLongitudeText;
-
 
     @Override
     public void onCreate() {
@@ -83,12 +77,6 @@ public class LocationService extends Service implements
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // This 'data' object is able to query the meta data from the Manifest
-
-        getBundleData();
-        buildGoogleApiClient();
-    }
-
-    public void getBundleData(){
         try {
             data = getApplicationContext().getPackageManager().getApplicationInfo(
                     getApplicationContext().getPackageName(),
@@ -96,6 +84,8 @@ public class LocationService extends Service implements
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
+        buildGoogleApiClient();
     }
 
     /**
@@ -151,13 +141,13 @@ public class LocationService extends Service implements
         Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
-    public boolean submitLocation(String mPostData, String httpAuthToken, String apiUrl){
+    public boolean submitLocation(String mPostData, String httpAuthToken){
         try {
-
-            if (BuildConfig.DEBUG && apiUrl.isEmpty()) {
+            String apiUrl;
+            if (BuildConfig.DEBUG) {
                 apiUrl = data.getString("api.url.test.locations");
 
-            } else if (!BuildConfig.DEBUG) {
+            } else {
                 apiUrl = data.getString("api.url.prod.locations");
             }
 
@@ -196,22 +186,6 @@ public class LocationService extends Service implements
         return false;
     }
 
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-     /*
-     * class for binding
-     */
-    private final IBinder mBinder = new myBinder();
-    public class myBinder extends Binder {
-        LocationService getService() {
-            return LocationService.this;
-        }
-    }
-
     public class SubmitCrdTask extends AsyncTask<Object, Void, Object> {
 
         public String generatePostData(){
@@ -234,13 +208,27 @@ public class LocationService extends Service implements
         protected Object doInBackground(final Object... params) {
 
             String mPostData = generatePostData();
-
             String httpAuthToken = sharedPref.getString("AlertedToken", null);
 
             // Do not hit api if no json data
-            Boolean result = !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken, "");
+            Boolean result = !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken);
 
             return result;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    /*
+    * class for binding
+    */
+    private final IBinder mBinder = new myBinder();
+    public class myBinder extends Binder {
+        LocationService getService() {
+            return LocationService.this;
         }
     }
 

@@ -76,7 +76,9 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
 
     public void testSubmitLocation() {
 
-        LocationService locationService = new LocationService();
+        Intent startIntent = new Intent();
+        startIntent.setClass(getContext(), LocationService.class);
+        startService(startIntent);
 
         JSONObject postData = new JSONObject();
         JSONObject geom = new JSONObject();
@@ -96,7 +98,7 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         String mPostData = postData.toString();
         String httpAuthToken = "abcdefgh";
         String apiUrl = "http://192.168.56.1:8882/api/v1/users/locations/";
-        Boolean result = locationService.submitLocation(mPostData, httpAuthToken, apiUrl);
+        Boolean result = getService().submitLocation(mPostData, httpAuthToken);
         assertTrue(result);
     }
 
