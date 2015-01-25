@@ -3,6 +3,7 @@ package us.alerted.alerted;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -62,7 +63,7 @@ import java.util.Scanner;
  * https://developers.google.com/+/mobile/android/getting-started#step_1_enable_the_google_api
  * and follow the steps in "Step 1" to create an OAuth 2.0 client for your package.
  */
-public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<Cursor>{
+public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -285,53 +286,25 @@ public class LoginActivity extends PlusBaseActivity implements LoaderCallbacks<C
         }
     }
 
-    @Override
-    protected void onPlusClientSignIn() {
-        //Set up sign out and disconnect buttons.
-        /*
-        Button signOutButton = (Button) findViewById(R.id.plus_sign_out_button);
-        signOutButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOut();
-            }
-        });
 
-        Button disconnectButton = (Button) findViewById(R.id.plus_disconnect_button);
-        disconnectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                revokeAccess();
-            }
-        });
-        */
-    }
-
+    /*
     @Override
     protected void onPlusClientBlockingUI(boolean show) {
         showProgress(show);
     }
 
+
     @Override
     protected void updateConnectButtonState() {
         //TODO: Update this logic to also handle the user logged in by email.
-        boolean connected = getPlusClient().isConnected();
+        //boolean connected = getPlusClient().isConnected();
 
         //mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
         //mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);
-        mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
+        //mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
     }
+    */
 
-    @Override
-    protected void onPlusClientRevokeAccess() {
-        // TODO: Access to the user's G+ account has been revoked.  Per the developer terms, delete
-        // any stored user data here.
-    }
-
-    @Override
-    protected void onPlusClientSignOut() {
-
-    }
 
     /**
      * Check if the device supports Google Play Services.  It's best

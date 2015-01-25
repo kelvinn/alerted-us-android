@@ -17,7 +17,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +28,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +49,6 @@ public class NotificationService extends Service{
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
     public static Bundle data;
     public static GoogleCloudMessaging gcm;
-    public static Context baseContext;
 
 
     public void onCreate(){

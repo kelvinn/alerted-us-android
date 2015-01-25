@@ -91,9 +91,7 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:21.+'
     // For testing API calls
-    //compile 'com.google.mockwebserver:mockwebserver:20130706'
-    //androidTestCompile 'com.google.mockwebserver:mockwebserver:20130706'
-    //androidTestCompile 'com.squareup.okhttp:mockwebserver:2.2.0'
+
     compile 'com.ocpsoft:ocpsoft-pretty-time:1.0.7'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
