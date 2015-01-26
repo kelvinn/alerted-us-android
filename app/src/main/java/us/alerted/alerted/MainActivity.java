@@ -215,42 +215,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-
-    // If messages have been missed, check the backlog. Otherwise check the current intent for a new message.
-    private String getMessage(int numOfMissedMessages) {
-        String message = "";
-        String linesOfMessageCount = getString(R.string.lines_of_message_count);
-        PrettyTime p = new PrettyTime();
-        if(numOfMissedMessages > 0){
-            String plural = numOfMissedMessages > 1 ? "s" : "";
-            //Log.i("onResume","missed " + numOfMissedMessages + " message" + plural);
-            tView.append("You missed " + numOfMissedMessages +" message" + plural + ". Your most recent was:\n");
-            for(int i = 0; i < savedValues.getInt(linesOfMessageCount, 0); i++){
-                String line = savedValues.getString("MessageLine"+i, "");
-                message+= (line + "\n");
-            }
-            NotificationManager mNotification = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotification.cancel(R.string.notification_number);
-            SharedPreferences.Editor editor=savedValues.edit();
-            editor.putInt(this.numOfMissedMessages, 0);
-            editor.putInt(linesOfMessageCount, 0);
-            editor.apply();
-        }
-        else{
-            Intent intent = getIntent();
-            if(intent!=null){
-                Bundle extras = intent.getExtras();
-                if(extras!=null){
-                    for(String key: extras.keySet()){
-                        message+= key + "=" + extras.getString(key) + "\n";
-                    }
-                }
-            }
-        }
-        message+="\n";
-        return message;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

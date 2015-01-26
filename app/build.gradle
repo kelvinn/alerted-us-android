@@ -19,6 +19,8 @@ repositories {
 
 apply plugin: 'newrelic'
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+
 
 //gradle.projectsEvaluated {
 //    preBuild.dependsOn(startStubby)
@@ -30,6 +32,7 @@ task startStubby(type: NodeTask) {
 }
 
 android {
+
     signingConfigs {
         release {
             storeFile file("../signing_keystore.jks")
@@ -39,7 +42,7 @@ android {
         }
     }
     compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
@@ -61,6 +64,8 @@ android {
         }
         debug {
             minifyEnabled false
+            debuggable true
+            testCoverageEnabled true
         }
     }
     sourceSets {
