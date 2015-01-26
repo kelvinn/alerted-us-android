@@ -40,7 +40,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -173,7 +172,7 @@ public class LocationService extends Service implements
             conn.connect();
 
             // create JSON object from content
-            InputStream inputStream = conn.getInputStream();
+            conn.getInputStream();
             int code = conn.getResponseCode();
 
             return (code == 201);
@@ -211,9 +210,8 @@ public class LocationService extends Service implements
             String httpAuthToken = sharedPref.getString("AlertedToken", null);
 
             // Do not hit api if no json data
-            Boolean result = !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken);
 
-            return result;
+            return !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken);
         }
     }
 

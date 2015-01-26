@@ -49,7 +49,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         Bundle extras = new Bundle();
         extras.putString("message", "Test single notification");
 
-        NotificationService.saveToDB(extras, getInstrumentation().getTargetContext());
+        NotificationService.saveToDB(extras);
         NotificationService.sendToApp("NEW_CARD");
 
         // Check that the list of alerts comes up

@@ -68,6 +68,9 @@ android {
             testCoverageEnabled true
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
     sourceSets {
         androidTest.setRoot('src/androidTest')
     }

@@ -1,5 +1,7 @@
 package us.alerted.alerted;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -21,6 +23,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,6 +57,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
@@ -81,7 +85,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private EditText mPasswordView;
     private Boolean mLoginResult;
     private View mProgressView;
-    //private View mTextViewLoading;
     private TextView mTextViewLoading;
     private View mEmailLoginFormView;
     private SignInButton mPlusSignInButton;
@@ -112,23 +115,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        //populateAutoComplete();
+        List<String> emails = ProfileQuery();
+        addEmailsToAutoComplete(emails);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-
-        // I don't think this does anything
-        /*
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.email_sign_in_button || id == R.id.email_sign_up_button || id == EditorInfo.IME_NULL) {
-                    Boolean result = verifyDetails();
-                    return result;
-                }
-                return false;
-            }
-        });
-        */
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -165,10 +155,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             }
         });
 
-    }
-
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
     }
 
     /**
@@ -286,26 +272,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         }
     }
 
-
-    /*
-    @Override
-    protected void onPlusClientBlockingUI(boolean show) {
-        showProgress(show);
-    }
-
-
-    @Override
-    protected void updateConnectButtonState() {
-        //TODO: Update this logic to also handle the user logged in by email.
-        //boolean connected = getPlusClient().isConnected();
-
-        //mSignOutButtons.setVisibility(connected ? View.VISIBLE : View.GONE);
-        //mPlusSignInButton.setVisibility(connected ? View.GONE : View.VISIBLE);
-        //mEmailLoginFormView.setVisibility(connected ? View.GONE : View.VISIBLE);
-    }
-    */
-
-
     /**
      * Check if the device supports Google Play Services.  It's best
      * practice to check first rather than handling this as an error case.
@@ -317,62 +283,46 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 ConnectionResult.SUCCESS;
     }
 
+
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
 
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                                                                     .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        addEmailsToAutoComplete(emails);
     }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
     }
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
+    private List<String> ProfileQuery() {
+        List<String> emails = new ArrayList<>();
 
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(LoginActivity.this).getAccounts();
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                emails.add(account.name);
+            }
+        }
+        return emails;
     }
-
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+        AutoCompleteTextView textView = (AutoCompleteTextView)
+                findViewById(R.id.email);
+        textView.setAdapter(adapter);
 
         mEmailView.setAdapter(adapter);
-    }
-
-    public boolean getLoginResult(){
-        return mLoginResult;
     }
 
     /**
@@ -395,8 +345,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             mCreateUser = create_user;
         }
 
-
-
         private String getResponseText(InputStream inStream) {
             // very nice trick from
             // http://weblogs.java.net/blog/pat/archive/2004/10/stupid_scanner_1.html
@@ -405,10 +353,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
         protected void createAccount(){
-            List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
-            urlParams.add(new BasicNameValuePair("username", mEmail));
-            urlParams.add(new BasicNameValuePair("password", mPassword));
-            urlParams.add(new BasicNameValuePair("email", mEmail));
 
             JSONObject postData = new JSONObject();
 
@@ -442,8 +386,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                //writer.write(getQuery(urlParams));
-                Log.i("us.alerted.us", postData.toString());
                 writer.write(postData.toString());
                 writer.flush();
                 writer.close();
@@ -455,14 +397,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 InputStream in = new BufferedInputStream(
                         conn.getInputStream());
 
-                /*
-                try {
-                    JSONObject jsonToken = new JSONObject(getResponseText(in));
-                } catch(JSONException e) {
-                    Log.e(TAG, e.toString());
-                }
-                */
-
 
             } catch (MalformedURLException e) {
                 Log.e(TAG, e.toString());
@@ -471,10 +405,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             }
         }
         protected boolean getToken(){
-            List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
-            urlParams.add(new BasicNameValuePair("username", mEmail));
-            urlParams.add(new BasicNameValuePair("password", mPassword));
-
             JSONObject postData = new JSONObject();
 
             try {
@@ -509,8 +439,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
-                //writer.write(getQuery(urlParams));
-                Log.i("us.alerted.us", postData.toString());
+                Log.i(TAG, postData.toString());
                 writer.write(postData.toString());
                 writer.flush();
                 writer.close();

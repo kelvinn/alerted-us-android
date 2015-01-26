@@ -33,8 +33,6 @@
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
 
     <application
         android:name="com.orm.SugarApp"
@@ -85,7 +83,8 @@
 
         <service
             android:name=".LocationService"
-            android:label="LocationService" >
+            android:label="LocationService"
+            android:exported = "false" >
             <intent-filter>
                 <action android:name="us.alerted.alerted.MainActivity" />
                 <action android:name="us.alerted.alerted.ExternalReceiver" />
@@ -110,7 +109,8 @@
 
         <service
             android:name=".NotificationService"
-            android:label="NotificationService" >
+            android:label="NotificationService"
+            android:exported = "false" >
             <intent-filter>
                 <action android:name="us.alerted.alerted.MainActivity" />
                 <action android:name="us.alerted.alerted.ExternalReceiver" />

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ocpsoft.pretty.time.PrettyTime;
 
-import java.util.Date;
 import java.util.List;
 
 public class LazyAdapter extends ArrayAdapter<RowItem> {

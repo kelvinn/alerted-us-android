@@ -9,14 +9,15 @@ public class ExternalReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if(intent!=null){
-            Bundle extras = intent.getExtras();
+            Bundle extras;
+            extras = intent.getExtras();
             if(!MainActivity.inBackground){
                 // TODO also refresh app on this one?
-                NotificationService.saveToDB(extras, context);
+                NotificationService.saveToDB(extras);
                 NotificationService.sendToApp("NEW_CARD");
             }
             else{
-                NotificationService.saveToDB(extras, context);
+                NotificationService.saveToDB(extras);
                 NotificationService.postNotification(new Intent(context, MainActivity.class), context);
             }
         }

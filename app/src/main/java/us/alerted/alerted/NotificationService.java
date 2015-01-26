@@ -86,23 +86,23 @@ public class NotificationService extends Service{
         broadcaster.sendBroadcast(intent);
     }
 
-    public static void saveToDB(Bundle extras, Context context){
+    public static void saveToDB(Bundle extras){
         JSONObject recData;
         String msg = extras.getString("message");
 
         try {
             if (msg != null) {
 
-                String cap_headline = "";
-                String cap_urgency = "";
-                String cap_severity = "";
-                String cap_certainty = "";
-                String cap_effective = "";
-                String cap_expires = "";
-                String cap_description = "";
-                String cap_instruction = "";
-                String cap_category = "";
-                String cap_event = "";
+                String cap_headline;
+                String cap_urgency;
+                String cap_severity;
+                String cap_certainty;
+                String cap_effective;
+                String cap_expires;
+                String cap_description;
+                String cap_instruction;
+                String cap_category;
+                String cap_event;
 
                 if (msg.equals("Test single notification")){
                     cap_headline = "Sample Weather Alert";
@@ -168,7 +168,7 @@ public class NotificationService extends Service{
         List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "1");
 
 
-        Map<String,Integer> categoryLookup = new HashMap<String, Integer>();
+        Map<String,Integer> categoryLookup = new HashMap<>();
         {
             categoryLookup.put("Geo", R.drawable.geo);
             categoryLookup.put("Met",R.drawable.met);
@@ -184,7 +184,7 @@ public class NotificationService extends Service{
             categoryLookup.put("Other",R.drawable.other);
         }
 
-        Map<String,Integer> severityLookup = new HashMap<String, Integer>();
+        Map<String,Integer> severityLookup = new HashMap<>();
         {
             severityLookup.put("Extreme", Notification.PRIORITY_HIGH);
             severityLookup.put("Severe", Notification.PRIORITY_LOW);
@@ -269,7 +269,7 @@ public class NotificationService extends Service{
                 conn.connect();
 
                 // create JSON object from content
-                InputStream inputStream = conn.getInputStream();
+                conn.getInputStream();
 
                 int code = conn.getResponseCode();
                 if (code == 201){

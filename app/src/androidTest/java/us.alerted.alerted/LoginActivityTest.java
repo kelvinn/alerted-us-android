@@ -38,6 +38,20 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
     }
 
+    public void testLoginInvalidPasswordDenied() {
+        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
+        onView(withId(R.id.password)).perform(typeText("invalid")).check(ViewAssertions.matches(withText("invalid")));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
+    public void testLoginInvalidPasswordDeniedTooShort() {
+        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
+        onView(withId(R.id.password)).perform(typeText("abc")).check(ViewAssertions.matches(withText("abc")));
+        onView(withId(R.id.email_sign_in_button)).perform(click());
+        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
+    }
+
     public void testLoginEmptyPasswordDenied() {
         onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
         onView(withId(R.id.email_sign_in_button)).perform(click());
