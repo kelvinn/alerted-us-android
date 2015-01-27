@@ -125,8 +125,8 @@ public class LocationService extends Service implements
 
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setInterval(15 * 60 * 1000); // Update location every five minutes
-        mLocationRequest.setFastestInterval(60 * 1000); // 60 seconds, in milliseconds
+        mLocationRequest.setInterval(30 * 60 * 1000); // Update location every 30 minutes
+        mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
 
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);

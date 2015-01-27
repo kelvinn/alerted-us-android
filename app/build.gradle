@@ -47,15 +47,11 @@ android {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 12
-        versionName "r12"
+        versionCode 13
+        versionName "r13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        def BOOLEAN = "boolean"
-        def STRING = "String"
-        def TRUE = "true"
-        def FALSE = "false"
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

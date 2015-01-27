@@ -20,6 +20,7 @@ public class MainDetailActivity extends Activity {
     private String TAG = this.getClass().getSimpleName();
     static final public String EXTRA_MESSAGE = "us.alerted.alerted.MainActivity.MESSAGE";
     public SharedPreferences sharedPref;
+
     SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
@@ -45,9 +46,7 @@ public class MainDetailActivity extends Activity {
         try {
             formatted_expires = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(alert.expires));
             formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(alert.effective));
-
             expiresDate.setTime(dt.parse(alert.expires));
-
             long msUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis();
             long msUntil = expiresDate.getTimeInMillis()-msUtc;
         } catch (ParseException e) {
