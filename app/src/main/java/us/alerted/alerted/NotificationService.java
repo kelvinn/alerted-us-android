@@ -86,10 +86,10 @@ public class NotificationService extends Service{
         broadcaster.sendBroadcast(intent);
     }
 
-    public static void saveToDB(Bundle extras){
+    public static boolean saveToDB(Bundle extras){
         JSONObject recData;
         String msg = extras.getString("message");
-
+        Boolean result = false;
         try {
             if (msg != null) {
 
@@ -103,6 +103,7 @@ public class NotificationService extends Service{
                 String cap_instruction;
                 String cap_category;
                 String cap_event;
+                String cap_slug;
 
                 if (msg.equals("Test single notification")){
                     cap_headline = "Sample Weather Alert";
@@ -126,6 +127,7 @@ public class NotificationService extends Service{
                     cap_instruction = "This is a sample instruction";
                     cap_category = "Met";
                     cap_event = "Test Weather Statement";
+                    cap_slug = "this_is_a_unit_string_1234";
                 } else {
                     recData = new JSONObject(msg);
 
@@ -139,28 +141,40 @@ public class NotificationService extends Service{
                     cap_instruction = recData.get("cap_instruction").toString();
                     cap_category = recData.get("cap_category").toString();
                     cap_event = recData.get("cap_event").toString();
+                    cap_slug = recData.get("cap_slug").toString();
                 }
 
-                Alert alert = new Alert();
+                List<Alert> alerts = Alert.find(Alert.class, "slug = ?", cap_slug);
+                if (alerts.isEmpty()){
+                    Alert alert = new Alert();
 
-                alert.headline = cap_headline;
-                alert.urgency = cap_urgency;
-                alert.severity = cap_severity;
-                alert.certainty = cap_certainty;
-                alert.effective = cap_effective;
-                alert.expires = cap_expires;
-                alert.description = cap_description;
-                alert.instruction = cap_instruction;
-                alert.category = cap_category;
-                alert.event = cap_event;
+                    alert.headline = cap_headline;
+                    alert.urgency = cap_urgency;
+                    alert.severity = cap_severity;
+                    alert.certainty = cap_certainty;
+                    alert.effective = cap_effective;
+                    alert.expires = cap_expires;
+                    alert.description = cap_description;
+                    alert.instruction = cap_instruction;
+                    alert.category = cap_category;
+                    alert.event = cap_event;
+                    alert.slug = cap_slug;
 
-                alert.save();
+                    alert.save();
+                    result = true;
+                } else {
+                    result = false;
+                }
+
+
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
+            result = false;
         }
-
+        return result;
     }
 
     protected static void postNotification(Intent intentAction, Context context){
