@@ -22,7 +22,6 @@ import com.newrelic.agent.android.NewRelic;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
