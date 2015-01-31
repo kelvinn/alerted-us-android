@@ -55,6 +55,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // Check that the list of alerts comes up
         onView(withId(R.id.myListImg)).check(ViewAssertions.matches(isDisplayed()));
 
+        // Check that the status is displayed (it should be inactive)
+        onView(withId(R.id.status)).check(ViewAssertions.matches(withText("Inactive")));
+
         // Click on a card and see if the detail page comes up
         onView(withId(R.id.card)).perform(click());
         onView(withId(R.id.alert_summary)).check(ViewAssertions.matches(isDisplayed()));

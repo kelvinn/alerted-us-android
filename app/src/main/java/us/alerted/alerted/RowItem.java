@@ -65,26 +65,29 @@ public class RowItem {
     private int desc_cap_urgency;
     private int desc_cap_certainty;
     private int desc_cap_category;
+    private String pretty_effective;
     private String effective;
+    private String expires;
+    private String received;
     public PrettyTime p = new PrettyTime();
     String pretty_formatted;
 
-    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     //private int urgencyImageId;
     // TODO image to be put in when map is ready
     // public RowItem(int imageId, String title, String desc) {
     public RowItem(Long id, String title, String description, String desc_cap_certainty,
                    String desc_cap_severity, String desc_cap_urgency, String desc_cap_category,
-                   String effective) {
+                   String effective, String expires, String received) {
         //this.imageId = imageId;
         this.title = title;
         this.id = id;
 
         String formatted_effective = new String();
         try {
-            formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(effective));
-            pretty_formatted = p.format(dt.parse(effective));
+            //formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(effective));
+            pretty_formatted = p.format(sdf.parse(received));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -96,13 +99,16 @@ public class RowItem {
         else {
             this.description = description;
         }
+
         this.desc_cap_urgency = urgencyLookup.get(desc_cap_urgency);
         this.desc_cap_severity = severityLookup.get(desc_cap_severity);
         this.desc_cap_certainty = certaintyLookup.get(desc_cap_certainty);
         this.desc_cap_category = categoryLookup.get(desc_cap_category);
-        Log.i("Alerted", formatted_effective);
 
-        this.effective = "Effective " + pretty_formatted;
+        this.effective = effective;
+        this.expires = expires;
+
+        this.received = "Received " + pretty_formatted;
 
         //this.urgencyImageId = urgencyImageId;
     }
@@ -153,12 +159,23 @@ public class RowItem {
         return desc_cap_category;
     }
 
+    public String getReceived() {
+        return received;
+    }
+
     public String getTitle() {
         return title;
     }
 
+    public String getPrettyEffective() {
+        return this.pretty_effective;
+    }
     public String getEffective() {
         return this.effective;
+    }
+
+    public String getExpires() {
+        return expires;
     }
 
     public void setTitle(String title) {

@@ -42,17 +42,6 @@ public class MainActivity extends Activity {
 
     private List<RowItem> rowItems;
 
-    private static Integer[] images = {
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners,
-            R.drawable.prisoners
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +118,7 @@ public class MainActivity extends Activity {
                     RowItem item = new RowItem(alerts.get(i).getId(), alerts.get(i).event,
                             alerts.get(i).description, alerts.get(i).certainty,
                             alerts.get(i).severity, alerts.get(i).urgency, alerts.get(i).category,
-                            alerts.get(i).effective);
+                            alerts.get(i).effective, alerts.get(i).expires, alerts.get(i).received);
                     rowItems.add(item);
                 }
             }

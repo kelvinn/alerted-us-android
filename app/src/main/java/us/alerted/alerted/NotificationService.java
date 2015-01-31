@@ -29,6 +29,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,15 +42,17 @@ import java.util.Map;
  * when a message is received, it will immediately be posted. If the app is not in the foreground, the message will be saved
  * and a notification is posted to the NotificationManager.
  */
-public class NotificationService extends Service{
+public class NotificationService extends Service {
 
     public static SharedPreferences sharedPref;
-    public String TAG = this.getClass().getSimpleName();
+    public static String TAG = "NotificationService";
     static public LocalBroadcastManager broadcaster;
     static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
     public static Bundle data;
     public static GoogleCloudMessaging gcm;
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static Date now = new Date();
 
 
     public void onCreate(){
@@ -103,48 +107,37 @@ public class NotificationService extends Service{
                 String cap_instruction;
                 String cap_category;
                 String cap_event;
-                String cap_slug;
 
+                // I've hardcoded this in because this is the default message by Django Rest Framework
                 if (msg.equals("Test single notification")){
-                    cap_headline = "Sample Weather Alert";
-                    cap_urgency = "Immediate";
-                    cap_severity = "Minor";
-                    cap_certainty = "Observed";
-                    cap_effective = "2015-01-10T05:05:05";
-                    cap_expires = "2015-01-11T05:05:05";
-
-                    cap_description = "...SIGNIFICANT WEATHER ADVISORY FOR...\n" +
-                        "SOUTHERN HOPKINS COUNTY\n" +
-                        "EASTERN RAINS COUNTY\n" +
-                        "AT 447 AM CDT...NATIONAL WEATHER SERVICE METEOROLOGISTS DETECTED A\n" +
-                        "STRONG THUNDERSTORM 2 MILES EAST OF SULPHUR SPRINGS...MOVING SOUTH AT\n" +
-                        "30 MPH.\n" +
-                        "CITIES IN THE PATH OF THIS STORM INCLUDE COMO...CUMBY...SULPHUR\n" +
-                        "SPRINGS AND EMORY.\n" +
-                        "FREQUENT CLOUD TO GROUND LIGHTNING...VERY HEAVY RAINFALL...PEA-SIZED\n" +
-                        "HAIL...AND WIND GUSTS TO 50 MPH CAN BE EXPECTED FROM THIS STORM.\n" +
-                        "IF THIS STORM INTENSIFIES...A SEVERE WEATHER WARNING MAY BE NEEDED.";
-                    cap_instruction = "This is a sample instruction";
-                    cap_category = "Met";
-                    cap_event = "Test Weather Statement";
-                    cap_slug = "this_is_a_unit_string_1234";
-                } else {
-                    recData = new JSONObject(msg);
-
-                    cap_headline = recData.get("cap_headline").toString();
-                    cap_urgency = recData.get("cap_urgency").toString();
-                    cap_severity = recData.get("cap_severity").toString();
-                    cap_certainty = recData.get("cap_certainty").toString();
-                    cap_effective = recData.get("cap_effective").toString();
-                    cap_expires = recData.get("cap_expires").toString();
-                    cap_description = recData.get("cap_description").toString();
-                    cap_instruction = recData.get("cap_instruction").toString();
-                    cap_category = recData.get("cap_category").toString();
-                    cap_event = recData.get("cap_event").toString();
-                    cap_slug = recData.get("cap_slug").toString();
+                    msg = "{\"cap_sender_name\": null, \"cap_certainty\": \"Likely\", " +
+                            "\"cap_effective\": \"2015-01-21T01:16:17Z\", \"cap_urgency\": \"Expected\", " +
+                            "\"cap_response_type\": \"Monitor\", \"cap_event_code\": null, " +
+                            "\"cap_expires\": \"2015-01-24T01:16:17Z\", \"cap_category\": \"Health\"," +
+                            " \"cap_description\": \"This is a test description.\"," +
+                            " \"cap_audience\": null, \"cap_headline\": \"[TEST] Air Quality Alert\"," +
+                            " \"cap_alert\": 49, \"cap_language\": \"en-AU\", \"cap_contact\": null," +
+                            " \"cap_onset\": null, \"cap_severity\": \"Moderate\", \"cap_link\": \"\"," +
+                            " \"cap_event\": \"Air Quality Test Alert\", " +
+                            " \"cap_instruction\": \"People with heart or lung disease should limit exercising outdoors.\"}";
                 }
 
-                List<Alert> alerts = Alert.find(Alert.class, "slug = ?", cap_slug);
+                recData = new JSONObject(msg);
+
+                cap_headline = recData.get("cap_headline").toString();
+                cap_urgency = recData.get("cap_urgency").toString();
+                cap_severity = recData.get("cap_severity").toString();
+                cap_certainty = recData.get("cap_certainty").toString();
+                cap_effective = recData.get("cap_effective").toString();
+                cap_expires = recData.get("cap_expires").toString();
+                cap_description = recData.get("cap_description").toString();
+                cap_instruction = recData.get("cap_instruction").toString();
+                cap_category = recData.get("cap_category").toString();
+                cap_event = recData.get("cap_event").toString();
+
+
+                List<Alert> alerts = Alert.find(Alert.class, "effective = ?", cap_effective);
+
                 if (alerts.isEmpty()){
                     Alert alert = new Alert();
 
@@ -154,20 +147,17 @@ public class NotificationService extends Service{
                     alert.certainty = cap_certainty;
                     alert.effective = cap_effective;
                     alert.expires = cap_expires;
+                    alert.received = sdf.format(now);
                     alert.description = cap_description;
                     alert.instruction = cap_instruction;
                     alert.category = cap_category;
                     alert.event = cap_event;
-                    alert.slug = cap_slug;
 
                     alert.save();
                     result = true;
                 } else {
                     result = false;
                 }
-
-
-
             }
 
         } catch (JSONException e) {
@@ -255,6 +245,7 @@ public class NotificationService extends Service{
                 String apiUrl;
                 if (BuildConfig.DEBUG) {
                     apiUrl = data.getString("api.url.test.gcmtoken");
+                    Log.i(TAG, token);
 
                 } else {
                     apiUrl = data.getString("api.url.prod.gcmtoken");

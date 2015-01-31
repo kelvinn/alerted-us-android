@@ -34,14 +34,35 @@
         android:layout_height="1dp"
         android:background="@color/activity_background" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:id="@+id/effective"
-        android:textColor="#ff8f8f8f"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Active"
+            android:id="@+id/status"
+            android:textColor="#ffeaeaea"
+            android:background="#ff8f4e4e"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:autoText="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6 hours ago"
+            android:id="@+id/received"
+            android:textColor="#ff8f8f8f"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"

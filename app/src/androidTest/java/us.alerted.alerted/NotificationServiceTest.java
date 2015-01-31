@@ -16,7 +16,7 @@ import java.util.List;
 public class NotificationServiceTest extends ServiceTestCase<NotificationService> {
 
     public static SharedPreferences sharedPref;
-    public JSONObject postData;
+    public String postData;
     public NotificationServiceTest() {
         super(NotificationService.class);
     }
@@ -25,22 +25,16 @@ public class NotificationServiceTest extends ServiceTestCase<NotificationService
     public void setUp() throws Exception {
         super.setUp();
 
-        postData = new JSONObject();
-        try {
-            postData.put("cap_headline", "Sample Weather Alert");
-            postData.put("cap_urgency", "Immediate");
-            postData.put("cap_severity", "Minor");
-            postData.put("cap_certainty", "Observed");
-            postData.put("cap_effective", "2015-01-10T05:05:05");
-            postData.put("cap_expires", "2015-01-11T05:05:05");
-            postData.put("cap_description", "Test Description.");
-            postData.put("cap_instruction", "This is a sample instruction");
-            postData.put("cap_category", "Met");
-            postData.put("cap_event", "Test Weather Statement");
-            postData.put("cap_slug", "this_is_a_unit_string_1234");
-        }  catch(JSONException e) {
-            e.printStackTrace();
-        }
+        postData = "{\"cap_sender_name\": null, \"cap_certainty\": \"Likely\", " +
+                "\"cap_effective\": \"2015-01-21T01:16:17Z\", \"cap_urgency\": \"Expected\", " +
+                "\"cap_response_type\": \"Monitor\", \"cap_event_code\": null, " +
+                "\"cap_expires\": \"2015-01-22T01:16:17Z\", \"cap_category\": \"Health\"," +
+                " \"cap_description\": \"The air quality for the Sydney basin is forecast to be POOR.\"," +
+                " \"cap_audience\": null, \"cap_headline\": \"Air Quality Forecast (POOR)\"," +
+                " \"cap_alert\": 49, \"cap_language\": \"en-AU\", \"cap_contact\": null," +
+                " \"cap_onset\": null, \"cap_severity\": \"Moderate\", \"cap_link\": \"\"," +
+                " \"cap_event\": \"Air Quality\", \"cap_instruction\": \"People with heart or lung disease should limit exercising outdoors.\"}";
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
     }
 
@@ -67,7 +61,7 @@ public class NotificationServiceTest extends ServiceTestCase<NotificationService
         Alert.deleteAll(Alert.class);
 
         Bundle extras = new Bundle();
-        extras.putString("message", postData.toString());
+        extras.putString("message", postData);
 
         // Second, save one entry to the DB
         Boolean result = NotificationService.saveToDB(extras);

@@ -12,6 +12,7 @@ public class Alert extends SugarRecord<Alert> {
     String certainty;
     String effective;
     String expires;
+    String received;
     String description;
     String instruction;
     String category;
@@ -22,7 +23,7 @@ public class Alert extends SugarRecord<Alert> {
     }
 
     public Alert(String headline, String urgency, String severity, String certainty,
-                 String effective, String expires, String description,
+                 String effective, String expires, String received, String description,
                  String instruction, String category, String slug, String event){
         this.headline = headline;
         this.urgency = urgency;
@@ -30,6 +31,7 @@ public class Alert extends SugarRecord<Alert> {
         this.certainty = certainty;
         this.effective = effective;
         this.expires = expires;
+        this.received = received;
         this.description = description;
         this.instruction = instruction;
         this.category = category;
