@@ -1,0 +1,1 @@
+alter table ALERT add RECEIVED TEXT;

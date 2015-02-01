@@ -70,7 +70,7 @@ public class RowItem {
     private String expires;
     private String received;
     public PrettyTime p = new PrettyTime();
-    String pretty_formatted;
+    private String pretty_formatted;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -85,9 +85,15 @@ public class RowItem {
         this.id = id;
 
         String formatted_effective = new String();
+        pretty_formatted = "";
         try {
             //formatted_effective = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss").format(dt.parse(effective));
-            pretty_formatted = p.format(sdf.parse(received));
+            if (received != null){
+                pretty_formatted = p.format(sdf.parse(received));
+            } else {
+                pretty_formatted = "a while ago";
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -107,8 +113,9 @@ public class RowItem {
 
         this.effective = effective;
         this.expires = expires;
-
         this.received = "Received " + pretty_formatted;
+
+
 
         //this.urgencyImageId = urgencyImageId;
     }
