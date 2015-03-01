@@ -46,6 +46,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import retrofit.RestAdapter;
+import retrofit.client.Response;
+
 /**
  * Location sample.
  *
@@ -138,6 +141,30 @@ public class LocationService extends Service implements
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
         // onConnectionFailed.
         Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+
+    public AlertNew getAlertTest(){
+        String apiUrl;
+        if (BuildConfig.DEBUG) {
+            apiUrl = data.getString("api.url.test.url");
+
+        } else {
+            apiUrl = data.getString("api.url.prod.url");
+        }
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(apiUrl)
+                .build();
+
+        AlertsApi alertsApi = restAdapter.create(AlertsApi.class);
+        AlertNew result = alertsApi.getMyThing("0.0", "0.0");
+        Log.e(TAG, result.toString());
+        //String r = result.getBody().toString();
+        Log.e(TAG, "HERE RIGHT NOW");
+        //Log.i(TAG, result.toString());
+        return result;
+
     }
 
     public boolean submitLocation(String mPostData, String httpAuthToken){

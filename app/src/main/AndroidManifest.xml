@@ -54,13 +54,14 @@
         <meta-data android:name="api.url.test.users" android:value="http://192.168.56.1:8882/api/v1/users/"/>
         <meta-data android:name="api.url.test.gcmtoken" android:value="http://192.168.56.1:8882/api/v1/users/gcmtoken/"/>
         <meta-data android:name="api.url.test.locations" android:value="http://192.168.56.1:8882/api/v1/users/locations/"/>
+        <meta-data android:name="api.url.test.url" android:value="http://192.168.56.1:8882/"/>
 
         <!-- API Values Production -->
         <meta-data android:name="api.url.prod.token" android:value="https://alerted.us/api-token-auth/"/>
         <meta-data android:name="api.url.prod.users" android:value="https://alerted.us/api/v1/users/"/>
         <meta-data android:name="api.url.prod.gcmtoken" android:value="https://alerted.us/api/v1/users/gcmtoken/"/>
         <meta-data android:name="api.url.prod.locations" android:value="https://alerted.us/api/v1/users/locations/"/>
-
+        <meta-data android:name="api.url.prod.url" android:value="https://alerted.us/"/>
 
 
 

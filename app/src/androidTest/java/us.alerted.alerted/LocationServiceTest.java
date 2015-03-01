@@ -56,6 +56,22 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         getService().onLocationChanged(location);
     }
 
+    public void testGetAlertTest() {
+        Intent startIntent = new Intent();
+        startIntent.setClass(getContext(), LocationService.class);
+        startService(startIntent);
+
+        AlertNew result = getService().getAlertTest();
+        //assertEquals(result.category, "bob");
+        assertEquals(result.getCap_sender(), "w-nws.webmaster@noaa.gov");
+
+
+        assertEquals(result.getCap_slug(), "712c963f91646a212f071571d611d8");
+
+        Info info = result.getInfo().get(0);
+        assertEquals(info.getCap_category(), "Met");
+
+    }
 
     public void testSubmitLocation() {
 
