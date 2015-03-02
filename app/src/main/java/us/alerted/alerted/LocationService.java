@@ -25,6 +25,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -45,9 +46,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import retrofit.RestAdapter;
-import retrofit.client.Response;
 
 /**
  * Location sample.
@@ -62,11 +65,16 @@ public class LocationService extends Service implements
 
     public String TAG = this.getClass().getSimpleName();
 
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static Date now = new Date();
     private GoogleApiClient mGoogleApiClient;
     private SubmitCrdTask mSubmitCrdTask = null;
     LocationRequest mLocationRequest;
     public static SharedPreferences sharedPref;
     public static Bundle data;
+    static public LocalBroadcastManager broadcaster;
+    static final public String NOTIF_RESULT = "us.alerted.alerted.NotificationService.NEW_REQUEST";
+    static final public String NOTIF_MESSAGE = "us.alerted.alerted.NotificationService.NEW_MESSAGE";
 
     /**
      * Represents a geographical location.
@@ -76,6 +84,7 @@ public class LocationService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+        broadcaster = LocalBroadcastManager.getInstance(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // This 'data' object is able to query the meta data from the Manifest
@@ -143,8 +152,7 @@ public class LocationService extends Service implements
         Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
-
-    public AlertNew getAlertTest(){
+    public static List<AlertGson> getAlertFromApi(String lat, String lng){
         String apiUrl;
         if (BuildConfig.DEBUG) {
             apiUrl = data.getString("api.url.test.url");
@@ -158,13 +166,44 @@ public class LocationService extends Service implements
                 .build();
 
         AlertsApi alertsApi = restAdapter.create(AlertsApi.class);
-        AlertNew result = alertsApi.getMyThing("0.0", "0.0");
-        Log.e(TAG, result.toString());
-        //String r = result.getBody().toString();
-        Log.e(TAG, "HERE RIGHT NOW");
-        //Log.i(TAG, result.toString());
+        List<AlertGson> result = alertsApi.getMyThing(lat, lng);
         return result;
+    }
 
+    public static void sendToApp(String message) {
+        Intent intent = new Intent(NOTIF_RESULT);
+        if(message != null)
+            intent.putExtra(NOTIF_MESSAGE, message);
+        broadcaster.sendBroadcast(intent);
+    }
+
+    public static boolean saveAlertToDB(AlertGson alertGson) {
+        Boolean result = false;
+
+        List<Alert> alerts = Alert.find(Alert.class, "effective = ?", alertGson.getInfo().get(0).getCap_effective());
+
+        if (alerts.isEmpty()){
+            Alert alert = new Alert();
+
+            alert.headline = alertGson.getInfo().get(0).getCap_headline();
+            alert.urgency = alertGson.getInfo().get(0).getCap_urgency();
+            alert.severity = alertGson.getInfo().get(0).getCap_severity();
+            alert.certainty = alertGson.getInfo().get(0).getCap_certainty();
+            alert.effective = alertGson.getInfo().get(0).getCap_effective();
+            alert.expires = alertGson.getInfo().get(0).getCap_expires();
+            alert.received = sdf.format(now);
+            alert.description = alertGson.getInfo().get(0).getCap_description();
+            alert.instruction = alertGson.getInfo().get(0).getCap_instruction();
+            alert.category = alertGson.getInfo().get(0).getCap_category();
+            alert.event = alertGson.getInfo().get(0).getCap_event();
+
+            alert.save();
+            result = true;
+        } else {
+            result = false;
+        }
+
+        return result;
     }
 
     public boolean submitLocation(String mPostData, String httpAuthToken){

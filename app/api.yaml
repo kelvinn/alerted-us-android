@@ -64,630 +64,734 @@
   response:
     - status: 200
       body: >
-        {
-              "info_set": [
-                  {
-                      "parameter_set": [
-                          {
-                              "id": 293120,
-                              "value_name": "WMOHEADER",
-                              "value": "",
-                              "cap_info": 75096
-                          },
-                          {
-                              "id": 293121,
-                              "value_name": "UGC",
-                              "value": "MNC027",
-                              "cap_info": 75096
-                          },
-                          {
-                              "id": 293122,
-                              "value_name": "VTEC",
-                              "value": "/O.EXT.KFGF.FL.W.0036.000000T0000Z-000000T0000Z/\n/DILM5.1.ER.140617T2130Z.140620T1200Z.000000T0000Z.NO/",
-                              "cap_info": 75096
-                          },
-                          {
-                              "id": 293123,
-                              "value_name": "TIME...MOT...LOC",
-                              "value": "",
-                              "cap_info": 75096
-                          }
-                      ],
-                      "resource_set": [],
-                      "area_set": [
-                          {
-                              "id": 137808,
-                              "type": "Feature",
-                              "geometry": {
-                                  "type": "MultiPolygon",
-                                  "coordinates": [
-                                      [
-                                          [
-                                              [
-                                                  -96.5948257454654,
-                                                  47.15145864000115
-                                              ],
-                                              [
-                                                  -96.19466410075934,
-                                                  47.15110387322002
-                                              ],
-                                              [
-                                                  -96.1935730958713,
-                                                  46.97754667147678
-                                              ],
-                                              [
-                                                  -96.17398081329654,
-                                                  46.97752370415759
-                                              ],
-                                              [
-                                                  -96.17699442399287,
-                                                  46.80501175019189
-                                              ],
-                                              [
-                                                  -96.17227182899998,
-                                                  46.63071070644237
-                                              ],
-                                              [
-                                                  -96.79820241499996,
-                                                  46.62932591664067
-                                              ],
-                                              [
-                                                  -96.78575887351045,
-                                                  46.640472429315345
-                                              ],
-                                              [
-                                                  -96.799056907,
-                                                  46.65407184726908
-                                              ],
-                                              [
-                                                  -96.79586783258443,
-                                                  46.666614580564655
-                                              ],
-                                              [
-                                                  -96.80204000252786,
-                                                  46.667850461125624
-                                              ],
-                                              [
-                                                  -96.79513545519141,
-                                                  46.66750708162623
-                                              ],
-                                              [
-                                                  -96.79167928632916,
-                                                  46.67251202489518
-                                              ],
-                                              [
-                                                  -96.79835504959419,
-                                                  46.6737213993631
-                                              ],
-                                              [
-                                                  -96.79898066744136,
-                                                  46.67845144706459
-                                              ],
-                                              [
-                                                  -96.78752890703582,
-                                                  46.67710108226399
-                                              ],
-                                              [
-                                                  -96.79479970878053,
-                                                  46.683296141283456
-                                              ],
-                                              [
-                                                  -96.78414144528404,
-                                                  46.6853294080438
-                                              ],
-                                              [
-                                                  -96.79061116699998,
-                                                  46.68917088313123
-                                              ],
-                                              [
-                                                  -96.78423299879624,
-                                                  46.70146182555096
-                                              ],
-                                              [
-                                                  -96.79120626000001,
-                                                  46.70374674124322
-                                              ],
-                                              [
-                                                  -96.78392783720967,
-                                                  46.70598596272145
-                                              ],
-                                              [
-                                                  -96.78954305771693,
-                                                  46.709575607042716
-                                              ],
-                                              [
-                                                  -96.78212728161809,
-                                                  46.71690751891673
-                                              ],
-                                              [
-                                                  -96.79119863103999,
-                                                  46.718875853605816
-                                              ],
-                                              [
-                                                  -96.77909841099998,
-                                                  46.72666168200004
-                                              ],
-                                              [
-                                                  -96.78461446299998,
-                                                  46.731872586964776
-                                              ],
-                                              [
-                                                  -96.78058615492213,
-                                                  46.741745042352946
-                                              ],
-                                              [
-                                                  -96.78746022322132,
-                                                  46.74307251848349
-                                              ],
-                                              [
-                                                  -96.78051748757512,
-                                                  46.74542240570077
-                                              ],
-                                              [
-                                                  -96.78942860380262,
-                                                  46.75201800359559
-                                              ],
-                                              [
-                                                  -96.78290548413175,
-                                                  46.754184754623104
-                                              ],
-                                              [
-                                                  -96.78978719199998,
-                                                  46.7567024182489
-                                              ],
-                                              [
-                                                  -96.78294364334847,
-                                                  46.7567443287086
-                                              ],
-                                              [
-                                                  -96.78639216791673,
-                                                  46.761863616062485
-                                              ],
-                                              [
-                                                  -96.77784719208478,
-                                                  46.76158907031288
-                                              ],
-                                              [
-                                                  -96.78952016399998,
-                                                  46.766025509817545
-                                              ],
-                                              [
-                                                  -96.77545156024532,
-                                                  46.76675034300046
-                                              ],
-                                              [
-                                                  -96.78921500193432,
-                                                  46.77120977109408
-                                              ],
-                                              [
-                                                  -96.78379055116342,
-                                                  46.778247925968174
-                                              ],
-                                              [
-                                                  -96.79712666783088,
-                                                  46.776878387991154
-                                              ],
-                                              [
-                                                  -96.78714742348598,
-                                                  46.785652178175596
-                                              ],
-                                              [
-                                                  -96.7961958998277,
-                                                  46.78988271601812
-                                              ],
-                                              [
-                                                  -96.7949294489541,
-                                                  46.79577645048625
-                                              ],
-                                              [
-                                                  -96.80191792645272,
-                                                  46.79696659527299
-                                              ],
-                                              [
-                                                  -96.7956923452912,
-                                                  46.8018074200183
-                                              ],
-                                              [
-                                                  -96.8031462555426,
-                                                  46.80509946461502
-                                              ],
-                                              [
-                                                  -96.79575337899999,
-                                                  46.80779647800006
-                                              ],
-                                              [
-                                                  -96.802543529056,
-                                                  46.81151966781845
-                                              ],
-                                              [
-                                                  -96.79155726568848,
-                                                  46.827865490389875
-                                              ],
-                                              [
-                                                  -96.78015890213094,
-                                                  46.825862853379306
-                                              ],
-                                              [
-                                                  -96.79396042245655,
-                                                  46.833065083503456
-                                              ],
-                                              [
-                                                  -96.78515616999995,
-                                                  46.833064972999985
-                                              ],
-                                              [
-                                                  -96.78276052479438,
-                                                  46.837062866592404
-                                              ],
-                                              [
-                                                  -96.7871627481905,
-                                                  46.84106435234335
-                                              ],
-                                              [
-                                                  -96.77536000891322,
-                                                  46.83886335353246
-                                              ],
-                                              [
-                                                  -96.78166187610702,
-                                                  46.845665008604925
-                                              ],
-                                              [
-                                                  -96.77315513011591,
-                                                  46.851463375402204
-                                              ],
-                                              [
-                                                  -96.78546130416926,
-                                                  46.854862166751744
-                                              ],
-                                              [
-                                                  -96.77605428347466,
-                                                  46.85446165288977
-                                              ],
-                                              [
-                                                  -96.78395833154913,
-                                                  46.86167531409182
-                                              ],
-                                              [
-                                                  -96.7822569713488,
-                                                  46.87076183090238
-                                              ],
-                                              [
-                                                  -96.77595510049125,
-                                                  46.87436293609966
-                                              ],
-                                              [
-                                                  -96.78135669196989,
-                                                  46.879363983183985
-                                              ],
-                                              [
-                                                  -96.768455421258,
-                                                  46.87956232334401
-                                              ],
-                                              [
-                                                  -96.76805869248548,
-                                                  46.88476186345379
-                                              ],
-                                              [
-                                                  -96.77465809128803,
-                                                  46.88866422152431
-                                              ],
-                                              [
-                                                  -96.77015677461718,
-                                                  46.89366155105558
-                                              ],
-                                              [
-                                                  -96.77655780440948,
-                                                  46.89566422910585
-                                              ],
-                                              [
-                                                  -96.77045439193756,
-                                                  46.906761040805904
-                                              ],
-                                              [
-                                                  -96.76565543850968,
-                                                  46.905063568326334
-                                              ],
-                                              [
-                                                  -96.76015462566394,
-                                                  46.91556165783332
-                                              ],
-                                              [
-                                                  -96.76285539756648,
-                                                  46.91756429762652
-                                              ],
-                                              [
-                                                  -96.75455465615708,
-                                                  46.91486354884905
-                                              ],
-                                              [
-                                                  -96.76325975788274,
-                                                  46.923362687581765
-                                              ],
-                                              [
-                                                  -96.75325765119665,
-                                                  46.924564368268705
-                                              ],
-                                              [
-                                                  -96.7652586826398,
-                                                  46.92756276141609
-                                              ],
-                                              [
-                                                  -96.75685873091653,
-                                                  46.928462951030106
-                                              ],
-                                              [
-                                                  -96.76325988114165,
-                                                  46.93506250776462
-                                              ],
-                                              [
-                                                  -96.7837601068411,
-                                                  46.92466365053368
-                                              ],
-                                              [
-                                                  -96.785957295183,
-                                                  46.930164428290674
-                                              ],
-                                              [
-                                                  -96.79175557483471,
-                                                  46.92846302736084
-                                              ],
-                                              [
-                                                  -96.79265586568302,
-                                                  46.946765960900166
-                                              ],
-                                              [
-                                                  -96.80466451199995,
-                                                  46.94746785226076
-                                              ],
-                                              [
-                                                  -96.79862966203044,
-                                                  46.951244339681125
-                                              ],
-                                              [
-                                                  -96.80374898399994,
-                                                  46.958171803018466
-                                              ],
-                                              [
-                                                  -96.79515829963397,
-                                                  46.96588521240754
-                                              ],
-                                              [
-                                                  -96.80656434235439,
-                                                  46.967693428353336
-                                              ],
-                                              [
-                                                  -96.80981444591315,
-                                                  46.963901621116804
-                                              ],
-                                              [
-                                                  -96.82266228154177,
-                                                  46.97004706730843
-                                              ],
-                                              [
-                                                  -96.8201369259285,
-                                                  46.97938921054454
-                                              ],
-                                              [
-                                                  -96.82640828465463,
-                                                  46.98791886894714
-                                              ],
-                                              [
-                                                  -96.8223723382544,
-                                                  46.99058912621033
-                                              ],
-                                              [
-                                                  -96.82392875831611,
-                                                  46.99743645190458
-                                              ],
-                                              [
-                                                  -96.81948080082911,
-                                                  46.997371643299715
-                                              ],
-                                              [
-                                                  -96.82097616222293,
-                                                  47.00332644489542
-                                              ],
-                                              [
-                                                  -96.83954610220769,
-                                                  47.006729148035234
-                                              ],
-                                              [
-                                                  -96.8335036410854,
-                                                  47.01010889064149
-                                              ],
-                                              [
-                                                  -96.83477772697157,
-                                                  47.01744455859514
-                                              ],
-                                              [
-                                                  -96.82949822508833,
-                                                  47.021537704723585
-                                              ],
-                                              [
-                                                  -96.81479637598737,
-                                                  47.02432244061571
-                                              ],
-                                              [
-                                                  -96.82719411640481,
-                                                  47.03211590298219
-                                              ],
-                                              [
-                                                  -96.8170699576987,
-                                                  47.033260257997824
-                                              ],
-                                              [
-                                                  -96.81256093522205,
-                                                  47.03858185466087
-                                              ],
-                                              [
-                                                  -96.8226851489153,
-                                                  47.03686909683729
-                                              ],
-                                              [
-                                                  -96.8178023414543,
-                                                  47.04708104232967
-                                              ],
-                                              [
-                                                  -96.82756795399999,
-                                                  47.04632945545501
-                                              ],
-                                              [
-                                                  -96.8177718183798,
-                                                  47.052314793146486
-                                              ],
-                                              [
-                                                  -96.82509603921949,
-                                                  47.055606898914654
-                                              ],
-                                              [
-                                                  -96.82225030944711,
-                                                  47.05955895047292
-                                              ],
-                                              [
-                                                  -96.83037556523853,
-                                                  47.06088254364204
-                                              ],
-                                              [
-                                                  -96.8197478291201,
-                                                  47.06172940259134
-                                              ],
-                                              [
-                                                  -96.82453145369891,
-                                                  47.071510328232556
-                                              ],
-                                              [
-                                                  -96.8195799953832,
-                                                  47.07532506834252
-                                              ],
-                                              [
-                                                  -96.82927693899998,
-                                                  47.07461544010153
-                                              ],
-                                              [
-                                                  -96.81610098358816,
-                                                  47.07895656127175
-                                              ],
-                                              [
-                                                  -96.82064809299996,
-                                                  47.08288957982036
-                                              ],
-                                              [
-                                                  -96.81613152050251,
-                                                  47.08816535291511
-                                              ],
-                                              [
-                                                  -96.82717122511045,
-                                                  47.08889771197434
-                                              ],
-                                              [
-                                                  -96.8174056101571,
-                                                  47.0920524181961
-                                              ],
-                                              [
-                                                  -96.8210905968071,
-                                                  47.09995652464912
-                                              ],
-                                              [
-                                                  -96.81633748856207,
-                                                  47.1084327964524
-                                              ],
-                                              [
-                                                  -96.82212822619034,
-                                                  47.108844829979816
-                                              ],
-                                              [
-                                                  -96.82118979084575,
-                                                  47.115722701293826
-                                              ],
-                                              [
-                                                  -96.82838435454799,
-                                                  47.120773404576966
-                                              ],
-                                              [
-                                                  -96.83755482923515,
-                                                  47.12198262751949
-                                              ],
-                                              [
-                                                  -96.82580562205428,
-                                                  47.12310400422251
-                                              ],
-                                              [
-                                                  -96.82072439188626,
-                                                  47.13038638387702
-                                              ],
-                                              [
-                                                  -96.83043664072056,
-                                                  47.12922294855788
-                                              ],
-                                              [
-                                                  -96.82635488437101,
-                                                  47.13495638924221
-                                              ],
-                                              [
-                                                  -96.83465566447218,
-                                                  47.14397808909219
-                                              ],
-                                              [
-                                                  -96.82862844948706,
-                                                  47.146244091513694
-                                              ],
-                                              [
-                                                  -96.84004178435153,
-                                                  47.15047444991506
-                                              ],
-                                              [
-                                                  -96.5948257454654,
-                                                  47.15145864000115
-                                              ]
-                                          ]
-                                      ]
-                                  ]
-                              },
-                              "properties": {
-                                  "area_description": "Clay",
-                                  "geocode_list": "['27027']",
-                                  "cap_info": 75096
-                              }
-                          }
-                      ],
-                      "id": 75096,
-                      "cap_language": null,
-                      "cap_category": "Met",
-                      "cap_event": "Flood Warning",
-                      "cap_response_type": null,
-                      "cap_urgency": "Expected",
-                      "cap_severity": "Moderate",
-                      "cap_certainty": "Likely",
-                      "cap_audience": null,
-                      "cap_event_code": null,
-                      "cap_effective": "2014-06-18T14:47:00Z",
-                      "cap_onset": null,
-                      "cap_expires": "2014-06-19T14:47:00Z",
-                      "cap_sender_name": null,
-                      "cap_headline": "Flood Warning issued June 18 at 9:47AM CDT until further notice by NWS Eastern ND and Grand Forks",
-                      "cap_description": "...THE FLOOD WARNING HAS BEEN EXTENDED FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* WAHPETON...ON THE RED RIVER...IN WILKIN AND RICHLAND COUNTIES\n* OSLO...ON THE RED RIVER...IN MARSHALL...WALSH...POLK AND GRAND\nFORKS COUNTIES\n* DILWORTH...ON THE BUFFALO RIVER...IN CLAY COUNTY\n* CROOKSTON...ON THE RED LAKE RIVER...IN POLK COUNTY\n* HALLOCK...ON THE TWO RIVERS RIVER...IN KITTSON COUNTY\n...THE FLOOD WARNING CONTINUES FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* FARGO...ON THE RED RIVER ...IN CLAY AND CASS COUNTIES\n* EAST GRAND FORKS...ON THE RED RIVER ...IN POLK AND GRAND FORKS\nCOUNTIES\n* SABIN...ON THE S BR BUFFALO RIVER ...IN CLAY COUNTY\n.RIVER RISES CONTINUE IN MANY AREAS DUE TO RECENT RAINFALL. ADDITIONAL\nRAINFALL IS FORECAST...BUT TOTAL AMOUNTS REMAIN UNCERTAIN AT THIS TIME.\nFORECASTS WILL BE UPDATED AS MORE INFORMATION BECOMES AVAILABLE.\nTHIS FORECAST IS FOR A 7 DAY PERIOD...THE HIGHEST STAGE INDICATED\nMAY NOT REFLECT THE CREST FOR THIS EVENT.\nFORECASTS ARE UPDATED DAILY AND STAGE VALUES WILL CHANGE AS NEW\nWEATHER AND RIVER INFORMATION IS USED. RIVER FORECASTS USUALLY USE\n24 HOURS OF EXPECTED PRECIPITATION BUT DEPENDING ON THE SITUATION\nIT MAY INCLUDE PRECIPITATION EXPECTED THROUGH THE NEXT 72 HOURS.\nTHE FLOOD WARNING CONTINUES FOR...\n* ...DILWORTH...ON THE BUFFALO RIVER.\n* UNTIL FURTHER NOTICE...OR UNTIL THE WARNING IS CANCELLED.\n* AT  8:30 AM WEDNESDAY THE STAGE WAS 12.3 FEET.\n* MINOR FLOODING IS OCCURRING AND DURING THE NEXT 7 DAYS...MINOR\nFLOODING IS FORECAST.\n* MINOR FLOOD STAGE IS 12.0 FEET.\n* FORECAST...THE RIVER WILL RISE TO A CREST NEAR 14.0 FEET SOMETIME\nFRIDAY MID-MORNING THEN BEGIN FALLING.\n* THE RIVER IS FORECAST TO CREST AT 14.0 FEET ON FRIDAY MID-MORNING\nDURING THIS 7-DAY PERIOD.\n* IMPACT STATEMENT(S) - AT 14.9 FEET, BOTTOM OF STEEL BRIDGE CAUSES\nUPSTREAM ROAD TO FLOOD.\n&&\nDAILY 7 AM CDT/6 AM CST FORECAST STAGE IN FEET:\nDATE                THU    FRI    SAT    SUN    MON    TUE    WED\n(MONTH/DAY)         06/19  06/20  06/21  06/22  06/23  06/24  06/25\nBUFFALO RIVER\nDILWORTH          13.1   14.0   14.0   13.6   13.1   12.7   12.2",
-                      "cap_instruction": "SAFETY MESSAGE...TURN AROUND, DON`T DROWN...\n- DON`T TRAVEL THROUGH FLOODED AREAS!\n- PERSONS IN THE WARNED AREA NEED TO TAKE STEPS TO PROTECT LIFE\nAND PROPERTY. IF NECESSARY MOVE TO A HIGHER AND SAFER LOCATION.\n- PERSONS LIVING IN THE RED RIVER BASIN SHOULD MONITOR RIVER\nLEVELS WHILE THE RIVER IS IN...OR NEAR...FLOOD.\nFOR MORE INFORMATION...GO TO THE AHPS/RIVER SECTION\nON OUR WEB PAGE AT: WWW.WEATHER.GOV/GRANDFORKS",
-                      "cap_link": "",
-                      "cap_contact": null,
-                      "cap_alert": 43608
-                  }
-              ],
-              "id": 43608,
-              "cap_id": "NOAA-NWS-ALERTS-MN12515A63DBBC.FloodWarning.12515A731DFCMN.FGFFLSFGF.7e0027a2b56a26c27c16fc13bca73601",
-              "cap_slug": "712c963f91646a212f071571d611d8",
-              "cap_sender": "w-nws.webmaster@noaa.gov",
-              "cap_sent": "2014-06-18T14:47:00Z",
-              "cap_status": "Actual",
-              "cap_message_type": null,
-              "cap_source": null,
-              "cap_scope": "Public",
-              "cap_restriction": null,
-              "cap_addresses": null,
-              "cap_code": null,
-              "cap_note": "Alert for Clay (Minnesota) Issued by the National Weather Service",
-              "cap_references": null,
-              "cap_incidents": null,
-              "cap_date_received": "2014-06-18T14:50:01.537Z",
-              "cap_raw": "<?xml version = '1.0' encoding = 'UTF-8' standalone = 'yes'?>\n<?xml-stylesheet href='http://alerts.weather.gov/cap/capatomproduct.xsl' type='text/xsl'?>\n\r\n<!--\r\nThis atom/xml feed is an index to active advisories, watches and warnings \r\nissued by the National Weather Service.  This index file is not the complete \r\nCommon Alerting Protocol (CAP) alert message.  To obtain the complete CAP \r\nalert, please follow the links for each entry in this index.  Also note the \r\nCAP message uses a style sheet to convey the information in a human readable \r\nformat.  Please view the source of the CAP message to see the complete data \r\nset.  Not all information in the CAP message is contained in this index of \r\nactive alerts.\r\n-->\r\n\n<alert xmlns = 'urn:oasis:names:tc:emergency:cap:1.1'>\n\n<!-- http-date = Wed, 18 Jun 2014 02:47:00 GMT -->\n<identifier>NOAA-NWS-ALERTS-MN12515A63DBBC.FloodWarning.12515A731DFCMN.FGFFLSFGF.7e0027a2b56a26c27c16fc13bca73601</identifier>\r\n<sender>w-nws.webmaster@noaa.gov</sender>\r\n<sent>2014-06-18T09:47:00-05:00</sent>\r\n<status>Actual</status>\r\n<msgType>Alert</msgType>\r\n<scope>Public</scope>\r\n<note>Alert for Clay (Minnesota) Issued by the National Weather Service</note>\r\n<info>\r\n<category>Met</category>\r\n<event>Flood Warning</event>\r\n<urgency>Expected</urgency>\r\n<severity>Moderate</severity>\r\n<certainty>Likely</certainty>\r\n<eventCode>\r\n<valueName>SAME</valueName>\r\n<value></value>\r\n</eventCode>\r\n<effective>2014-06-18T09:47:00-05:00</effective>\r\n<expires>2014-06-19T09:47:00-05:00</expires>\r\n<senderName>NWS Eastern ND and Grand Forks (Northeastern North Dakota and Northwestern Minnesota)</senderName>\r\n<headline>Flood Warning issued June 18 at 9:47AM CDT until further notice by NWS Eastern ND and Grand Forks</headline>\r\n<description>...THE FLOOD WARNING HAS BEEN EXTENDED FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* WAHPETON...ON THE RED RIVER...IN WILKIN AND RICHLAND COUNTIES\n* OSLO...ON THE RED RIVER...IN MARSHALL...WALSH...POLK AND GRAND\nFORKS COUNTIES\n* DILWORTH...ON THE BUFFALO RIVER...IN CLAY COUNTY\n* CROOKSTON...ON THE RED LAKE RIVER...IN POLK COUNTY\n* HALLOCK...ON THE TWO RIVERS RIVER...IN KITTSON COUNTY\n...THE FLOOD WARNING CONTINUES FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* FARGO...ON THE RED RIVER ...IN CLAY AND CASS COUNTIES\n* EAST GRAND FORKS...ON THE RED RIVER ...IN POLK AND GRAND FORKS\nCOUNTIES\n* SABIN...ON THE S BR BUFFALO RIVER ...IN CLAY COUNTY\n.RIVER RISES CONTINUE IN MANY AREAS DUE TO RECENT RAINFALL. ADDITIONAL\nRAINFALL IS FORECAST...BUT TOTAL AMOUNTS REMAIN UNCERTAIN AT THIS TIME.\nFORECASTS WILL BE UPDATED AS MORE INFORMATION BECOMES AVAILABLE.\nTHIS FORECAST IS FOR A 7 DAY PERIOD...THE HIGHEST STAGE INDICATED\nMAY NOT REFLECT THE CREST FOR THIS EVENT.\nFORECASTS ARE UPDATED DAILY AND STAGE VALUES WILL CHANGE AS NEW\nWEATHER AND RIVER INFORMATION IS USED. RIVER FORECASTS USUALLY USE\n24 HOURS OF EXPECTED PRECIPITATION BUT DEPENDING ON THE SITUATION\nIT MAY INCLUDE PRECIPITATION EXPECTED THROUGH THE NEXT 72 HOURS.\nTHE FLOOD WARNING CONTINUES FOR...\n* ...DILWORTH...ON THE BUFFALO RIVER.\n* UNTIL FURTHER NOTICE...OR UNTIL THE WARNING IS CANCELLED.\n* AT  8:30 AM WEDNESDAY THE STAGE WAS 12.3 FEET.\n* MINOR FLOODING IS OCCURRING AND DURING THE NEXT 7 DAYS...MINOR\nFLOODING IS FORECAST.\n* MINOR FLOOD STAGE IS 12.0 FEET.\n* FORECAST...THE RIVER WILL RISE TO A CREST NEAR 14.0 FEET SOMETIME\nFRIDAY MID-MORNING THEN BEGIN FALLING.\n* THE RIVER IS FORECAST TO CREST AT 14.0 FEET ON FRIDAY MID-MORNING\nDURING THIS 7-DAY PERIOD.\n* IMPACT STATEMENT(S) - AT 14.9 FEET, BOTTOM OF STEEL BRIDGE CAUSES\nUPSTREAM ROAD TO FLOOD.\n&amp;&amp;\nDAILY 7 AM CDT/6 AM CST FORECAST STAGE IN FEET:\nDATE                THU    FRI    SAT    SUN    MON    TUE    WED\n(MONTH/DAY)         06/19  06/20  06/21  06/22  06/23  06/24  06/25\nBUFFALO RIVER\nDILWORTH          13.1   14.0   14.0   13.6   13.1   12.7   12.2</description>\r\n<instruction>SAFETY MESSAGE...TURN AROUND, DON`T DROWN...\n- DON`T TRAVEL THROUGH FLOODED AREAS!\n- PERSONS IN THE WARNED AREA NEED TO TAKE STEPS TO PROTECT LIFE\nAND PROPERTY. IF NECESSARY MOVE TO A HIGHER AND SAFER LOCATION.\n- PERSONS LIVING IN THE RED RIVER BASIN SHOULD MONITOR RIVER\nLEVELS WHILE THE RIVER IS IN...OR NEAR...FLOOD.\nFOR MORE INFORMATION...GO TO THE AHPS/RIVER SECTION\nON OUR WEB PAGE AT: WWW.WEATHER.GOV/GRANDFORKS</instruction>\r\n<parameter>\r\n<valueName>WMOHEADER</valueName>\r\n<value></value>\r\n</parameter>\r\n<parameter>\r\n<valueName>UGC</valueName>\r\n<value>MNC027</value>\r\n</parameter>\r\n<parameter>\r\n<valueName>VTEC</valueName>\r\n<value>/O.EXT.KFGF.FL.W.0036.000000T0000Z-000000T0000Z/\n/DILM5.1.ER.140617T2130Z.140620T1200Z.000000T0000Z.NO/</value>\r\n</parameter>\r\n<parameter>\r\n<valueName>TIME...MOT...LOC</valueName>\r\n<value></value>\r\n</parameter>\r\n<area>\r\n<areaDesc>Clay</areaDesc>\r\n<polygon>47.15,-96.82 47.04,-96.81 46.89,-96.69 46.84,-96.52 46.92,-96.5 47.15,-96.82</polygon>\r\n<geocode>\r\n<valueName>FIPS6</valueName>\r\n<value>027027</value>\r\n</geocode>\r\n<geocode>\r\n<valueName>UGC</valueName>\r\n<value>MNC027</value>\r\n</geocode>\r\n</area>\n</info>\n</alert>",
-              "contributor": null
-        }
+        [
+            {
+                "info_set": [
+                    {
+                        "parameter_set": [],
+                        "resource_set": [],
+                        "area_set": [
+                            {
+                                "id": 1926282,
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "MultiPolygon",
+                                    "coordinates": [
+                                        [
+                                            [
+                                                [
+                                                    150.7708708836917,
+                                                    -33.7155
+                                                ],
+                                                [
+                                                    150.77073296505156,
+                                                    -33.71583296505157
+                                                ],
+                                                [
+                                                    150.7704,
+                                                    -33.715970883691725
+                                                ],
+                                                [
+                                                    150.77006703494843,
+                                                    -33.71583296505157
+                                                ],
+                                                [
+                                                    150.76992911630828,
+                                                    -33.7155
+                                                ],
+                                                [
+                                                    150.77006703494843,
+                                                    -33.71516703494843
+                                                ],
+                                                [
+                                                    150.7704,
+                                                    -33.71502911630827
+                                                ],
+                                                [
+                                                    150.77073296505156,
+                                                    -33.71516703494843
+                                                ],
+                                                [
+                                                    150.7708708836917,
+                                                    -33.7155
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                },
+                                "properties": {
+                                    "area_description": "South Creek Rd, Shanes Park, NSW 2747, Blacktown",
+                                    "geocode_list": null,
+                                    "cap_info": 570458
+                                }
+                            }
+                        ],
+                        "id": 570458,
+                        "cap_language": "en-AU",
+                        "cap_category": "Fire",
+                        "cap_event": "Bushfire",
+                        "cap_response_type": "Monitor",
+                        "cap_urgency": "Expected",
+                        "cap_severity": "Moderate",
+                        "cap_certainty": "Observed",
+                        "cap_audience": null,
+                        "cap_event_code": null,
+                        "cap_effective": "2015-02-01T12:01:00Z",
+                        "cap_onset": null,
+                        "cap_expires": "2015-02-02T12:01:00Z",
+                        "cap_sender_name": null,
+                        "cap_headline": "South Creek Rd, Shanes Park",
+                        "cap_description": "ALERT LEVEL: AdviceLOCATION: South Creek Rd, Shanes Park, NSW 2747COUNCIL AREA: BlacktownSTATUS: out of controlTYPE: Bush FireSIZE: 0 RESPONSIBLE AGENCY: Rural Fire ServiceUPDATED: 1 Mar 2015 23:01",
+                        "cap_instruction": "A fire has started. There is no immediate danger. Stay up to date in case the situation changes.",
+                        "cap_link": "http://www.rfs.nsw.gov.au/fire-information/fires-near-me",
+                        "cap_contact": "webmaster@rfs.nsw.gov.au",
+                        "cap_alert": 395598
+                    }
+                ],
+                "id": 395598,
+                "cap_id": "2015-02-01T12:01:00-00:00:187480",
+                "cap_slug": "aee6dcf6ff841bd6b2086fb7769d6c",
+                "cap_sender": "webmaster@rfs.nsw.gov.au",
+                "cap_sent": "2015-03-01T12:01:00Z",
+                "cap_status": "Actual",
+                "cap_message_type": null,
+                "cap_source": null,
+                "cap_scope": "Public",
+                "cap_restriction": null,
+                "cap_addresses": null,
+                "cap_code": "urn:oasis:names:tc:emergency:cap:1.2:profile:CAP-AU:1.0",
+                "cap_note": null,
+                "cap_references": null,
+                "cap_incidents": "187480",
+                "cap_date_received": "2015-03-02T08:14:20.760Z",
+                "cap_raw": null,
+                "contributor": 9
+            },
+            {
+                "info_set": [
+                    {
+                        "parameter_set": [
+                            {
+                                "id": 293120,
+                                "value_name": "WMOHEADER",
+                                "value": "",
+                                "cap_info": 75096
+                            },
+                            {
+                                "id": 293121,
+                                "value_name": "UGC",
+                                "value": "MNC027",
+                                "cap_info": 75096
+                            },
+                            {
+                                "id": 293122,
+                                "value_name": "VTEC",
+                                "value": "/O.EXT.KFGF.FL.W.0036.000000T0000Z-000000T0000Z/\n/DILM5.1.ER.140617T2130Z.140620T1200Z.000000T0000Z.NO/",
+                                "cap_info": 75096
+                            },
+                            {
+                                "id": 293123,
+                                "value_name": "TIME...MOT...LOC",
+                                "value": "",
+                                "cap_info": 75096
+                            }
+                        ],
+                        "resource_set": [],
+                        "area_set": [
+                            {
+                                "id": 137808,
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "MultiPolygon",
+                                    "coordinates": [
+                                        [
+                                            [
+                                                [
+                                                    -96.5948257454654,
+                                                    47.15145864000115
+                                                ],
+                                                [
+                                                    -96.19466410075934,
+                                                    47.15110387322002
+                                                ],
+                                                [
+                                                    -96.1935730958713,
+                                                    46.97754667147678
+                                                ],
+                                                [
+                                                    -96.17398081329654,
+                                                    46.97752370415759
+                                                ],
+                                                [
+                                                    -96.17699442399287,
+                                                    46.80501175019189
+                                                ],
+                                                [
+                                                    -96.17227182899998,
+                                                    46.63071070644237
+                                                ],
+                                                [
+                                                    -96.79820241499996,
+                                                    46.62932591664067
+                                                ],
+                                                [
+                                                    -96.78575887351045,
+                                                    46.640472429315345
+                                                ],
+                                                [
+                                                    -96.799056907,
+                                                    46.65407184726908
+                                                ],
+                                                [
+                                                    -96.79586783258443,
+                                                    46.666614580564655
+                                                ],
+                                                [
+                                                    -96.80204000252786,
+                                                    46.667850461125624
+                                                ],
+                                                [
+                                                    -96.79513545519141,
+                                                    46.66750708162623
+                                                ],
+                                                [
+                                                    -96.79167928632916,
+                                                    46.67251202489518
+                                                ],
+                                                [
+                                                    -96.79835504959419,
+                                                    46.6737213993631
+                                                ],
+                                                [
+                                                    -96.79898066744136,
+                                                    46.67845144706459
+                                                ],
+                                                [
+                                                    -96.78752890703582,
+                                                    46.67710108226399
+                                                ],
+                                                [
+                                                    -96.79479970878053,
+                                                    46.683296141283456
+                                                ],
+                                                [
+                                                    -96.78414144528404,
+                                                    46.6853294080438
+                                                ],
+                                                [
+                                                    -96.79061116699998,
+                                                    46.68917088313123
+                                                ],
+                                                [
+                                                    -96.78423299879624,
+                                                    46.70146182555096
+                                                ],
+                                                [
+                                                    -96.79120626000001,
+                                                    46.70374674124322
+                                                ],
+                                                [
+                                                    -96.78392783720967,
+                                                    46.70598596272145
+                                                ],
+                                                [
+                                                    -96.78954305771693,
+                                                    46.709575607042716
+                                                ],
+                                                [
+                                                    -96.78212728161809,
+                                                    46.71690751891673
+                                                ],
+                                                [
+                                                    -96.79119863103999,
+                                                    46.718875853605816
+                                                ],
+                                                [
+                                                    -96.77909841099998,
+                                                    46.72666168200004
+                                                ],
+                                                [
+                                                    -96.78461446299998,
+                                                    46.731872586964776
+                                                ],
+                                                [
+                                                    -96.78058615492213,
+                                                    46.741745042352946
+                                                ],
+                                                [
+                                                    -96.78746022322132,
+                                                    46.74307251848349
+                                                ],
+                                                [
+                                                    -96.78051748757512,
+                                                    46.74542240570077
+                                                ],
+                                                [
+                                                    -96.78942860380262,
+                                                    46.75201800359559
+                                                ],
+                                                [
+                                                    -96.78290548413175,
+                                                    46.754184754623104
+                                                ],
+                                                [
+                                                    -96.78978719199998,
+                                                    46.7567024182489
+                                                ],
+                                                [
+                                                    -96.78294364334847,
+                                                    46.7567443287086
+                                                ],
+                                                [
+                                                    -96.78639216791673,
+                                                    46.761863616062485
+                                                ],
+                                                [
+                                                    -96.77784719208478,
+                                                    46.76158907031288
+                                                ],
+                                                [
+                                                    -96.78952016399998,
+                                                    46.766025509817545
+                                                ],
+                                                [
+                                                    -96.77545156024532,
+                                                    46.76675034300046
+                                                ],
+                                                [
+                                                    -96.78921500193432,
+                                                    46.77120977109408
+                                                ],
+                                                [
+                                                    -96.78379055116342,
+                                                    46.778247925968174
+                                                ],
+                                                [
+                                                    -96.79712666783088,
+                                                    46.776878387991154
+                                                ],
+                                                [
+                                                    -96.78714742348598,
+                                                    46.785652178175596
+                                                ],
+                                                [
+                                                    -96.7961958998277,
+                                                    46.78988271601812
+                                                ],
+                                                [
+                                                    -96.7949294489541,
+                                                    46.79577645048625
+                                                ],
+                                                [
+                                                    -96.80191792645272,
+                                                    46.79696659527299
+                                                ],
+                                                [
+                                                    -96.7956923452912,
+                                                    46.8018074200183
+                                                ],
+                                                [
+                                                    -96.8031462555426,
+                                                    46.80509946461502
+                                                ],
+                                                [
+                                                    -96.79575337899999,
+                                                    46.80779647800006
+                                                ],
+                                                [
+                                                    -96.802543529056,
+                                                    46.81151966781845
+                                                ],
+                                                [
+                                                    -96.79155726568848,
+                                                    46.827865490389875
+                                                ],
+                                                [
+                                                    -96.78015890213094,
+                                                    46.825862853379306
+                                                ],
+                                                [
+                                                    -96.79396042245655,
+                                                    46.833065083503456
+                                                ],
+                                                [
+                                                    -96.78515616999995,
+                                                    46.833064972999985
+                                                ],
+                                                [
+                                                    -96.78276052479438,
+                                                    46.837062866592404
+                                                ],
+                                                [
+                                                    -96.7871627481905,
+                                                    46.84106435234335
+                                                ],
+                                                [
+                                                    -96.77536000891322,
+                                                    46.83886335353246
+                                                ],
+                                                [
+                                                    -96.78166187610702,
+                                                    46.845665008604925
+                                                ],
+                                                [
+                                                    -96.77315513011591,
+                                                    46.851463375402204
+                                                ],
+                                                [
+                                                    -96.78546130416926,
+                                                    46.854862166751744
+                                                ],
+                                                [
+                                                    -96.77605428347466,
+                                                    46.85446165288977
+                                                ],
+                                                [
+                                                    -96.78395833154913,
+                                                    46.86167531409182
+                                                ],
+                                                [
+                                                    -96.7822569713488,
+                                                    46.87076183090238
+                                                ],
+                                                [
+                                                    -96.77595510049125,
+                                                    46.87436293609966
+                                                ],
+                                                [
+                                                    -96.78135669196989,
+                                                    46.879363983183985
+                                                ],
+                                                [
+                                                    -96.768455421258,
+                                                    46.87956232334401
+                                                ],
+                                                [
+                                                    -96.76805869248548,
+                                                    46.88476186345379
+                                                ],
+                                                [
+                                                    -96.77465809128803,
+                                                    46.88866422152431
+                                                ],
+                                                [
+                                                    -96.77015677461718,
+                                                    46.89366155105558
+                                                ],
+                                                [
+                                                    -96.77655780440948,
+                                                    46.89566422910585
+                                                ],
+                                                [
+                                                    -96.77045439193756,
+                                                    46.906761040805904
+                                                ],
+                                                [
+                                                    -96.76565543850968,
+                                                    46.905063568326334
+                                                ],
+                                                [
+                                                    -96.76015462566394,
+                                                    46.91556165783332
+                                                ],
+                                                [
+                                                    -96.76285539756648,
+                                                    46.91756429762652
+                                                ],
+                                                [
+                                                    -96.75455465615708,
+                                                    46.91486354884905
+                                                ],
+                                                [
+                                                    -96.76325975788274,
+                                                    46.923362687581765
+                                                ],
+                                                [
+                                                    -96.75325765119665,
+                                                    46.924564368268705
+                                                ],
+                                                [
+                                                    -96.7652586826398,
+                                                    46.92756276141609
+                                                ],
+                                                [
+                                                    -96.75685873091653,
+                                                    46.928462951030106
+                                                ],
+                                                [
+                                                    -96.76325988114165,
+                                                    46.93506250776462
+                                                ],
+                                                [
+                                                    -96.7837601068411,
+                                                    46.92466365053368
+                                                ],
+                                                [
+                                                    -96.785957295183,
+                                                    46.930164428290674
+                                                ],
+                                                [
+                                                    -96.79175557483471,
+                                                    46.92846302736084
+                                                ],
+                                                [
+                                                    -96.79265586568302,
+                                                    46.946765960900166
+                                                ],
+                                                [
+                                                    -96.80466451199995,
+                                                    46.94746785226076
+                                                ],
+                                                [
+                                                    -96.79862966203044,
+                                                    46.951244339681125
+                                                ],
+                                                [
+                                                    -96.80374898399994,
+                                                    46.958171803018466
+                                                ],
+                                                [
+                                                    -96.79515829963397,
+                                                    46.96588521240754
+                                                ],
+                                                [
+                                                    -96.80656434235439,
+                                                    46.967693428353336
+                                                ],
+                                                [
+                                                    -96.80981444591315,
+                                                    46.963901621116804
+                                                ],
+                                                [
+                                                    -96.82266228154177,
+                                                    46.97004706730843
+                                                ],
+                                                [
+                                                    -96.8201369259285,
+                                                    46.97938921054454
+                                                ],
+                                                [
+                                                    -96.82640828465463,
+                                                    46.98791886894714
+                                                ],
+                                                [
+                                                    -96.8223723382544,
+                                                    46.99058912621033
+                                                ],
+                                                [
+                                                    -96.82392875831611,
+                                                    46.99743645190458
+                                                ],
+                                                [
+                                                    -96.81948080082911,
+                                                    46.997371643299715
+                                                ],
+                                                [
+                                                    -96.82097616222293,
+                                                    47.00332644489542
+                                                ],
+                                                [
+                                                    -96.83954610220769,
+                                                    47.006729148035234
+                                                ],
+                                                [
+                                                    -96.8335036410854,
+                                                    47.01010889064149
+                                                ],
+                                                [
+                                                    -96.83477772697157,
+                                                    47.01744455859514
+                                                ],
+                                                [
+                                                    -96.82949822508833,
+                                                    47.021537704723585
+                                                ],
+                                                [
+                                                    -96.81479637598737,
+                                                    47.02432244061571
+                                                ],
+                                                [
+                                                    -96.82719411640481,
+                                                    47.03211590298219
+                                                ],
+                                                [
+                                                    -96.8170699576987,
+                                                    47.033260257997824
+                                                ],
+                                                [
+                                                    -96.81256093522205,
+                                                    47.03858185466087
+                                                ],
+                                                [
+                                                    -96.8226851489153,
+                                                    47.03686909683729
+                                                ],
+                                                [
+                                                    -96.8178023414543,
+                                                    47.04708104232967
+                                                ],
+                                                [
+                                                    -96.82756795399999,
+                                                    47.04632945545501
+                                                ],
+                                                [
+                                                    -96.8177718183798,
+                                                    47.052314793146486
+                                                ],
+                                                [
+                                                    -96.82509603921949,
+                                                    47.055606898914654
+                                                ],
+                                                [
+                                                    -96.82225030944711,
+                                                    47.05955895047292
+                                                ],
+                                                [
+                                                    -96.83037556523853,
+                                                    47.06088254364204
+                                                ],
+                                                [
+                                                    -96.8197478291201,
+                                                    47.06172940259134
+                                                ],
+                                                [
+                                                    -96.82453145369891,
+                                                    47.071510328232556
+                                                ],
+                                                [
+                                                    -96.8195799953832,
+                                                    47.07532506834252
+                                                ],
+                                                [
+                                                    -96.82927693899998,
+                                                    47.07461544010153
+                                                ],
+                                                [
+                                                    -96.81610098358816,
+                                                    47.07895656127175
+                                                ],
+                                                [
+                                                    -96.82064809299996,
+                                                    47.08288957982036
+                                                ],
+                                                [
+                                                    -96.81613152050251,
+                                                    47.08816535291511
+                                                ],
+                                                [
+                                                    -96.82717122511045,
+                                                    47.08889771197434
+                                                ],
+                                                [
+                                                    -96.8174056101571,
+                                                    47.0920524181961
+                                                ],
+                                                [
+                                                    -96.8210905968071,
+                                                    47.09995652464912
+                                                ],
+                                                [
+                                                    -96.81633748856207,
+                                                    47.1084327964524
+                                                ],
+                                                [
+                                                    -96.82212822619034,
+                                                    47.108844829979816
+                                                ],
+                                                [
+                                                    -96.82118979084575,
+                                                    47.115722701293826
+                                                ],
+                                                [
+                                                    -96.82838435454799,
+                                                    47.120773404576966
+                                                ],
+                                                [
+                                                    -96.83755482923515,
+                                                    47.12198262751949
+                                                ],
+                                                [
+                                                    -96.82580562205428,
+                                                    47.12310400422251
+                                                ],
+                                                [
+                                                    -96.82072439188626,
+                                                    47.13038638387702
+                                                ],
+                                                [
+                                                    -96.83043664072056,
+                                                    47.12922294855788
+                                                ],
+                                                [
+                                                    -96.82635488437101,
+                                                    47.13495638924221
+                                                ],
+                                                [
+                                                    -96.83465566447218,
+                                                    47.14397808909219
+                                                ],
+                                                [
+                                                    -96.82862844948706,
+                                                    47.146244091513694
+                                                ],
+                                                [
+                                                    -96.84004178435153,
+                                                    47.15047444991506
+                                                ],
+                                                [
+                                                    -96.5948257454654,
+                                                    47.15145864000115
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                },
+                                "properties": {
+                                    "area_description": "Clay",
+                                    "geocode_list": "['27027']",
+                                    "cap_info": 75096
+                                }
+                            }
+                        ],
+                        "id": 75096,
+                        "cap_language": null,
+                        "cap_category": "Met",
+                        "cap_event": "Flood Warning",
+                        "cap_response_type": null,
+                        "cap_urgency": "Expected",
+                        "cap_severity": "Moderate",
+                        "cap_certainty": "Likely",
+                        "cap_audience": null,
+                        "cap_event_code": null,
+                        "cap_effective": "2014-06-18T14:47:00Z",
+                        "cap_onset": null,
+                        "cap_expires": "2014-06-19T14:47:00Z",
+                        "cap_sender_name": null,
+                        "cap_headline": "Flood Warning issued June 18 at 9:47AM CDT until further notice by NWS Eastern ND and Grand Forks",
+                        "cap_description": "...THE FLOOD WARNING HAS BEEN EXTENDED FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* WAHPETON...ON THE RED RIVER...IN WILKIN AND RICHLAND COUNTIES\n* OSLO...ON THE RED RIVER...IN MARSHALL...WALSH...POLK AND GRAND\nFORKS COUNTIES\n* DILWORTH...ON THE BUFFALO RIVER...IN CLAY COUNTY\n* CROOKSTON...ON THE RED LAKE RIVER...IN POLK COUNTY\n* HALLOCK...ON THE TWO RIVERS RIVER...IN KITTSON COUNTY\n...THE FLOOD WARNING CONTINUES FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* FARGO...ON THE RED RIVER ...IN CLAY AND CASS COUNTIES\n* EAST GRAND FORKS...ON THE RED RIVER ...IN POLK AND GRAND FORKS\nCOUNTIES\n* SABIN...ON THE S BR BUFFALO RIVER ...IN CLAY COUNTY\n.RIVER RISES CONTINUE IN MANY AREAS DUE TO RECENT RAINFALL. ADDITIONAL\nRAINFALL IS FORECAST...BUT TOTAL AMOUNTS REMAIN UNCERTAIN AT THIS TIME.\nFORECASTS WILL BE UPDATED AS MORE INFORMATION BECOMES AVAILABLE.\nTHIS FORECAST IS FOR A 7 DAY PERIOD...THE HIGHEST STAGE INDICATED\nMAY NOT REFLECT THE CREST FOR THIS EVENT.\nFORECASTS ARE UPDATED DAILY AND STAGE VALUES WILL CHANGE AS NEW\nWEATHER AND RIVER INFORMATION IS USED. RIVER FORECASTS USUALLY USE\n24 HOURS OF EXPECTED PRECIPITATION BUT DEPENDING ON THE SITUATION\nIT MAY INCLUDE PRECIPITATION EXPECTED THROUGH THE NEXT 72 HOURS.\nTHE FLOOD WARNING CONTINUES FOR...\n* ...DILWORTH...ON THE BUFFALO RIVER.\n* UNTIL FURTHER NOTICE...OR UNTIL THE WARNING IS CANCELLED.\n* AT  8:30 AM WEDNESDAY THE STAGE WAS 12.3 FEET.\n* MINOR FLOODING IS OCCURRING AND DURING THE NEXT 7 DAYS...MINOR\nFLOODING IS FORECAST.\n* MINOR FLOOD STAGE IS 12.0 FEET.\n* FORECAST...THE RIVER WILL RISE TO A CREST NEAR 14.0 FEET SOMETIME\nFRIDAY MID-MORNING THEN BEGIN FALLING.\n* THE RIVER IS FORECAST TO CREST AT 14.0 FEET ON FRIDAY MID-MORNING\nDURING THIS 7-DAY PERIOD.\n* IMPACT STATEMENT(S) - AT 14.9 FEET, BOTTOM OF STEEL BRIDGE CAUSES\nUPSTREAM ROAD TO FLOOD.\n&&\nDAILY 7 AM CDT/6 AM CST FORECAST STAGE IN FEET:\nDATE                THU    FRI    SAT    SUN    MON    TUE    WED\n(MONTH/DAY)         06/19  06/20  06/21  06/22  06/23  06/24  06/25\nBUFFALO RIVER\nDILWORTH          13.1   14.0   14.0   13.6   13.1   12.7   12.2",
+                        "cap_instruction": "SAFETY MESSAGE...TURN AROUND, DON`T DROWN...\n- DON`T TRAVEL THROUGH FLOODED AREAS!\n- PERSONS IN THE WARNED AREA NEED TO TAKE STEPS TO PROTECT LIFE\nAND PROPERTY. IF NECESSARY MOVE TO A HIGHER AND SAFER LOCATION.\n- PERSONS LIVING IN THE RED RIVER BASIN SHOULD MONITOR RIVER\nLEVELS WHILE THE RIVER IS IN...OR NEAR...FLOOD.\nFOR MORE INFORMATION...GO TO THE AHPS/RIVER SECTION\nON OUR WEB PAGE AT: WWW.WEATHER.GOV/GRANDFORKS",
+                        "cap_link": "",
+                        "cap_contact": null,
+                        "cap_alert": 43608
+                    }
+                ],
+                "id": 43608,
+                "cap_id": "NOAA-NWS-ALERTS-MN12515A63DBBC.FloodWarning.12515A731DFCMN.FGFFLSFGF.7e0027a2b56a26c27c16fc13bca73601",
+                "cap_slug": "712c963f91646a212f071571d611d8",
+                "cap_sender": "w-nws.webmaster@noaa.gov",
+                "cap_sent": "2014-06-18T14:47:00Z",
+                "cap_status": "Actual",
+                "cap_message_type": null,
+                "cap_source": null,
+                "cap_scope": "Public",
+                "cap_restriction": null,
+                "cap_addresses": null,
+                "cap_code": null,
+                "cap_note": "Alert for Clay (Minnesota) Issued by the National Weather Service",
+                "cap_references": null,
+                "cap_incidents": null,
+                "cap_date_received": "2014-06-18T14:50:01.537Z",
+                "cap_raw": "<?xml version = '1.0' encoding = 'UTF-8' standalone = 'yes'?>\n<?xml-stylesheet href='http://alerts.weather.gov/cap/capatomproduct.xsl' type='text/xsl'?>\n\r\n<!--\r\nThis atom/xml feed is an index to active advisories, watches and warnings \r\nissued by the National Weather Service.  This index file is not the complete \r\nCommon Alerting Protocol (CAP) alert message.  To obtain the complete CAP \r\nalert, please follow the links for each entry in this index.  Also note the \r\nCAP message uses a style sheet to convey the information in a human readable \r\nformat.  Please view the source of the CAP message to see the complete data \r\nset.  Not all information in the CAP message is contained in this index of \r\nactive alerts.\r\n-->\r\n\n<alert xmlns = 'urn:oasis:names:tc:emergency:cap:1.1'>\n\n<!-- http-date = Wed, 18 Jun 2014 02:47:00 GMT -->\n<identifier>NOAA-NWS-ALERTS-MN12515A63DBBC.FloodWarning.12515A731DFCMN.FGFFLSFGF.7e0027a2b56a26c27c16fc13bca73601</identifier>\r\n<sender>w-nws.webmaster@noaa.gov</sender>\r\n<sent>2014-06-18T09:47:00-05:00</sent>\r\n<status>Actual</status>\r\n<msgType>Alert</msgType>\r\n<scope>Public</scope>\r\n<note>Alert for Clay (Minnesota) Issued by the National Weather Service</note>\r\n<info>\r\n<category>Met</category>\r\n<event>Flood Warning</event>\r\n<urgency>Expected</urgency>\r\n<severity>Moderate</severity>\r\n<certainty>Likely</certainty>\r\n<eventCode>\r\n<valueName>SAME</valueName>\r\n<value></value>\r\n</eventCode>\r\n<effective>2014-06-18T09:47:00-05:00</effective>\r\n<expires>2014-06-19T09:47:00-05:00</expires>\r\n<senderName>NWS Eastern ND and Grand Forks (Northeastern North Dakota and Northwestern Minnesota)</senderName>\r\n<headline>Flood Warning issued June 18 at 9:47AM CDT until further notice by NWS Eastern ND and Grand Forks</headline>\r\n<description>...THE FLOOD WARNING HAS BEEN EXTENDED FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* WAHPETON...ON THE RED RIVER...IN WILKIN AND RICHLAND COUNTIES\n* OSLO...ON THE RED RIVER...IN MARSHALL...WALSH...POLK AND GRAND\nFORKS COUNTIES\n* DILWORTH...ON THE BUFFALO RIVER...IN CLAY COUNTY\n* CROOKSTON...ON THE RED LAKE RIVER...IN POLK COUNTY\n* HALLOCK...ON THE TWO RIVERS RIVER...IN KITTSON COUNTY\n...THE FLOOD WARNING CONTINUES FOR THESE RIVER LOCATIONS IN\nMINNESOTA...NORTH DAKOTA...\n* FARGO...ON THE RED RIVER ...IN CLAY AND CASS COUNTIES\n* EAST GRAND FORKS...ON THE RED RIVER ...IN POLK AND GRAND FORKS\nCOUNTIES\n* SABIN...ON THE S BR BUFFALO RIVER ...IN CLAY COUNTY\n.RIVER RISES CONTINUE IN MANY AREAS DUE TO RECENT RAINFALL. ADDITIONAL\nRAINFALL IS FORECAST...BUT TOTAL AMOUNTS REMAIN UNCERTAIN AT THIS TIME.\nFORECASTS WILL BE UPDATED AS MORE INFORMATION BECOMES AVAILABLE.\nTHIS FORECAST IS FOR A 7 DAY PERIOD...THE HIGHEST STAGE INDICATED\nMAY NOT REFLECT THE CREST FOR THIS EVENT.\nFORECASTS ARE UPDATED DAILY AND STAGE VALUES WILL CHANGE AS NEW\nWEATHER AND RIVER INFORMATION IS USED. RIVER FORECASTS USUALLY USE\n24 HOURS OF EXPECTED PRECIPITATION BUT DEPENDING ON THE SITUATION\nIT MAY INCLUDE PRECIPITATION EXPECTED THROUGH THE NEXT 72 HOURS.\nTHE FLOOD WARNING CONTINUES FOR...\n* ...DILWORTH...ON THE BUFFALO RIVER.\n* UNTIL FURTHER NOTICE...OR UNTIL THE WARNING IS CANCELLED.\n* AT  8:30 AM WEDNESDAY THE STAGE WAS 12.3 FEET.\n* MINOR FLOODING IS OCCURRING AND DURING THE NEXT 7 DAYS...MINOR\nFLOODING IS FORECAST.\n* MINOR FLOOD STAGE IS 12.0 FEET.\n* FORECAST...THE RIVER WILL RISE TO A CREST NEAR 14.0 FEET SOMETIME\nFRIDAY MID-MORNING THEN BEGIN FALLING.\n* THE RIVER IS FORECAST TO CREST AT 14.0 FEET ON FRIDAY MID-MORNING\nDURING THIS 7-DAY PERIOD.\n* IMPACT STATEMENT(S) - AT 14.9 FEET, BOTTOM OF STEEL BRIDGE CAUSES\nUPSTREAM ROAD TO FLOOD.\n&amp;&amp;\nDAILY 7 AM CDT/6 AM CST FORECAST STAGE IN FEET:\nDATE                THU    FRI    SAT    SUN    MON    TUE    WED\n(MONTH/DAY)         06/19  06/20  06/21  06/22  06/23  06/24  06/25\nBUFFALO RIVER\nDILWORTH          13.1   14.0   14.0   13.6   13.1   12.7   12.2</description>\r\n<instruction>SAFETY MESSAGE...TURN AROUND, DON`T DROWN...\n- DON`T TRAVEL THROUGH FLOODED AREAS!\n- PERSONS IN THE WARNED AREA NEED TO TAKE STEPS TO PROTECT LIFE\nAND PROPERTY. IF NECESSARY MOVE TO A HIGHER AND SAFER LOCATION.\n- PERSONS LIVING IN THE RED RIVER BASIN SHOULD MONITOR RIVER\nLEVELS WHILE THE RIVER IS IN...OR NEAR...FLOOD.\nFOR MORE INFORMATION...GO TO THE AHPS/RIVER SECTION\nON OUR WEB PAGE AT: WWW.WEATHER.GOV/GRANDFORKS</instruction>\r\n<parameter>\r\n<valueName>WMOHEADER</valueName>\r\n<value></value>\r\n</parameter>\r\n<parameter>\r\n<valueName>UGC</valueName>\r\n<value>MNC027</value>\r\n</parameter>\r\n<parameter>\r\n<valueName>VTEC</valueName>\r\n<value>/O.EXT.KFGF.FL.W.0036.000000T0000Z-000000T0000Z/\n/DILM5.1.ER.140617T2130Z.140620T1200Z.000000T0000Z.NO/</value>\r\n</parameter>\r\n<parameter>\r\n<valueName>TIME...MOT...LOC</valueName>\r\n<value></value>\r\n</parameter>\r\n<area>\r\n<areaDesc>Clay</areaDesc>\r\n<polygon>47.15,-96.82 47.04,-96.81 46.89,-96.69 46.84,-96.52 46.92,-96.5 47.15,-96.82</polygon>\r\n<geocode>\r\n<valueName>FIPS6</valueName>\r\n<value>027027</value>\r\n</geocode>\r\n<geocode>\r\n<valueName>UGC</valueName>\r\n<value>MNC027</value>\r\n</geocode>\r\n</area>\n</info>\n</alert>",
+                "contributor": null
+            }
+        ]

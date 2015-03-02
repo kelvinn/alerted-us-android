@@ -8,6 +8,8 @@ import android.support.test.espresso.assertion.ViewAssertions;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import java.util.List;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -46,11 +48,16 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         Boolean gcm_result = sharedPref.getBoolean(String.valueOf(R.string.post_new_gmc_token), true);
         assertFalse(gcm_result);
 
-        Bundle extras = new Bundle();
-        extras.putString("message", "Test single notification");
+        //Bundle extras = new Bundle();
+        //extras.putString("message", "Test single notification");
 
-        NotificationService.saveToDB(extras);
-        NotificationService.sendToApp("NEW_CARD");
+        //NotificationService.saveToDB(extras);
+        //NotificationService.sendToApp("NEW_CARD");
+
+        List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0");
+        Boolean saveResult = LocationService.saveAlertToDB(alertGson.get(0));
+        assertTrue(saveResult);
+        LocationService.sendToApp("NEW_CARD");
 
         // Check that the list of alerts comes up
         onView(withId(R.id.myListImg)).check(ViewAssertions.matches(isDisplayed()));

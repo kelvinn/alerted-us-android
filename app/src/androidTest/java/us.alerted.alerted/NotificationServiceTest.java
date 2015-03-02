@@ -6,9 +6,6 @@ import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 

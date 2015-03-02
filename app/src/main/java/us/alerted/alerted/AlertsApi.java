@@ -1,13 +1,8 @@
 package us.alerted.alerted;
 
-import android.database.Observable;
-
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.client.Response;
 import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -18,7 +13,7 @@ import retrofit.http.Query;
 public interface AlertsApi {
 
     @GET("/api/v1/alerts/")
-    AlertNew getMyThing(
+    List<AlertGson> getMyThing(
             @Query("lat") String lat,
             @Query("lng") String lng);
 }

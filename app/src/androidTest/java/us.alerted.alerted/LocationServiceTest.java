@@ -3,6 +3,7 @@ package us.alerted.alerted;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
@@ -12,6 +13,8 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 @LargeTest
 public class LocationServiceTest extends ServiceTestCase<LocationService> {
@@ -61,16 +64,31 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         startIntent.setClass(getContext(), LocationService.class);
         startService(startIntent);
 
-        AlertNew result = getService().getAlertTest();
-        //assertEquals(result.category, "bob");
-        assertEquals(result.getCap_sender(), "w-nws.webmaster@noaa.gov");
+        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0");
 
+        //List<AlertGson> alerts = AlertGson.find(AlertGson.class, null, null, null, "cap_slug DESC", "1");
+        //assertEquals(alerts.size(), 1);
 
-        assertEquals(result.getCap_slug(), "712c963f91646a212f071571d611d8");
+        assertEquals(result.get(1).getCap_sender(), "w-nws.webmaster@noaa.gov");
+        assertEquals(result.get(1).getCap_slug(), "712c963f91646a212f071571d611d8");
 
-        Info info = result.getInfo().get(0);
+        InfoGson info = result.get(1).getInfo().get(0);
         assertEquals(info.getCap_category(), "Met");
 
+        // First, delete all entries
+        Alert.deleteAll(Alert.class);
+
+        // Save result #1
+        Boolean saveResult = getService().saveAlertToDB(result.get(0));
+        assertTrue(saveResult);
+
+        // Save result #2 (shouldn't save)
+        Boolean saveResult2 = getService().saveAlertToDB(result.get(0));
+        assertFalse(saveResult2);
+
+        // Finally, count the number of entries.
+        List<Alert> alerts = Alert.listAll(Alert.class);
+        assertEquals(1, alerts.size());
     }
 
     public void testSubmitLocation() {
