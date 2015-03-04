@@ -22,18 +22,4 @@ public class UtilsTest extends AndroidTestCase  {
         assertEquals(result, "[1,1]");
     }
 
-    public void testGetQuery() {
-        List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
-        urlParams.add(new BasicNameValuePair("username", "test@alerted.us"));
-        urlParams.add(new BasicNameValuePair("password", "password"));
-
-        String result = null;
-        try {
-            result = Utils.getQuery(urlParams);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(result, "username=test%40alerted.us&password=password");
-    }
 }

@@ -14,6 +14,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 @LargeTest
@@ -29,6 +30,9 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     public void setUp() throws Exception {
         super.setUp();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.commit();
         Alert.deleteAll(Alert.class);
     }
 
@@ -60,12 +64,23 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         getService().onLocationChanged(location);
     }
 
+    public void testGetLastCheckDate() {
+        String d = LocationService.getLastCheckDate();
+        assertEquals(d, "1970-01-01T01:00:00.00000");
+    }
+
+    public void testGetSetLastCheckDate() {
+        String a = LocationService.setLastCheckDate();
+        String d = LocationService.getLastCheckDate();
+        assertEquals(d, d);
+    }
+
     public void testGetAlertTest() {
         Intent startIntent = new Intent();
         startIntent.setClass(getContext(), LocationService.class);
         startService(startIntent);
 
-        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0");
+        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         //List<AlertGson> alerts = AlertGson.find(AlertGson.class, null, null, null, "cap_slug DESC", "1");
         //assertEquals(alerts.size(), 1);

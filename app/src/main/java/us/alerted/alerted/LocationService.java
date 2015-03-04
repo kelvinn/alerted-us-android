@@ -51,11 +51,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit.RestAdapter;
 
@@ -71,11 +74,11 @@ public class LocationService extends Service implements
         ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     public String TAG = this.getClass().getSimpleName();
+    public static TimeZone tz = TimeZone.getTimeZone("UTC");
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     public static Date now = new Date();
     private GoogleApiClient mGoogleApiClient;
-    private SubmitCrdTask mSubmitCrdTask = null;
     LocationRequest mLocationRequest;
     public static SharedPreferences sharedPref;
     public static Bundle data;
@@ -121,8 +124,37 @@ public class LocationService extends Service implements
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        mSubmitCrdTask = new SubmitCrdTask();
-        mSubmitCrdTask.execute((Void) null);
+        String lat = String.valueOf(location.getLatitude());
+        String lng = String.valueOf(location.getLongitude());
+        String cap_date_received = LocationService.getLastCheckDate();
+        LocationService.getAlertFromApi(lat, lng, cap_date_received);
+    }
+
+    /**
+     * This can probably be refactored. The point of this is to first get the last check date, and if now
+     * is after that, store now for reference. It then returns the last check date to compare
+     * against cap_date_received in the Alerted API.
+     */
+    public static String getLastCheckDate() {
+        String lastCheckDate = sharedPref.getString(String.valueOf(R.string.last_check), "1970-01-01T01:00:00.00000");
+
+        // Return lastCheckDate so we can query with cap_date_received
+        return lastCheckDate;
+
+    }
+
+    public static String setLastCheckDate() {
+        Date nowAsISO = new Date();
+        try {
+            nowAsISO = sdf.parse(now.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(String.valueOf(R.string.last_check), nowAsISO.toString());
+        editor.apply();
+
+        return nowAsISO.toString();
     }
 
     /**
@@ -138,8 +170,10 @@ public class LocationService extends Service implements
 
         if (location != null) {
             mLastLocation = location;
-            mSubmitCrdTask = new SubmitCrdTask();
-            mSubmitCrdTask.execute((Void) null);
+            String lat = String.valueOf(location.getLatitude());
+            String lng = String.valueOf(location.getLongitude());
+            String cap_date_received = LocationService.getLastCheckDate();
+            LocationService.getAlertFromApi(lat, lng, cap_date_received);
         }
 
         mLocationRequest = LocationRequest.create();
@@ -159,7 +193,7 @@ public class LocationService extends Service implements
         Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
-    public static List<AlertGson> getAlertFromApi(String lat, String lng){
+    public static List<AlertGson> getAlertFromApi(String lat, String lng, String cap_date_received){
         String apiUrl;
         if (BuildConfig.DEBUG) {
             apiUrl = data.getString("api.url.test.url");
@@ -173,7 +207,7 @@ public class LocationService extends Service implements
                 .build();
 
         AlertsApi alertsApi = restAdapter.create(AlertsApi.class);
-        List<AlertGson> result = alertsApi.getMyThing(lat, lng);
+        List<AlertGson> result = alertsApi.getMyThing(lat, lng, cap_date_received);
         return result;
     }
 
@@ -264,80 +298,6 @@ public class LocationService extends Service implements
         return result;
     }
 
-    public boolean submitLocation(String mPostData, String httpAuthToken){
-        try {
-            String apiUrl;
-            if (BuildConfig.DEBUG) {
-                apiUrl = data.getString("api.url.test.locations");
-
-            } else {
-                apiUrl = data.getString("api.url.prod.locations");
-            }
-
-            URL url = new URL(apiUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            String tokenAuth = "Token " + httpAuthToken;
-            conn.setRequestProperty ("Authorization", tokenAuth);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(mPostData);
-            writer.flush();
-            writer.close();
-            os.close();
-
-            conn.connect();
-
-            // create JSON object from content
-            conn.getInputStream();
-            int code = conn.getResponseCode();
-
-            return (code == 201);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public class SubmitCrdTask extends AsyncTask<Object, Void, Object> {
-
-        public String generatePostData(){
-            JSONObject postData = new JSONObject();
-            JSONObject geom = new JSONObject();
-            try {
-                geom.put("type", "Point");
-                geom.put("coordinates", Utils.format(mLastLocation));
-                postData.put("name","Current Location");
-                postData.put("source","current");
-                postData.put("geom", geom);
-
-            }  catch(JSONException e) {
-                e.printStackTrace();
-            }
-            return postData.toString();
-        }
-
-        @Override
-        protected Object doInBackground(final Object... params) {
-
-            String mPostData = generatePostData();
-            String httpAuthToken = sharedPref.getString("AlertedToken", null);
-
-            // Do not hit api if no json data
-
-            return !mPostData.isEmpty() && submitLocation(mPostData, httpAuthToken);
-        }
-    }
 
     @Override
     public IBinder onBind(Intent intent) {

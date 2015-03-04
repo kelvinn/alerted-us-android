@@ -37,7 +37,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testPopulateAlert() {
 
-        List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0");
+        List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0", "2015-02-17T08:03:21.156421");
         Boolean saveResult = LocationService.saveAlertToDB(alertGson.get(0));
         assertTrue(saveResult);
 

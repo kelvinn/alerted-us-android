@@ -63,4 +63,6 @@
     <string name="title_alert_list">Alerts</string>
     <string name="title_alert_detail">Alert Detail</string>
 
+    <!-- For shared preferences -->
+    <string name="last_check">cap_date_received</string>
 </resources>
