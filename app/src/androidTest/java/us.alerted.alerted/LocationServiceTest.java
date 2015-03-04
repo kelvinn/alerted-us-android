@@ -29,6 +29,7 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     public void setUp() throws Exception {
         super.setUp();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Alert.deleteAll(Alert.class);
     }
 
     @SmallTest
@@ -76,7 +77,7 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertEquals(info.getCap_category(), "Met");
 
         // First, delete all entries
-        Alert.deleteAll(Alert.class);
+
 
         // Save result #1
         Boolean saveResult = getService().saveAlertToDB(result.get(0));
@@ -89,33 +90,6 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         // Finally, count the number of entries.
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(1, alerts.size());
-    }
-
-    public void testSubmitLocation() {
-
-        Intent startIntent = new Intent();
-        startIntent.setClass(getContext(), LocationService.class);
-        startService(startIntent);
-
-        JSONObject postData = new JSONObject();
-        JSONObject geom = new JSONObject();
-        Location location = new Location("");//provider name is unecessary
-        location.setLatitude(1.0d);//your coords of course
-        location.setLongitude(1.0d);
-        try {
-            geom.put("type", "Point");
-            geom.put("coordinates", Utils.format(location));
-            postData.put("name","Current Location");
-            postData.put("source","current");
-            postData.put("geom", geom);
-        }  catch(JSONException e) {
-            e.printStackTrace();
-        }
-
-        String mPostData = postData.toString();
-        String httpAuthToken = "abcdefgh";
-        Boolean result = getService().submitLocation(mPostData, httpAuthToken);
-        assertTrue(result);
     }
 
 }

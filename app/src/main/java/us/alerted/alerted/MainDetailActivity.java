@@ -96,12 +96,6 @@ public class MainDetailActivity extends Activity {
             editor.putBoolean("userLoggedInState", false);
             editor.apply();
 
-            // Now go back to LoginActivity
-            Intent intent = new Intent(MainDetailActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            finish();
-            startActivity(intent);
 
             return true;
         }

@@ -31,24 +31,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void setUp() throws Exception {
         super.setUp();
         getActivity();
+        Alert.deleteAll(Alert.class);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
     }
 
     public void testPopulateAlert() {
-
-        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
-        onView(withId(R.id.password)).perform(typeText("password")).check(ViewAssertions.matches(withText("password")));
-        onView(withId(R.id.email_sign_in_button)).perform(click());
-
-        // Test that a token was received
-        String result = sharedPref.getString("AlertedToken", "");
-        assertEquals(result, "abcdefgh");
-
-        //Bundle extras = new Bundle();
-        //extras.putString("message", "Test single notification");
-
-        //NotificationService.saveToDB(extras);
-        //NotificationService.sendToApp("NEW_CARD");
 
         List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0");
         Boolean saveResult = LocationService.saveAlertToDB(alertGson.get(0));
@@ -70,9 +57,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // depending on if the device has a hardware or software overflow menu button.
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        // Click the item.
-        onView(withText("Logout")).perform(click());
-        onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
     }
 
 }
