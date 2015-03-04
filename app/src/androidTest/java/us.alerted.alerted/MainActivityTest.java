@@ -42,11 +42,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         // Test that a token was received
         String result = sharedPref.getString("AlertedToken", "");
-        assertEquals(result, "abcdefgh"); // This value is from Apiary
-
-        // Test that the GCM was submitted OK
-        Boolean gcm_result = sharedPref.getBoolean(String.valueOf(R.string.post_new_gmc_token), true);
-        assertFalse(gcm_result);
+        assertEquals(result, "abcdefgh");
 
         //Bundle extras = new Bundle();
         //extras.putString("message", "Test single notification");
@@ -57,6 +53,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0");
         Boolean saveResult = LocationService.saveAlertToDB(alertGson.get(0));
         assertTrue(saveResult);
+
         LocationService.sendToApp("NEW_CARD");
 
         // Check that the list of alerts comes up
@@ -78,25 +75,4 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         onView(withId(R.id.email)).check(ViewAssertions.matches(isDisplayed()));
     }
 
-    public void testReceiveGCM() {
-
-        onView(withId(R.id.email)).perform(typeText("test@alerted.us")).check(ViewAssertions.matches(withText("test@alerted.us")));
-        onView(withId(R.id.password)).perform(typeText("password")).check(ViewAssertions.matches(withText("password")));
-        onView(withId(R.id.email_sign_in_button)).perform(click());
-        Intent gcmIntent = new Intent();
-        gcmIntent.putExtra("message", "Test single notification");
-
-        ExternalReceiver r = new ExternalReceiver();
-        // TODO put extras
-        //gcmIntent.addFlags()
-        r.onReceive(getInstrumentation().getTargetContext(), gcmIntent);
-
-        // Check that the list of alerts comes up
-        //onView(withId(R.id.myListImg)).check(ViewAssertions.matches(isDisplayed()));
-
-        // Click on a card and see if the detail page comes up
-        //onView(withId(R.id.card)).perform(click());
-        //onView(withId(R.id.alert_summary)).check(ViewAssertions.matches(isDisplayed()));
-
-    }
 }

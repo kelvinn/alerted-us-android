@@ -63,11 +63,10 @@ public class MainActivity extends Activity {
         } else {
 
 
-
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    String s = intent.getStringExtra(NotificationService.NOTIF_MESSAGE);
+                    String s = intent.getStringExtra(LocationService.NOTIF_MESSAGE);
                     if (s.equals("NEW_CARD")){
                         Intent newIntent = getIntent();
                         overridePendingTransition(0, 0);
@@ -78,7 +77,6 @@ public class MainActivity extends Activity {
                     }
                 }
             };
-
             numOfMissedMessages = getString(R.string.num_of_missed_messages);
 
             /*
@@ -146,7 +144,6 @@ public class MainActivity extends Activity {
                 }
             });
 
-            startService(new Intent(this, NotificationService.class));
             startService(new Intent(this, LocationService.class));
         }
 
@@ -156,7 +153,8 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         inBackground = false;
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(NotificationService.NOTIF_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(LocationService.NOTIF_RESULT));
+
     }
 
     public void onStop(){
@@ -212,7 +210,6 @@ public class MainActivity extends Activity {
         if (id == R.id.action_logout) {
 
             // Stop services
-            stopService(new Intent(this, NotificationService.class));
             stopService(new Intent(this, LocationService.class));
 
             // Erase all records in database

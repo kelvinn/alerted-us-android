@@ -496,7 +496,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
             if (success) {
                 mLoginResult = true; // This is for unit tests
-                startService(new Intent(getApplicationContext(), NotificationService.class));
                 startService(new Intent(getApplicationContext(), LocationService.class));
 
                 Intent i = new Intent(getBaseContext(), MainActivity.class);

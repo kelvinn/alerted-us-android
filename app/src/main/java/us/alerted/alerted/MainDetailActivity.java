@@ -81,7 +81,6 @@ public class MainDetailActivity extends Activity {
         if (id == R.id.action_logout) {
 
             // Stop services
-            stopService(new Intent(this, NotificationService.class));
             stopService(new Intent(this, LocationService.class));
 
             // Erase all records in database
