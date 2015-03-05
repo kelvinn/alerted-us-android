@@ -67,6 +67,13 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertEquals(2, alerts.size());
     }
 
+    public void testPostNotification() {
+        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        Boolean saveResult = LocationService.saveAlertToDB(result.get(0));
+        assertTrue(saveResult);
+
+    }
+
     public void testSaveAlertsToDB() {
         List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 

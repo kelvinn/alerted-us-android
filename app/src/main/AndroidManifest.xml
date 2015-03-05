@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="us.alerted.alerted" >
 
-
-
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,7 +11,6 @@
 
     <!-- For New Relic -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <!-- To allow automatic startup at boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -44,26 +41,52 @@
 
         <!-- For DB migrations -->
 
-        <meta-data android:name="DATABASE" android:value="alertdb.db" />
-        <meta-data android:name="VERSION" android:value="2" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="us.alerted" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="alertdb.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="2" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="us.alerted" />
 
         <!-- API Values Testing -->
-        <meta-data android:name="api.url.test.token" android:value="http://192.168.56.1:8882/api-token-auth/"/>
-        <meta-data android:name="api.url.test.users" android:value="http://192.168.56.1:8882/api/v1/users/"/>
-        <meta-data android:name="api.url.test.gcmtoken" android:value="http://192.168.56.1:8882/api/v1/users/gcmtoken/"/>
-        <meta-data android:name="api.url.test.locations" android:value="http://192.168.56.1:8882/api/v1/users/locations/"/>
-        <meta-data android:name="api.url.test.url" android:value="http://192.168.56.1:8882/"/>
+        <meta-data
+            android:name="api.url.test.token"
+            android:value="http://192.168.56.1:8882/api-token-auth/" />
+        <meta-data
+            android:name="api.url.test.users"
+            android:value="http://192.168.56.1:8882/api/v1/users/" />
+        <meta-data
+            android:name="api.url.test.gcmtoken"
+            android:value="http://192.168.56.1:8882/api/v1/users/gcmtoken/" />
+        <meta-data
+            android:name="api.url.test.locations"
+            android:value="http://192.168.56.1:8882/api/v1/users/locations/" />
+        <meta-data
+            android:name="api.url.test.url"
+            android:value="http://192.168.56.1:8882/" />
 
         <!-- API Values Production -->
-        <meta-data android:name="api.url.prod.token" android:value="https://alerted.us/api-token-auth/"/>
-        <meta-data android:name="api.url.prod.users" android:value="https://alerted.us/api/v1/users/"/>
-        <meta-data android:name="api.url.prod.gcmtoken" android:value="https://alerted.us/api/v1/users/gcmtoken/"/>
-        <meta-data android:name="api.url.prod.locations" android:value="https://alerted.us/api/v1/users/locations/"/>
-        <meta-data android:name="api.url.prod.url" android:value="https://alerted.us/"/>
-
-
+        <meta-data
+            android:name="api.url.prod.token"
+            android:value="https://alerted.us/api-token-auth/" />
+        <meta-data
+            android:name="api.url.prod.users"
+            android:value="https://alerted.us/api/v1/users/" />
+        <meta-data
+            android:name="api.url.prod.gcmtoken"
+            android:value="https://alerted.us/api/v1/users/gcmtoken/" />
+        <meta-data
+            android:name="api.url.prod.locations"
+            android:value="https://alerted.us/api/v1/users/locations/" />
+        <meta-data
+            android:name="api.url.prod.url"
+            android:value="https://alerted.us/" />
 
         <activity
             android:name=".MainActivity"
@@ -79,14 +102,14 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
         <service
             android:name=".LocationService"
-            android:label="LocationService"
-            android:exported = "false" >
+            android:exported="false"
+            android:label="LocationService" >
             <intent-filter>
                 <action android:name="us.alerted.alerted.MainActivity" />
                 <action android:name="us.alerted.alerted.ExternalReceiver" />
+
                 <category android:name="us.alerted.alerted" />
             </intent-filter>
         </service>
@@ -104,6 +127,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="us.alerted.alerted.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

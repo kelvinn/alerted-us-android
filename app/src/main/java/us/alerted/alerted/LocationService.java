@@ -115,8 +115,16 @@ public class LocationService extends Service implements
         String lng = String.valueOf(location.getLongitude());
         String cap_date_received = LocationService.getLastCheckDate();
         List<AlertGson> alerts = LocationService.getAlertFromApi(lat, lng, cap_date_received);
-        saveAlertsToDB(alerts);
+        boolean result = saveAlertsToDB(alerts);
 
+        if(!MainActivity.inBackground && result){
+            // TODO also refresh app on this one?
+            LocationService.sendToApp("NEW_CARD");
+        }
+        else{
+            LocationService.postNotification(new Intent(getApplicationContext(),
+                    MainActivity.class), getApplicationContext());
+        }
     }
 
     /**
@@ -170,6 +178,7 @@ public class LocationService extends Service implements
 
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
+
 
     }
 
