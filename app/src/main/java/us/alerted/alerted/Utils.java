@@ -1,13 +1,7 @@
 package us.alerted.alerted;
 
 import android.location.Location;
-
-import org.apache.http.NameValuePair;
 import org.json.JSONArray;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
 
 public class Utils {
 

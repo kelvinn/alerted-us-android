@@ -3,7 +3,6 @@ package us.alerted.alerted;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
@@ -11,10 +10,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
 import java.util.List;
 
 @LargeTest
@@ -29,10 +24,14 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+
+        // Clear shared preferences
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.commit();
+
+        // Delete all items in the Alert DB
         Alert.deleteAll(Alert.class);
     }
 
@@ -53,7 +52,7 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     }
 
     @MediumTest
-    public void testLocationOnChanged() {
+    public void testOnLocationChanged() {
         Intent startIntent = new Intent();
         startIntent.setClass(getContext(), LocationService.class);
         startService(startIntent);
@@ -62,6 +61,18 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         location.setLatitude(1.0d);//your coords of course
         location.setLongitude(1.0d);
         getService().onLocationChanged(location);
+
+        // Finally, count the number of entries. (alert # from stubby api)
+        List<Alert> alerts = Alert.listAll(Alert.class);
+        assertEquals(2, alerts.size());
+    }
+
+    public void testSaveAlertsToDB() {
+        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+
+        // Save multiple alerts
+        Boolean saveResult = LocationService.saveAlertsToDB(result);
+        assertTrue(saveResult);
     }
 
     public void testGetLastCheckDate() {
@@ -72,15 +83,12 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     public void testGetSetLastCheckDate() {
         String a = LocationService.setLastCheckDate();
         String d = LocationService.getLastCheckDate();
-        assertEquals(d, d);
+        assertEquals(a, d);
     }
 
     public void testGetAlertTest() {
-        Intent startIntent = new Intent();
-        startIntent.setClass(getContext(), LocationService.class);
-        startService(startIntent);
 
-        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         //List<AlertGson> alerts = AlertGson.find(AlertGson.class, null, null, null, "cap_slug DESC", "1");
         //assertEquals(alerts.size(), 1);
@@ -91,15 +99,12 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         InfoGson info = result.get(1).getInfo().get(0);
         assertEquals(info.getCap_category(), "Met");
 
-        // First, delete all entries
-
-
         // Save result #1
-        Boolean saveResult = getService().saveAlertToDB(result.get(0));
+        Boolean saveResult = LocationService.saveAlertToDB(result.get(0));
         assertTrue(saveResult);
 
         // Save result #2 (shouldn't save)
-        Boolean saveResult2 = getService().saveAlertToDB(result.get(0));
+        Boolean saveResult2 = LocationService.saveAlertToDB(result.get(0));
         assertFalse(saveResult2);
 
         // Finally, count the number of entries.

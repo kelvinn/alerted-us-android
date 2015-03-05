@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -40,18 +39,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -127,7 +114,9 @@ public class LocationService extends Service implements
         String lat = String.valueOf(location.getLatitude());
         String lng = String.valueOf(location.getLongitude());
         String cap_date_received = LocationService.getLastCheckDate();
-        LocationService.getAlertFromApi(lat, lng, cap_date_received);
+        List<AlertGson> alerts = LocationService.getAlertFromApi(lat, lng, cap_date_received);
+        saveAlertsToDB(alerts);
+
     }
 
     /**
@@ -136,10 +125,8 @@ public class LocationService extends Service implements
      * against cap_date_received in the Alerted API.
      */
     public static String getLastCheckDate() {
-        String lastCheckDate = sharedPref.getString(String.valueOf(R.string.last_check), "1970-01-01T01:00:00.00000");
-
         // Return lastCheckDate so we can query with cap_date_received
-        return lastCheckDate;
+        return sharedPref.getString(String.valueOf(R.string.last_check), "1970-01-01T01:00:00.00000");
 
     }
 
@@ -207,8 +194,7 @@ public class LocationService extends Service implements
                 .build();
 
         AlertsApi alertsApi = restAdapter.create(AlertsApi.class);
-        List<AlertGson> result = alertsApi.getMyThing(lat, lng, cap_date_received);
-        return result;
+        return alertsApi.getMyThing(lat, lng, cap_date_received);
     }
 
     public static void sendToApp(String message) {
@@ -267,6 +253,15 @@ public class LocationService extends Service implements
             mNotificationManager.notify(R.string.notification_number, notification);
         }
 
+    }
+
+    public static boolean saveAlertsToDB(List<AlertGson> alerts) {
+        boolean result = false;
+        for(AlertGson alert : alerts) {
+            result = saveAlertToDB(alert);
+
+        }
+        return result;
     }
 
     public static boolean saveAlertToDB(AlertGson alertGson) {
