@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -105,26 +106,12 @@ public class LocationService extends Service implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        String lat = String.valueOf(location.getLatitude());
-        String lng = String.valueOf(location.getLongitude());
-        String cap_date_received = LocationService.getLastCheckDate();
-        List<AlertGson> alerts = LocationService.getAlertFromApi(lat, lng, cap_date_received);
-        boolean result = saveAlertsToDB(alerts);
-
-        if(!MainActivity.inBackground && result){
-            // TODO also refresh app on this one?
-            LocationService.sendToApp("NEW_CARD");
-        }
-        else{
-            LocationService.postNotification(new Intent(getApplicationContext(),
-                    MainActivity.class), getApplicationContext());
-        }
+        new GetAndSaveAlertsCmd().execute();
     }
 
     /**
@@ -164,22 +151,18 @@ public class LocationService extends Service implements
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (location != null) {
-            mLastLocation = location;
-            String lat = String.valueOf(location.getLatitude());
-            String lng = String.valueOf(location.getLongitude());
-            String cap_date_received = LocationService.getLastCheckDate();
-            LocationService.getAlertFromApi(lat, lng, cap_date_received);
+            GetAndSaveAlertsCmd getAndSaveAlertsCmd = new GetAndSaveAlertsCmd();
+            getAndSaveAlertsCmd.execute();
         }
 
+        Integer pollingFrequency = sharedPref.getInt("pollingFrequency",5);
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setInterval(30 * 60 * 1000); // Update location every 30 minutes
+        mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
         mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
 
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
-
-
     }
 
     @Override
@@ -203,7 +186,17 @@ public class LocationService extends Service implements
                 .build();
 
         AlertsApi alertsApi = restAdapter.create(AlertsApi.class);
-        return alertsApi.getMyThing(lat, lng, cap_date_received);
+
+        List<AlertGson> result;
+
+        try {
+            result = alertsApi.getMyThing(lat, lng, cap_date_received);
+        } catch(retrofit.RetrofitError e) {
+            result = null;
+        }
+
+
+        return result;
     }
 
     public static void sendToApp(String message) {
@@ -266,9 +259,10 @@ public class LocationService extends Service implements
 
     public static boolean saveAlertsToDB(List<AlertGson> alerts) {
         boolean result = false;
-        for(AlertGson alert : alerts) {
-            result = saveAlertToDB(alert);
-
+        if(alerts != null) {
+            for(AlertGson alert : alerts) {
+                result = saveAlertToDB(alert);
+            }
         }
         return result;
     }
@@ -323,5 +317,38 @@ public class LocationService extends Service implements
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
         mGoogleApiClient.connect();
+    }
+
+    public class GetAndSaveAlertsCmd extends AsyncTask<Location, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Location... l) {
+            Boolean result;
+
+            if(mLastLocation != null) {
+                String lat = String.valueOf(mLastLocation.getLatitude());
+                String lng = String.valueOf(mLastLocation.getLongitude());
+                String cap_date_received = LocationService.getLastCheckDate();
+
+                List<AlertGson> alerts = LocationService.getAlertFromApi(lat, lng, cap_date_received);
+                result = saveAlertsToDB(alerts);
+            } else {
+                result = false;
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(!MainActivity.inBackground && result){
+                LocationService.sendToApp("NEW_CARD");
+            }
+            else if(result){
+                LocationService.postNotification(new Intent(getApplicationContext(),
+                    MainActivity.class), getApplicationContext());
+            }
+            setLastCheckDate();
+        }
     }
 }

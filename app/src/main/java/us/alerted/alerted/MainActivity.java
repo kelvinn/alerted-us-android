@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +25,8 @@ import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static us.alerted.alerted.LocationService.*;
 
 public class MainActivity extends Activity {
 
@@ -59,7 +63,7 @@ public class MainActivity extends Activity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String s = intent.getStringExtra(LocationService.NOTIF_MESSAGE);
+                String s = intent.getStringExtra(NOTIF_MESSAGE);
                 if (s.equals("NEW_CARD")){
                     Intent newIntent = getIntent();
                     overridePendingTransition(0, 0);
@@ -145,7 +149,7 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         inBackground = false;
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(LocationService.NOTIF_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(NOTIF_RESULT));
 
     }
 
@@ -182,8 +186,10 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Log.i(TAG, "Pressed Settings Key");
+            Intent i = new Intent(this, MyPreferencesActivity.class);
+            startActivity(i);
         }
+
         return super.onOptionsItemSelected(item);
     }
 

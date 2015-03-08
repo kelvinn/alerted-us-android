@@ -3,6 +3,8 @@ package us.alerted.alerted;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.test.ServiceTestCase;
@@ -51,6 +53,20 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertNotNull(service);
     }
 
+    public void testOnConnected() {
+        Intent startIntent = new Intent();
+        startIntent.setClass(getContext(), LocationService.class);
+        startService(startIntent);
+
+        assertNotNull(getService());
+        Location location = new Location("");//provider name is unecessary
+        location.setLatitude(1.0d);//your coords of course
+        location.setLongitude(1.0d);
+
+        //getService().onConnected(null);
+
+    }
+
     @MediumTest
     public void testOnLocationChanged() {
         Intent startIntent = new Intent();
@@ -62,10 +78,17 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         location.setLongitude(1.0d);
         getService().onLocationChanged(location);
 
-        // Finally, count the number of entries. (alert # from stubby api)
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Execute some code after 2 seconds have passed
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(2, alerts.size());
     }
+
 
     public void testPostNotification() {
         List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");

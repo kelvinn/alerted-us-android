@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -80,7 +79,8 @@ public class MainDetailActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Log.i(TAG, "Pressed Settings Key");
+            Intent i = new Intent(this, MyPreferencesActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
