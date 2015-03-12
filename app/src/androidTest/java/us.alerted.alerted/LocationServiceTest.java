@@ -7,10 +7,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import java.util.List;
 
@@ -18,6 +27,7 @@ import java.util.List;
 public class LocationServiceTest extends ServiceTestCase<LocationService> {
 
     public static SharedPreferences sharedPref;
+    private LocationService mReceiver = new LocationService();
 
     public LocationServiceTest() {
         super(LocationService.class);
@@ -84,41 +94,37 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
             e.printStackTrace();
         }
 
+
+
         // Execute some code after 2 seconds have passed
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(2, alerts.size());
     }
 
-
-    public void testPostNotification() {
-        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
-        Boolean saveResult = LocationService.saveAlertToDB(result.get(0));
-        assertTrue(saveResult);
-
-    }
-
     public void testSaveAlertsToDB() {
-        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         // Save multiple alerts
-        Boolean saveResult = LocationService.saveAlertsToDB(result);
+        Boolean saveResult = mReceiver.saveAlertsToDB(result);
         assertTrue(saveResult);
     }
 
+
+
     public void testGetLastCheckDate() {
-        String d = LocationService.getLastCheckDate();
+        String d = mReceiver.getLastCheckDate();
         assertEquals(d, "1970-01-01T01:00:00.00000");
     }
 
     public void testGetSetLastCheckDate() {
-        String a = LocationService.setLastCheckDate();
-        String d = LocationService.getLastCheckDate();
+        String a = mReceiver.setLastCheckDate();
+        String d = mReceiver.getLastCheckDate();
         assertEquals(a, d);
     }
 
     public void testGetAlertTest() {
 
-        List<AlertGson> result = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         //List<AlertGson> alerts = AlertGson.find(AlertGson.class, null, null, null, "cap_slug DESC", "1");
         //assertEquals(alerts.size(), 1);
@@ -130,16 +136,21 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertEquals(info.getCap_category(), "Met");
 
         // Save result #1
-        Boolean saveResult = LocationService.saveAlertToDB(result.get(0));
+        Boolean saveResult = mReceiver.saveAlertToDB(result.get(0));
         assertTrue(saveResult);
 
         // Save result #2 (shouldn't save)
-        Boolean saveResult2 = LocationService.saveAlertToDB(result.get(0));
+        Boolean saveResult2 = mReceiver.saveAlertToDB(result.get(0));
         assertFalse(saveResult2);
 
         // Finally, count the number of entries.
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(1, alerts.size());
+
     }
+
+
+
+
 
 }

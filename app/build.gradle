@@ -63,6 +63,20 @@ android {
             testCoverageEnabled true
         }
     }
+    productFlavors {
+        production {
+            applicationId "us.alerted.alerted.production"
+        }
+
+        staging {
+            applicationId "us.alerted.alerted.staging"
+        }
+
+        defaultConfig {
+            applicationId "us.alerted.alerted.defaultConfig"
+        }
+
+    }
     lintOptions {
         disable 'InvalidPackage'
     }

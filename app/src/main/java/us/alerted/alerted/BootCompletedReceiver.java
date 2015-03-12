@@ -10,7 +10,7 @@ import android.content.Intent;
 public class BootCompletedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent startServiceIntent = new Intent(context, LocationService.class);
-        context.startService(startServiceIntent);
+        //Intent startServiceIntent = new Intent(context, LocationService.class);
+        //context.startService(startServiceIntent);
     }
 }

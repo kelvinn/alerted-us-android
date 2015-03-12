@@ -2,26 +2,26 @@ package us.alerted.alerted;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
 import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 
 @LargeTest
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public static SharedPreferences sharedPref;
+    private LocationService mReceiver = new LocationService();
 
     public MainActivityTest() {
         super(MainActivity.class);
@@ -33,15 +33,26 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getActivity();
         Alert.deleteAll(Alert.class);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+
     }
 
-    public void testPopulateAlert() {
 
-        List<AlertGson> alertGson = LocationService.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
-        Boolean saveResult = LocationService.saveAlertToDB(alertGson.get(0)); // we just show one for now
+    public void testPostNotification() {
+        List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        Boolean saveResult = mReceiver.saveAlertToDB(result.get(0));
         assertTrue(saveResult);
 
-        LocationService.sendToApp("NEW_CARD");
+    }
+
+    public void testSaveAlert() {
+        Alert.deleteAll(Alert.class);
+        List<AlertGson> alertGson = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        assertNotNull(alertGson);
+
+        Boolean saveResult = mReceiver.saveAlertToDB(alertGson.get(0)); // we just show one for now
+        assertTrue(saveResult);
+
+        mReceiver.sendToApp("NEW_CARD");
 
         // Check that the list of alerts comes up
         onView(withId(R.id.myListImg)).check(ViewAssertions.matches(isDisplayed()));
@@ -57,4 +68,5 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         // depending on if the device has a hardware or software overflow menu button.
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
     }
+
 }

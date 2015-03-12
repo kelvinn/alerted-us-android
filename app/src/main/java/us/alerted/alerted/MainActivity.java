@@ -1,6 +1,8 @@
 package us.alerted.alerted;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.newrelic.agent.android.NewRelic;
 import com.ocpsoft.pretty.time.PrettyTime;
@@ -44,6 +47,7 @@ public class MainActivity extends Activity {
     //private SharedPreferences sharedPref = getApplicationContext().getPreferences(Context.MODE_PRIVATE);
 
     private List<RowItem> rowItems;
+    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,19 @@ public class MainActivity extends Activity {
 
         //overridePendingTransition(R.anim.animation_leave,
         //        R.anim.animation_enter);
+
+        /* Retrieve a PendingIntent that will perform a broadcast */
+        Intent alarmIntent = new Intent(MainActivity.this, MyAlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
+
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 8000;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        //Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+
+
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         //String httpAuthToken = sharedPref.getString("AlertedToken", null);
@@ -141,8 +158,22 @@ public class MainActivity extends Activity {
             }
         });
 
-        startService(new Intent(this, LocationService.class));
+        //startService(new Intent(this, LocationService.class));
+        scheduleAlarm();
 
+    }
+
+    public void scheduleAlarm() {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, MyAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // first run of alarm is immediate
+        int intervalMillis = 25000; // 5 seconds
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, intervalMillis, pIntent);
     }
 
     @Override

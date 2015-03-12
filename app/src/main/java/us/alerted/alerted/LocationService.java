@@ -15,6 +15,7 @@ package us.alerted.alerted;
  * limitations under the License.
  */
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -66,6 +67,7 @@ public class LocationService extends Service implements
 
     public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     public static Date now = new Date();
+
     private GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     public static SharedPreferences sharedPref;
@@ -73,6 +75,7 @@ public class LocationService extends Service implements
     static public LocalBroadcastManager broadcaster;
     static final public String NOTIF_RESULT = "us.alerted.alerted.LocationService.NEW_REQUEST";
     static final public String NOTIF_MESSAGE = "us.alerted.alerted.LocationService.NEW_MESSAGE";
+    private Context context;
 
     /**
      * Represents a geographical location.
@@ -82,20 +85,15 @@ public class LocationService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
-        broadcaster = LocalBroadcastManager.getInstance(this);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // This 'data' object is able to query the meta data from the Manifest
-        try {
-            data = getApplicationContext().getPackageManager().getApplicationInfo(
-                    getApplicationContext().getPackageName(),
-                    PackageManager.GET_META_DATA).metaData;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        Log.i("LocationService", "Service running");
+        context = getApplicationContext();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        broadcaster = LocalBroadcastManager.getInstance(this);
 
         buildGoogleApiClient();
     }
+
 
     /**
      * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
@@ -106,26 +104,42 @@ public class LocationService extends Service implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        mGoogleApiClient.connect();
+
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        new GetAndSaveAlertsCmd().execute();
+    public void sendToApp(String message) {
+
+        Intent intent = new Intent(NOTIF_RESULT);
+        if(message != null)
+            intent.putExtra(NOTIF_MESSAGE, message);
+        broadcaster.sendBroadcast(intent);
     }
+
+
+    public boolean saveAlertsToDB(List<AlertGson> alerts) {
+        boolean result = false;
+        if(alerts != null) {
+            for(AlertGson alert : alerts) {
+                result = saveAlertToDB(alert);
+            }
+        }
+        return result;
+    }
+
 
     /**
      * This can probably be refactored. The point of this is to first get the last check date, and if now
      * is after that, store now for reference. It then returns the last check date to compare
      * against cap_date_received in the Alerted API.
      */
-    public static String getLastCheckDate() {
+    public String getLastCheckDate() {
         // Return lastCheckDate so we can query with cap_date_received
         return sharedPref.getString(String.valueOf(R.string.last_check), "1970-01-01T01:00:00.00000");
 
     }
 
-    public static String setLastCheckDate() {
+    public String setLastCheckDate() {
         Date nowAsISO = new Date();
         try {
             nowAsISO = sdf.parse(now.toString());
@@ -139,48 +153,21 @@ public class LocationService extends Service implements
         return nowAsISO.toString();
     }
 
-    /**
-     * Runs when a GoogleApiClient object successfully connects.
-     */
     @Override
-    public void onConnected(Bundle connectionHint) {
-        // Provides a simple way of getting a device's location and is well suited for
-        // applications that do not require a fine-grained location and that do not need location
-        // updates. Gets the best and most recent location currently available, which may be null
-        // in rare cases when a location is not available.
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (location != null) {
-            GetAndSaveAlertsCmd getAndSaveAlertsCmd = new GetAndSaveAlertsCmd();
-            getAndSaveAlertsCmd.execute();
-        }
-
-        Integer pollingFrequency = sharedPref.getInt("pollingFrequency",5);
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
-        mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        Log.i("LocationService", "Changed: " + mLastLocation.toString());
+        Intent stopServiceIntent = new Intent(context, LocationService.class);
+        context.stopService(stopServiceIntent);
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
-        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-    public static List<AlertGson> getAlertFromApi(String lat, String lng, String cap_date_received){
+    public List<AlertGson> getAlertFromApi(String lat, String lng, String cap_date_received){
         String apiUrl;
-        if (BuildConfig.DEBUG) {
-            apiUrl = data.getString("api.url.test.url");
 
-        } else {
-            apiUrl = data.getString("api.url.prod.url");
-        }
-
+        //apiUrl = R.string.base_url;
+        //apiUrl =  r.getString(R.string.base_url);
+        //apiUrl = context.getResources().getString(R.string.base_url);
+        apiUrl = "http://192.168.56.1:8882/";
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrl)
                 .build();
@@ -197,13 +184,6 @@ public class LocationService extends Service implements
 
 
         return result;
-    }
-
-    public static void sendToApp(String message) {
-        Intent intent = new Intent(NOTIF_RESULT);
-        if(message != null)
-            intent.putExtra(NOTIF_MESSAGE, message);
-        broadcaster.sendBroadcast(intent);
     }
 
     protected static void postNotification(Intent intentAction, Context context){
@@ -257,17 +237,7 @@ public class LocationService extends Service implements
 
     }
 
-    public static boolean saveAlertsToDB(List<AlertGson> alerts) {
-        boolean result = false;
-        if(alerts != null) {
-            for(AlertGson alert : alerts) {
-                result = saveAlertToDB(alert);
-            }
-        }
-        return result;
-    }
-
-    public static boolean saveAlertToDB(AlertGson alertGson) {
+    public boolean saveAlertToDB(AlertGson alertGson) {
         Boolean result = false;
 
         List<Alert> alerts = Alert.find(Alert.class, "effective = ?", alertGson.getInfo().get(0).getCap_effective());
@@ -296,6 +266,47 @@ public class LocationService extends Service implements
         return result;
     }
 
+    /**
+     * Runs when a GoogleApiClient object successfully connects.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        // Provides a simple way of getting a device's location and is well suited for
+        // applications that do not require a fine-grained location and that do not need location
+        // updates. Gets the best and most recent location currently available, which may be null
+        // in rare cases when a location is not available.
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.i("LocationService", "in onConnected");
+        if (location != null) {
+            Log.d(TAG, location.toString());
+            mLastLocation = location;
+            new GetAndSaveAlertsCmd(context).execute();
+
+            Intent stopServiceIntent = new Intent(context, LocationService.class);
+            context.stopService(stopServiceIntent);
+
+        } else {
+
+            Integer pollingFrequency = sharedPref.getInt("pollingFrequency", 5);
+            mLocationRequest = LocationRequest.create();
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            //mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
+            //mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
+
+            mLocationRequest.setInterval(5 * 1000);
+            mLocationRequest.setFastestInterval(5 * 1000); // 60 seconds, in milliseconds
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+        // onConnectionFailed.
+        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -316,21 +327,31 @@ public class LocationService extends Service implements
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
+        Log.e(TAG, "Error connecting with Google Play Services");
         mGoogleApiClient.connect();
     }
 
-    public class GetAndSaveAlertsCmd extends AsyncTask<Location, Void, Boolean> {
+    private class GetAndSaveAlertsCmd extends AsyncTask<Location, Void, Boolean> {
+
+        Context c;
+
+        public GetAndSaveAlertsCmd(Context c) {
+            this.c = c;
+        }
+
 
         @Override
         protected Boolean doInBackground(Location... l) {
             Boolean result;
+            Log.i("AlarmService", "in doInBackground");
 
             if(mLastLocation != null) {
+                Log.e(TAG, "not null");
                 String lat = String.valueOf(mLastLocation.getLatitude());
                 String lng = String.valueOf(mLastLocation.getLongitude());
-                String cap_date_received = LocationService.getLastCheckDate();
+                String cap_date_received = getLastCheckDate();
 
-                List<AlertGson> alerts = LocationService.getAlertFromApi(lat, lng, cap_date_received);
+                List<AlertGson> alerts = getAlertFromApi(lat, lng, cap_date_received);
                 result = saveAlertsToDB(alerts);
             } else {
                 result = false;
@@ -342,13 +363,14 @@ public class LocationService extends Service implements
         @Override
         protected void onPostExecute(Boolean result) {
             if(!MainActivity.inBackground && result){
-                LocationService.sendToApp("NEW_CARD");
+                sendToApp("NEW_CARD");
             }
             else if(result){
-                LocationService.postNotification(new Intent(getApplicationContext(),
-                    MainActivity.class), getApplicationContext());
+                postNotification(new Intent(c,
+                        MainActivity.class), c);
             }
-            setLastCheckDate();
+            //setLastCheckDate();
         }
     }
+
 }
