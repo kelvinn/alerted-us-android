@@ -8,12 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.newrelic.agent.android.NewRelic;
 import com.ocpsoft.pretty.time.PrettyTime;
@@ -62,7 +58,7 @@ public class MainActivity extends Activity {
         //        R.anim.animation_enter);
 
         /* Retrieve a PendingIntent that will perform a broadcast */
-        Intent alarmIntent = new Intent(MainActivity.this, MyAlarmReceiver.class);
+        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
 
 
@@ -70,12 +66,8 @@ public class MainActivity extends Activity {
         int interval = 8000;
 
         manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        //Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
-
-
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //String httpAuthToken = sharedPref.getString("AlertedToken", null);
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -105,16 +97,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         List<Alert> alerts = Alert.find(Alert.class, null, null, null, "effective DESC", "8");
-        //Collections.reverse(alerts);
-
-        //ArrayList<JSONObject> listdata = new ArrayList<JSONObject>();
 
         final ListView lv = (ListView) findViewById(R.id.myListImg);
-        //TextView empty=(TextView)findViewById(R.id.empty);
-        //lv.setEmptyView(empty);
-
-        //TextView empty_subtext=(TextView)findViewById(R.id.empty_subtext);
-        //lv.setEmptyView(empty_subtext);
 
         LinearLayout empty = (LinearLayout)findViewById(R.id.empty);
         lv.setEmptyView(empty);
@@ -158,16 +142,15 @@ public class MainActivity extends Activity {
             }
         });
 
-        //startService(new Intent(this, LocationService.class));
         scheduleAlarm();
 
     }
 
     public void scheduleAlarm() {
         // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, MyAlarmReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // first run of alarm is immediate

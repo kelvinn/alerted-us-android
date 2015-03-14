@@ -56,26 +56,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
             signingConfig signingConfigs.release
+            buildConfigField "String", "SERVER_URL", '"https://alerted.us/"'
         }
         debug {
             minifyEnabled false
             debuggable true
             testCoverageEnabled true
+            buildConfigField "String", "SERVER_URL", '"http://192.168.56.1:8882/"'
         }
-    }
-    productFlavors {
-        production {
-            applicationId "us.alerted.alerted.production"
-        }
-
-        staging {
-            applicationId "us.alerted.alerted.staging"
-        }
-
-        defaultConfig {
-            applicationId "us.alerted.alerted.defaultConfig"
-        }
-
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -97,15 +85,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // You must install or update the Google Repository through the SDK manager to use this dependency.
-    //compile 'com.google.android.gms:play-services:6.5.87'
-    // For Sugar ORM
-    
-
-    // For New Relic
-    
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    // For testing API calls
 
 
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'

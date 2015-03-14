@@ -82,13 +82,9 @@
         </service>
 
         <receiver
-            android:name=".MyAlarmReceiver"
+            android:name=".AlarmReceiver"
             android:process=":remote" >
         </receiver>
-
-        <service
-            android:name=".AlarmService"
-            android:exported="false" />
 
         <receiver android:name=".BootCompletedReceiver" >
             <intent-filter>

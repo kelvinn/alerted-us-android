@@ -83,29 +83,34 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         startIntent.setClass(getContext(), LocationService.class);
         startService(startIntent);
         assertNotNull(getService());
+
         Location location = new Location("");//provider name is unecessary
         location.setLatitude(1.0d);//your coords of course
         location.setLongitude(1.0d);
         getService().onLocationChanged(location);
 
+
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-
-
-        // Execute some code after 2 seconds have passed
+        // Execute some code after 3 seconds have passed (for async task to complete)
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(2, alerts.size());
     }
 
     public void testSaveAlertsToDB() {
-        List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        Intent startIntent = new Intent();
+        startIntent.setClass(getContext(), LocationService.class);
+        startService(startIntent);
+        assertNotNull(getService());
+
+        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         // Save multiple alerts
-        Boolean saveResult = mReceiver.saveAlertsToDB(result);
+        Boolean saveResult = getService().saveAlertsToDB(result);
         assertTrue(saveResult);
     }
 
@@ -123,8 +128,12 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
     }
 
     public void testGetAlertTest() {
+        Intent startIntent = new Intent();
+        startIntent.setClass(getContext(), LocationService.class);
+        startService(startIntent);
+        assertNotNull(getService());
 
-        List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
+        List<AlertGson> result = getService().getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
 
         //List<AlertGson> alerts = AlertGson.find(AlertGson.class, null, null, null, "cap_slug DESC", "1");
         //assertEquals(alerts.size(), 1);
@@ -136,21 +145,15 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertEquals(info.getCap_category(), "Met");
 
         // Save result #1
-        Boolean saveResult = mReceiver.saveAlertToDB(result.get(0));
+        Boolean saveResult = getService().saveAlertToDB(result.get(0));
         assertTrue(saveResult);
 
         // Save result #2 (shouldn't save)
-        Boolean saveResult2 = mReceiver.saveAlertToDB(result.get(0));
+        Boolean saveResult2 = getService().saveAlertToDB(result.get(0));
         assertFalse(saveResult2);
 
         // Finally, count the number of entries.
         List<Alert> alerts = Alert.listAll(Alert.class);
         assertEquals(1, alerts.size());
-
     }
-
-
-
-
-
 }

@@ -86,7 +86,6 @@ public class LocationService extends Service implements
     public void onCreate() {
         super.onCreate();
 
-        Log.i("LocationService", "Service running");
         context = getApplicationContext();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         broadcaster = LocalBroadcastManager.getInstance(this);
@@ -106,6 +105,62 @@ public class LocationService extends Service implements
                 .build();
         mGoogleApiClient.connect();
 
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        Log.e(TAG, "Error connecting with Google Play Services");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        new GetAndSaveAlertsCmd(context).execute();
+        Intent stopServiceIntent = new Intent(context, LocationService.class);
+        context.stopService(stopServiceIntent);
+    }
+
+    /**
+     * Runs when a GoogleApiClient object successfully connects.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        // Provides a simple way of getting a device's location and is well suited for
+        // applications that do not require a fine-grained location and that do not need location
+        // updates. Gets the best and most recent location currently available, which may be null
+        // in rare cases when a location is not available.
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (location != null) {
+            mLastLocation = location;
+            new GetAndSaveAlertsCmd(context).execute();
+
+            Intent stopServiceIntent = new Intent(context, LocationService.class);
+            context.stopService(stopServiceIntent);
+
+        } else {
+
+            Integer pollingFrequency = sharedPref.getInt("pollingFrequency", 5);
+            mLocationRequest = LocationRequest.create();
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            //mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
+            //mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
+
+            mLocationRequest.setInterval(5 * 1000);
+            mLocationRequest.setFastestInterval(5 * 1000); // 60 seconds, in milliseconds
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+        // onConnectionFailed.
+        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     public void sendToApp(String message) {
@@ -153,21 +208,10 @@ public class LocationService extends Service implements
         return nowAsISO.toString();
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        Log.i("LocationService", "Changed: " + mLastLocation.toString());
-        Intent stopServiceIntent = new Intent(context, LocationService.class);
-        context.stopService(stopServiceIntent);
-    }
-
     public List<AlertGson> getAlertFromApi(String lat, String lng, String cap_date_received){
         String apiUrl;
 
-        //apiUrl = R.string.base_url;
-        //apiUrl =  r.getString(R.string.base_url);
-        //apiUrl = context.getResources().getString(R.string.base_url);
-        apiUrl = "http://192.168.56.1:8882/";
+        apiUrl = BuildConfig.SERVER_URL;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(apiUrl)
                 .build();
@@ -266,47 +310,6 @@ public class LocationService extends Service implements
         return result;
     }
 
-    /**
-     * Runs when a GoogleApiClient object successfully connects.
-     */
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        // Provides a simple way of getting a device's location and is well suited for
-        // applications that do not require a fine-grained location and that do not need location
-        // updates. Gets the best and most recent location currently available, which may be null
-        // in rare cases when a location is not available.
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.i("LocationService", "in onConnected");
-        if (location != null) {
-            Log.d(TAG, location.toString());
-            mLastLocation = location;
-            new GetAndSaveAlertsCmd(context).execute();
-
-            Intent stopServiceIntent = new Intent(context, LocationService.class);
-            context.stopService(stopServiceIntent);
-
-        } else {
-
-            Integer pollingFrequency = sharedPref.getInt("pollingFrequency", 5);
-            mLocationRequest = LocationRequest.create();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            //mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
-            //mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
-
-            mLocationRequest.setInterval(5 * 1000);
-            mLocationRequest.setFastestInterval(5 * 1000); // 60 seconds, in milliseconds
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
-        Log.e(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -323,13 +326,7 @@ public class LocationService extends Service implements
         }
     }
 
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason. We call connect() to
-        // attempt to re-establish the connection.
-        Log.e(TAG, "Error connecting with Google Play Services");
-        mGoogleApiClient.connect();
-    }
+
 
     private class GetAndSaveAlertsCmd extends AsyncTask<Location, Void, Boolean> {
 
@@ -343,10 +340,8 @@ public class LocationService extends Service implements
         @Override
         protected Boolean doInBackground(Location... l) {
             Boolean result;
-            Log.i("AlarmService", "in doInBackground");
 
             if(mLastLocation != null) {
-                Log.e(TAG, "not null");
                 String lat = String.valueOf(mLastLocation.getLatitude());
                 String lng = String.valueOf(mLastLocation.getLongitude());
                 String cap_date_received = getLastCheckDate();
@@ -369,7 +364,7 @@ public class LocationService extends Service implements
                 postNotification(new Intent(c,
                         MainActivity.class), c);
             }
-            //setLastCheckDate();
+            setLastCheckDate();
         }
     }
 

@@ -33,9 +33,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         getActivity();
         Alert.deleteAll(Alert.class);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
-
     }
-
 
     public void testPostNotification() {
         List<AlertGson> result = mReceiver.getAlertFromApi("0.0", "1.0", "2014-02-17T08:03:21.156421");
