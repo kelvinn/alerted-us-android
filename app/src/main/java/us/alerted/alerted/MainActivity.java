@@ -1,8 +1,6 @@
 package us.alerted.alerted;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.newrelic.agent.android.NewRelic;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +26,19 @@ import static us.alerted.alerted.LocationService.*;
 public class MainActivity extends Activity {
 
     private String TAG = this.getClass().getSimpleName();
-    private String numOfMissedMessages;
-    private TextView tView;
     public SharedPreferences sharedPref;
-    private SharedPreferences savedValues;
     public static Boolean inBackground = true;
-    public String httpAuthToken;
-    ArrayList<String> alertNameList;
     public BroadcastReceiver receiver;
 
     static final public String EXTRA_MESSAGE = "us.alerted.alerted.MainActivity.MESSAGE";
     //private SharedPreferences sharedPref = getApplicationContext().getPreferences(Context.MODE_PRIVATE);
 
     private List<RowItem> rowItems;
-    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PrettyTime p = new PrettyTime();
         NewRelic.withApplicationToken(
                 "xXxXxXxXxXx"
         ).start(this.getApplication());
@@ -57,15 +46,6 @@ public class MainActivity extends Activity {
         //overridePendingTransition(R.anim.animation_leave,
         //        R.anim.animation_enter);
 
-        /* Retrieve a PendingIntent that will perform a broadcast */
-        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
-
-
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 8000;
-
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -83,7 +63,6 @@ public class MainActivity extends Activity {
                 }
             }
         };
-        numOfMissedMessages = getString(R.string.num_of_missed_messages);
 
         /*
         setContentView(R.layout.activity_main);
@@ -118,7 +97,6 @@ public class MainActivity extends Activity {
             }
         }
 
-
         // Set the adapter on the ListView
         LazyAdapter adapter = new LazyAdapter(getApplicationContext(), R.layout.list_row, rowItems);
         lv.setAdapter(adapter);
@@ -142,21 +120,10 @@ public class MainActivity extends Activity {
             }
         });
 
-        scheduleAlarm();
+        // Now we start the alarm service to keep polling for alerts
+        Intent msgIntent = new Intent(this, StarterService.class);
+        startService(msgIntent);
 
-    }
-
-    public void scheduleAlarm() {
-        // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Setup periodic alarm every 5 seconds
-        long firstMillis = System.currentTimeMillis(); // first run of alarm is immediate
-        int intervalMillis = 25000; // 5 seconds
-        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, intervalMillis, pIntent);
     }
 
     @Override
@@ -176,8 +143,6 @@ public class MainActivity extends Activity {
     public void onRestart(){
         super.onRestart();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //String httpAuthToken = sharedPref.getString("AlertedToken", null);
-
     }
 
     public void onResume(){

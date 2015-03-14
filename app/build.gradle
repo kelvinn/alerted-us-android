@@ -46,8 +46,8 @@ android {
         applicationId "us.alerted.alerted"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 19
-        versionName "r19"
+        versionCode 20
+        versionName "r20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

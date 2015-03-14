@@ -15,7 +15,6 @@ package us.alerted.alerted;
  * limitations under the License.
  */
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,7 +22,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -41,11 +39,12 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -65,8 +64,8 @@ public class LocationService extends Service implements
     public String TAG = this.getClass().getSimpleName();
     public static TimeZone tz = TimeZone.getTimeZone("UTC");
 
-    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    public static Date now = new Date();
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+
 
     private GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
@@ -120,8 +119,6 @@ public class LocationService extends Service implements
     public void onLocationChanged(Location location) {
         mLastLocation = location;
         new GetAndSaveAlertsCmd(context).execute();
-        Intent stopServiceIntent = new Intent(context, LocationService.class);
-        context.stopService(stopServiceIntent);
     }
 
     /**
@@ -136,21 +133,17 @@ public class LocationService extends Service implements
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
             mLastLocation = location;
+
             new GetAndSaveAlertsCmd(context).execute();
 
             Intent stopServiceIntent = new Intent(context, LocationService.class);
             context.stopService(stopServiceIntent);
 
         } else {
-
-            Integer pollingFrequency = sharedPref.getInt("pollingFrequency", 5);
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            //mLocationRequest.setInterval(pollingFrequency * 60 * 1000); // Update location every 30 minutes
-            //mLocationRequest.setFastestInterval(5 * 60 * 1000); // 60 seconds, in milliseconds
-
-            mLocationRequest.setInterval(5 * 1000);
-            mLocationRequest.setFastestInterval(5 * 1000); // 60 seconds, in milliseconds
+            mLocationRequest.setInterval(5 * 60 * 1000); // Update location every 30 minutes
+            mLocationRequest.setFastestInterval(1 * 60 * 1000); // 60 seconds, in milliseconds
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, this);
         }
@@ -190,25 +183,25 @@ public class LocationService extends Service implements
      */
     public String getLastCheckDate() {
         // Return lastCheckDate so we can query with cap_date_received
-        return sharedPref.getString(String.valueOf(R.string.last_check), "1970-01-01T01:00:00.00000");
+        Date date = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+        String nowAsIso = sdf.format(date);
+        return sharedPref.getString(String.valueOf(R.string.last_check), nowAsIso);
 
     }
 
     public String setLastCheckDate() {
-        Date nowAsISO = new Date();
-        try {
-            nowAsISO = sdf.parse(now.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date now = new Date();
+        String nowAsIso = sdf.format(now);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(String.valueOf(R.string.last_check), nowAsISO.toString());
+        editor.putString(String.valueOf(R.string.last_check), nowAsIso);
         editor.apply();
 
-        return nowAsISO.toString();
+        return nowAsIso;
     }
 
     public List<AlertGson> getAlertFromApi(String lat, String lng, String cap_date_received){
+
+
         String apiUrl;
 
         apiUrl = BuildConfig.SERVER_URL;
@@ -225,7 +218,6 @@ public class LocationService extends Service implements
         } catch(retrofit.RetrofitError e) {
             result = null;
         }
-
 
         return result;
     }
@@ -282,7 +274,8 @@ public class LocationService extends Service implements
     }
 
     public boolean saveAlertToDB(AlertGson alertGson) {
-        Boolean result = false;
+        Boolean result;
+        Date now = new Date();
 
         List<Alert> alerts = Alert.find(Alert.class, "effective = ?", alertGson.getInfo().get(0).getCap_effective());
 
@@ -365,6 +358,10 @@ public class LocationService extends Service implements
                         MainActivity.class), c);
             }
             setLastCheckDate();
+
+            // Now we stop the service and wait for the next run
+            Intent stopServiceIntent = new Intent(context, LocationService.class);
+            context.stopService(stopServiceIntent);
         }
     }
 
