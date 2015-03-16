@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
+
     }
 
     dependencies {
@@ -14,6 +15,9 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://mint.splunk.com/gradle/"
+    }
 }
 
 
@@ -30,14 +34,18 @@ task startStubby(type: NodeTask) {
     args = ['-d', 'api.yaml']
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def splunkMintRelease = properties.getProperty('splunkMintRelease')
+def splunkMintTesting = properties.getProperty('splunkMintTesting')
+
+
 android {
 
     signingConfigs {
         release {
             storeFile file("../signing_keystore.jks")
-            storePassword "F5GGYkGNVuNdWxqQamu8"
             keyAlias "alerted"
-            keyPassword "F5GGYkGNVuNdWxqQamu8"
         }
     }
     compileSdkVersion 21
@@ -50,6 +58,9 @@ android {
         versionName "r20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -57,12 +68,14 @@ android {
             zipAlignEnabled true
             signingConfig signingConfigs.release
             buildConfigField "String", "SERVER_URL", '"https://alerted.us/"'
+            buildConfigField "String", "SPLUNK_MINT_ID", splunkMintRelease
         }
         debug {
             minifyEnabled false
             debuggable true
             testCoverageEnabled true
             buildConfigField "String", "SERVER_URL", '"http://192.168.56.1:8882/"'
+            buildConfigField "String", "SPLUNK_MINT_ID", splunkMintTesting
         }
     }
     lintOptions {
@@ -94,6 +107,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+
+    compile "com.splunk.mint:mint:4.0.9"
 
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:appcompat-v7:21.0.3'

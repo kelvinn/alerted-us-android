@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.newrelic.agent.android.NewRelic;
+import com.splunk.mint.Mint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        NewRelic.withApplicationToken(
-                "xXxXxXxXxXx"
-        ).start(this.getApplication());
+        Mint.initAndStartSession(MainActivity.this, BuildConfig.SPLUNK_MINT_ID);
 
         //overridePendingTransition(R.anim.animation_leave,
         //        R.anim.animation_enter);
