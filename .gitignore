@@ -4,4 +4,4 @@
 .DS_Store
 /build
 .idea/
-/signing_keystroe.jks
+/signing_keystore.jks
