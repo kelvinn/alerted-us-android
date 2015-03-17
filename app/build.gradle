@@ -36,8 +36,8 @@ task startStubby(type: NodeTask) {
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def splunkMintRelease = properties.getProperty('splunkMintRelease')
-def splunkMintTesting = properties.getProperty('splunkMintTesting')
+def splunkMintRelease = properties.getProperty('splunkMintRelease', '000000')
+def splunkMintTesting = properties.getProperty('splunkMintTesting', '000000')
 
 
 android {
