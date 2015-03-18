@@ -9,10 +9,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.moowork.node" version "0.8"
-}
-
 repositories {
     mavenCentral()
     maven {
@@ -29,10 +25,22 @@ apply plugin: 'jacoco'
 //    preBuild.dependsOn(startStubby)
 //}
 
-task startStubby(type: NodeTask) {
-    script = file('./node_modules/.bin/stubby')
-    args = ['-d', 'api.yaml']
+
+task startStubby(type:Exec) {
+    workingDir './bin'
+
+    commandLine 'java -jar stubby4j-3.0.0.jar --location 0.0.0.0 --data api.yaml'.tokenize()
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
 }
+
+
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())

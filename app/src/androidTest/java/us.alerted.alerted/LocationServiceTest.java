@@ -85,7 +85,7 @@ public class LocationServiceTest extends ServiceTestCase<LocationService> {
         assertNotNull(getService());
 
         Location location = new Location("");//provider name is unecessary
-        location.setLatitude(1.0d);//your coords of course
+        location.setLatitude(0.0d);//your coords of course
         location.setLongitude(1.0d);
         getService().onLocationChanged(location);
 
